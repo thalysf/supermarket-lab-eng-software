@@ -1,0 +1,18 @@
+CREATE DATABASE supermarket-db;
+
+CREATE TABLE usuario (
+    nome varchar(50) NOT NULL,
+    cpf varchar(11) PRIMARY KEY,
+    biometria BYTEA NOT NULL
+);
+
+CREATE TABLE tela (
+    id_tela integer PRIMARY KEY,
+    nome varchar(45)  NOT NULL
+);
+
+CREATE TABLE usuario_tela (
+    id_tela integer NOT NULL references tela(id_tela),
+    cpf varchar(11) NOT NULL references usuario(cpf),
+	primary key(id_tela, cpf)
+);
