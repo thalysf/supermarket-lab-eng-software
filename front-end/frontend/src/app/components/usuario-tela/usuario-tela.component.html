@@ -13,6 +13,16 @@
             [(ngModel)] = "cpf" name="cpf" type="text"
             style="margin-left: 4px;"> 
         </mat-form-field>
+
+        <div class="multiselect espacamentoCampos">
+            <ng-multiselect-dropdown name="telas"
+                [formControl]="controlTelas"
+                [settings]="dropdownSettings"
+                [data]="telas"
+                [placeholder]="'Telas'"
+                [(ngModel)]="telasSelecionadas">
+            </ng-multiselect-dropdown>
+        </div>
     </form>
 
     <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima">

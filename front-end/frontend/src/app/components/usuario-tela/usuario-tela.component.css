@@ -1,5 +1,10 @@
 .espacamentoCampos {
-    margin-left: 7%;
+    margin-left: 3%;
+}
+
+.multiselect{
+    width:400px; 
+    display: inline-block;
 }
 
 .campo{

@@ -18,3 +18,7 @@
 .tituloTela{
     font-size: 22px;
 }
+
+a:hover{
+    cursor: pointer;
+}

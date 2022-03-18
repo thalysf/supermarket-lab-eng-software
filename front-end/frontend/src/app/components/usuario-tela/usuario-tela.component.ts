@@ -3,6 +3,8 @@ import { Usuario } from './../../entity/Usuario';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-usuario-tela',
@@ -13,6 +15,7 @@ export class UsuarioTelaComponent implements OnInit {
 
   cpf: string = "";
   nome: string = "";
+  telasSelecionadas:Tela[] = [];
   telas:Tela[] = [
     {
     nome:'TELA 01',
@@ -24,22 +27,28 @@ export class UsuarioTelaComponent implements OnInit {
     }
   ]
 
-  tela: Tela = this.telas[0];
-
+  public controlTelas = new FormControl([]);
+  dropdownSettings:IDropdownSettings={};
   displayedColumns: string[] = ['nome', 'cpf', 'telas', 'acao'];
 
   usuarios: Usuario[] = [
     {
       nome:"JAO",
       cpf:"1999",
-      acessos: [ { id: 0, nome: 'gerenciamento-usuario'}, { id: 1, nome: 'CAFÉ'} ]
+      acessos: [ { id: 0, nome: 'TELA 01'}, { id: 1, nome: 'TELA 02'} ]
     }
   ];
 
   dataSource = new MatTableDataSource<Usuario>(this.usuarios);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor() { }
+  constructor() { 
+
+    this.dropdownSettings = {
+      idField: 'id',
+      textField: 'nome',
+    };
+  }
 
   ngOnInit(): void {
   }
@@ -51,10 +60,12 @@ export class UsuarioTelaComponent implements OnInit {
 
   carregar(usuario:any){
     
+    this.cpf = usuario.cpf;
+    this.nome = usuario.nome;
+    this.telasSelecionadas = usuario.acessos;
   }
 
   nomesTelasPorUsuario(usuario: any){
-    console.log(usuario);
     var telas = "| ";
     for(let tela of usuario.acessos){
       telas += tela.nome + " | ";
