@@ -1,0 +1,29 @@
+.faixa{
+    width: 100%;
+    background-color: rgb(39, 90, 158);
+    height: 55px;
+}
+
+.primeiroBotao{
+    margin-left: 10px;
+}
+
+button{
+    height: 100%;
+    padding-left: 26px;
+    padding-right: 26px;
+    color: white;
+    background-color: transparent;
+    border: none;
+
+    font-size: 20px;
+}
+
+button:hover{
+    cursor:pointer;
+    background-color: rgb(33, 33, 124)
+}
+
+button:active{
+    background-color: rgb(24, 24, 85)
+}

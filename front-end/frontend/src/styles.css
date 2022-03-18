@@ -8,3 +8,13 @@
     background: transparent;
     font-family: 'Lucida Sans';
 }
+
+.telaMatCard{
+    width: 90%; 
+    margin-left: 4%; 
+    margin-top: 30px;
+}
+
+.tituloTela{
+    font-size: 22px;
+}
