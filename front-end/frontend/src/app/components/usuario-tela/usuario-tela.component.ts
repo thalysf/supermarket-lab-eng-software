@@ -1,3 +1,4 @@
+import { BiometriaDialogComponent } from './../biometria-dialog/biometria-dialog.component';
 import { Tela } from './../../entity/Tela';
 import { Usuario } from './../../entity/Usuario';
 import { Component, OnInit, ViewChild } from '@angular/core';
@@ -5,6 +6,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { FormControl } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-usuario-tela',
@@ -42,7 +44,7 @@ export class UsuarioTelaComponent implements OnInit {
   dataSource = new MatTableDataSource<Usuario>(this.usuarios);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor() { 
+  constructor(public dialog: MatDialog) { 
 
     this.dropdownSettings = {
       idField: 'id',
@@ -53,6 +55,18 @@ export class UsuarioTelaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  inserir(){
+
+    const dialogRef = this.dialog.open(BiometriaDialogComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+  }
+
+  editar(){
+
+  }
 
   excluir(){
 

@@ -16,6 +16,9 @@ import {MatButtonModule} from '@angular/material/button';
 import {MatTableModule} from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown'
+import { HttpClientModule } from '@angular/common/http';
+import {MatDialogModule} from '@angular/material/dialog';
+import { BiometriaDialogComponent } from './components/biometria-dialog/biometria-dialog.component';
 
 @NgModule({
   declarations: [
@@ -23,7 +26,8 @@ import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown'
     BannerPrincipalComponent,
     MenuTelasComponent,
     PrincipalComponent,
-    UsuarioTelaComponent
+    UsuarioTelaComponent,
+    BiometriaDialogComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +40,9 @@ import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown'
     MatButtonModule,
     MatTableModule,
     MatPaginatorModule,
-    NgMultiSelectDropDownModule.forRoot()
+    NgMultiSelectDropDownModule.forRoot(),
+    HttpClientModule,
+    MatDialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]
