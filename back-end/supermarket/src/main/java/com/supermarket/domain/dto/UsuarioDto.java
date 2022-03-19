@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -25,6 +25,6 @@ public class UsuarioDto {
     @NotNull
     private byte[] biometria;
 
-    private List<TelaDto> telas;
+    private Set<TelaDto> telas;
 
 }

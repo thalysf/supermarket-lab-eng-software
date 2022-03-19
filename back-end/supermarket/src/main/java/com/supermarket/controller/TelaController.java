@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.Set;
 
 @RestController
 @Validated
@@ -19,7 +19,7 @@ public class TelaController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<TelaDto> listarTelas() {
+    public Set<TelaDto> listarTelas() {
         return telaService.listarTelas();
     }
 

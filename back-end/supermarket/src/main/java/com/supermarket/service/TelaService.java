@@ -6,7 +6,7 @@ import com.supermarket.repository.TelaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class TelaService {
@@ -16,7 +16,7 @@ public class TelaService {
     @Autowired
     private TelaMapper telaMapper;
 
-    public List<TelaDto> listarTelas() {
-        return telaMapper.listTelaToListTelaDto(telaRepository.findAll());
+    public Set<TelaDto> listarTelas() {
+        return telaMapper.setTelaToSetTelaDto(telaRepository.findAll());
     }
 }

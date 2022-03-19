@@ -6,7 +6,7 @@ import com.supermarket.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Set;
 
 @Service
 public class UsuarioService {
@@ -30,7 +30,7 @@ public class UsuarioService {
         usuarioRepository.deleteById(cpf);
     }
 
-    public List<UsuarioDto> listarUsuarios() {
-        return usuarioMapper.listUsuarioToListUsuarioDto(usuarioRepository.findAll());
+    public Set<UsuarioDto> listarUsuarios() {
+        return usuarioMapper.setUsuarioToSetUsuarioDto(usuarioRepository.findAll());
     }
 }

@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -26,8 +26,8 @@ public class Usuario {
     @NotNull
     private byte[] biometria;
 
-    @OneToMany
-    @JoinTable(name="usuario_tela", joinColumns= {@JoinColumn(name="cpf")}, inverseJoinColumns= {@JoinColumn(name="idTela")})
-    private List<Tela> telas;
+    @ManyToMany
+    @JoinTable(name = "usuario_tela", joinColumns = {@JoinColumn(name = "cpf")}, inverseJoinColumns = {@JoinColumn(name = "idTela")})
+    private Set<Tela> telas;
 
 }

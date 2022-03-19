@@ -4,9 +4,9 @@ import com.supermarket.domain.dto.TelaDto;
 import com.supermarket.domain.entity.Tela;
 import org.mapstruct.Mapper;
 
-import java.util.List;
+import java.util.Set;
 
 @Mapper(componentModel = "spring")
 public interface TelaMapper {
-    List<TelaDto> listTelaToListTelaDto(List<Tela> telas);
+    Set<TelaDto> setTelaToSetTelaDto(Set<Tela> telas);
 }
