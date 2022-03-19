@@ -14,5 +14,14 @@ CREATE TABLE tela (
 CREATE TABLE usuario_tela (
     id_tela integer NOT NULL references tela(id_tela),
     cpf varchar(11) NOT NULL references usuario(cpf),
-	primary key(id_tela, cpf)
+	PRIMARY KEY(cpf, id_tela)
 );
+
+-- Telas de teste
+INSERT INTO tela
+VALUES
+(1, 'CAIXA'),
+(2, 'CAFETERIA'),
+(3, 'ESTOQUE'),
+(4, 'USUARIO'),
+(5, 'PRESENTES')
