@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  database:
+    image: postgres
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "1234"
+      POSTGRES_DB: "supermarket-db"
+    ports:
+      - "5432:5432"
+    volumes:
+      - D:/Docker/postgresql:/var/lib/postgresql/data 

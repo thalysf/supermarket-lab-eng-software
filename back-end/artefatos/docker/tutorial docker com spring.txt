@@ -1,0 +1,14 @@
+Quem quiser rodar o Docker pro banco de dados operar como um microserviço:
+Tutorial de como utilizar o Docker Compose, Docker Desktop e o SGBD Dbeaver para se conectar ao banco que estará no container docker:
+https://www.youtube.com/watch?v=bQXFdQ7Dwyw&list=LL&index=2&t=135s
+
+Link do docker desktop: https://www.docker.com/products/docker-desktop/
+Se você usar windows, pode dar falha por conta de um componente do linux faltante... É só instalar esse substituto que dá bom: https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi
+
+Link do DBeaver: https://dbeaver.io/download/
+
+Caso você, assim como eu já tenha o Postgresql instalado localmente, a sua versão local vai sobrepor a do container, logo vc não vai conseguir acessar o seu container. Pra isso você só precisa dar um stop no serviço do postgres local: https://tableplus.com/blog/2018/10/how-to-start-stop-restart-postgresql-server.html
+Por fim no seu projeto spring basta passar as informações do banco que foram configuradas no container, Exemplo:
+spring.datasource.url=jdbc:postgresql://localhost:5432/supermarket-db
+spring.datasource.username=postgres
+spring.datasource.password=1234
