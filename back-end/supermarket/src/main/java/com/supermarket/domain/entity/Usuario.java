@@ -1,29 +1,33 @@
 package com.supermarket.domain.entity;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Set;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Usuario {
+@Table(name = "usuario")
+public class Usuario implements Serializable {
     @NotNull
+    @Column(name = "nome", nullable = false)
     private String nome;
 
     @NotNull
     @Id
     @Size(min = 11, max = 11)
+    @Column(name = "cpf", nullable = false)
     private String cpf;
 
     @NotNull
+    @Column(name = "biometria", nullable = false)
     private byte[] biometria;
 
     @ManyToMany

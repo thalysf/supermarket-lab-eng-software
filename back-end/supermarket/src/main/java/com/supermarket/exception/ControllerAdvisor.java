@@ -1,76 +1,71 @@
 package com.supermarket.exception;
 
-import org.postgresql.util.PSQLException;
-
-import org.postgresql.util.PSQLException;
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
-import javax.persistence.EntityNotFoundException;
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import javax.validation.ConstraintViolationException;
+import java.time.Instant;
+import java.util.*;
+import java.util.stream.Collectors;
 
-//@ControllerAdvice
+@ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers,
+                                                                  HttpStatus status,
+                                                                  WebRequest request) {
+        Map<String, String> errors = new HashMap<>();
 
-//    @ExceptionHandler(EntityNotFoundException.class)
-//    public ResponseEntity<Object> handleEntityNotFoundException(
-//            EntityNotFoundException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", ex.getMessage());
-//        System.out.println(request);
-//        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
-//    }
-//
-//
-//    @ExceptionHandler(IllegalArgumentException.class)
-//    public ResponseEntity<Object> handleIllegalArgumentException(
-//            IllegalArgumentException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", ex.getMessage());
-//
-//        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-//    }
-//
-//    @ExceptionHandler(EmptyResultDataAccessException.class)
-//    public ResponseEntity<Object> handleEmptyResultDataAccessException(
-//            EmptyResultDataAccessException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", ex.getMessage());
-//
-//        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-//    }
-//
-//    @ExceptionHandler(PSQLException.class)
-//    public ResponseEntity<Object> handlePSQLException(
-//            PSQLException ex, WebRequest request) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", ex.getMessage());
-//
-//        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
-//    }
-//    @ExceptionHandler(Exception.class)
-//    public ResponseEntity<Object> handleException(
-//            Exception ex) {
-//
-//        Map<String, Object> body = new LinkedHashMap<>();
-//        body.put("timestamp", LocalDateTime.now());
-//        body.put("message", ex.getMessage());
-//
-//        return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+        ex.getBindingResult().getAllErrors().forEach((error) ->{
+            String fieldName = ((FieldError) error).getField();
+            String message = error.getDefaultMessage();
+            errors.put(fieldName, message);
+        });
+
+        return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<Object> handleConstraintViolation(ConstraintViolationException exception, WebRequest request) {
+        List<String> validationErrors = exception.getConstraintViolations().stream()
+                .map(violation -> violation.getPropertyPath() + ": " + violation.getMessage())
+                .collect(Collectors.toList());
+        return getExceptionResponseEntity(HttpStatus.BAD_REQUEST, request, validationErrors);
+    }
+
+    @ExceptionHandler(RegraNegocioException.class)
+    public ResponseEntity<Object> handleException(RegraNegocioException exception, WebRequest request) {
+        return getExceptionResponseEntity(HttpStatus.BAD_REQUEST, request, Collections.singletonList(exception.getMessage()));
+    }
+
+    private ResponseEntity<Object> getExceptionResponseEntity(final HttpStatus status, WebRequest request, List<String> errors) {
+        final Map<String, Object> body = new LinkedHashMap<>();
+        final String errorsMessage = getErrorsMessage(status, errors);
+        final String path = request.getDescription(false);
+        body.put("TIMESTAMP", Instant.now());
+        body.put("STATUS", status.value());
+        body.put("ERRORS", errorsMessage);
+        body.put("PATH", path);
+        body.put("MESSAGE", status.getReasonPhrase());
+        return new ResponseEntity<>(body, status);
+    }
+
+    private String getErrorsMessage(HttpStatus status, List<String> errors) {
+        if (CollectionUtils.isNotEmpty(errors)) {
+            return errors.stream().filter(StringUtils::isNotEmpty).collect(Collectors.joining(","));
+        }
+
+        return status.getReasonPhrase();
+    }
+
 }
