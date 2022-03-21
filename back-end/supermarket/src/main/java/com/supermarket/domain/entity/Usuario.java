@@ -26,11 +26,11 @@ public class Usuario implements Serializable {
     @Column(name = "cpf", nullable = false)
     private String cpf;
 
-    @NotNull
-    @Column(name = "biometria", nullable = false)
+
+    @Column(name = "biometria", nullable = true)
     private byte[] biometria;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "usuario_tela", joinColumns = {@JoinColumn(name = "cpf")}, inverseJoinColumns = {@JoinColumn(name = "idTela")})
     private Set<Tela> telas;
 

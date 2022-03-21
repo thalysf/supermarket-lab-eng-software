@@ -37,17 +37,8 @@ export class UsuarioTelaService {
 
   excluirUsuario(usuario:Usuario):void{
 
-    const options = {
-      headers: new HttpHeaders({
-        'Content-Type': 'application/json',
-      }),
-      body: {
-        id: usuario.cpf
-      },
-    };
-
-    this.http.delete<Usuario>(this.urlUsuario, options).subscribe(retorno =>{
-      // TODO
+    this.http.delete<Usuario>(this.urlUsuario + "/" + usuario.cpf).subscribe(retorno =>{
+      console.log(retorno);
     });
   }
 }

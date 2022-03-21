@@ -19,7 +19,7 @@ public class UsuarioDto implements Serializable {
     @Size(min = 11, max = 11)
     private String cpf;
 
-    @NotNull
+
     private byte[] biometria;
 
     private Set<TelaDto> telas;
