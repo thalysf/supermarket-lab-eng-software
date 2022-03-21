@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import java.util.Set;
 
 @Service
@@ -23,11 +25,13 @@ public class UsuarioService {
     private final TelaRepository telaRepository;
 
     public void cadastrarUsuario(UsuarioDto usuarioDto) {
+        usuarioRepository.findById(usuarioDto.getCpf()).ifPresent(u -> {throw new EntityExistsException();});
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
         usuarioRepository.save(usuario);
     }
 
     public void atualizarUsuario(UsuarioDto usuarioDto) {
+        usuarioRepository.findById(usuarioDto.getCpf()).orElseThrow(EntityNotFoundException::new);
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
         usuarioMapper.usuarioDtoToUsuario(usuarioRepository.save(usuario));
     }
