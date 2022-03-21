@@ -1,9 +1,11 @@
 package com.supermarket.domain.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
@@ -18,7 +20,6 @@ public class Tela {
     @Column(name = "id_tela", nullable = false)
     private Integer idTela;
 
-    @NotNull
-    @Column(name = "nome", nullable = false, length = 45)
+    @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 }
