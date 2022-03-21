@@ -3,9 +3,9 @@ package com.supermarket.service;
 import com.supermarket.domain.dto.UsuarioDto;
 import com.supermarket.domain.entity.Usuario;
 import com.supermarket.domain.mapper.UsuarioMapper;
+import com.supermarket.repository.TelaRepository;
 import com.supermarket.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +19,8 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
 
     private final UsuarioMapper usuarioMapper;
+
+    private final TelaRepository telaRepository;
 
     public void cadastrarUsuario(UsuarioDto usuarioDto) {
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
