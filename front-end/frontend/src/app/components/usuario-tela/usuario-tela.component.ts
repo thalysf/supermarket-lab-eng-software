@@ -51,8 +51,6 @@ export class UsuarioTelaComponent implements OnInit {
 
   inserir(){
 
-    console.log(this.telasSelecionadas);
-
     const usuario: Usuario = {
       cpf : this.cpf,
       nome: this.nome,
@@ -62,7 +60,7 @@ export class UsuarioTelaComponent implements OnInit {
 
     this.usuarioTelaService.criarUsuario(usuario);
 
-    this.carregarUsuarios()
+    this.carregarUsuarios();
 
     // Biometria
     //const dialogRef = this.dialog.open(BiometriaDialogComponent);
@@ -85,7 +83,8 @@ export class UsuarioTelaComponent implements OnInit {
   }
 
   excluir(usuario:any){
-
+    this.usuarioTelaService.excluirUsuario(usuario);
+    this.carregarUsuarios();
   }
 
   limpar(){
@@ -121,10 +120,5 @@ export class UsuarioTelaComponent implements OnInit {
       telas += tela.nome + " | ";
     }
     return telas;
-  }
-
-  onItemSelect(item: any) {
-    console.log(this.telas);
-    console.log(item);
   }
 }

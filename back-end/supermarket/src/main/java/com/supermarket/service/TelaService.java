@@ -4,6 +4,7 @@ import com.supermarket.domain.dto.TelaDto;
 import com.supermarket.domain.mapper.TelaMapper;
 import com.supermarket.repository.TelaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
