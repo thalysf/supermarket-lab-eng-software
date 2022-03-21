@@ -2,7 +2,7 @@ import { UsuarioTelaService } from './../../services/usuario-tela.service';
 import { BiometriaDialogComponent } from './../biometria-dialog/biometria-dialog.component';
 import { Tela } from './../../entity/Tela';
 import { Usuario } from './../../entity/Usuario';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './usuario-tela.component.html',
   styleUrls: ['./usuario-tela.component.css']
 })
-export class UsuarioTelaComponent implements OnInit {
+export class UsuarioTelaComponent implements AfterViewInit  {
 
   cpf: string = "";
   nome: string = "";
@@ -46,7 +46,8 @@ export class UsuarioTelaComponent implements OnInit {
     this.carregarUsuarios();
   }
 
-  ngOnInit(): void {
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
   }
 
   inserir(){
@@ -58,7 +59,10 @@ export class UsuarioTelaComponent implements OnInit {
       biometria:null
     }
 
-    this.usuarioTelaService.criarUsuario(usuario);
+    this.usuarioTelaService.criarUsuario(usuario).subscribe(
+      data=> this.carregarUsuarios(),
+      error=>this.toastr.error('Não foi possível Inserir o Usuário')
+    );
 
     this.carregarUsuarios();
 
@@ -78,13 +82,17 @@ export class UsuarioTelaComponent implements OnInit {
       biometria:null
     }
 
-    this.usuarioTelaService.atualizarUsuario(usuario);
-    this.carregarUsuarios();
+    this.usuarioTelaService.atualizarUsuario(usuario).subscribe(
+      data=> this.carregarUsuarios(),
+      error=>this.toastr.error('Não foi possível editar o Usuário')
+    );
   }
 
   excluir(usuario:any){
-    this.usuarioTelaService.excluirUsuario(usuario);
-    this.carregarUsuarios();
+    this.usuarioTelaService.excluirUsuario(usuario).subscribe(
+      data=> this.carregarUsuarios(),
+      error=>this.toastr.error('Não foi possível excluir o Usuário')
+    );
   }
 
   limpar(){
@@ -101,10 +109,14 @@ export class UsuarioTelaComponent implements OnInit {
   }
 
   carregarUsuarios(){
-    this.usuarioTelaService.carregarUsuarios().subscribe(
-      data=> this.dataSource.data = data,
-      error=>this.toastr.error('Não foi possível carregar os usuários')
+    this.usuarioTelaService.carregarUsuarios().subscribe((usuarios:Usuario[])=>
+      this.dataSource.data = this.usuariosFunc(usuarios)
     )
+  }
+
+  usuariosFunc(usuarios:Usuario[]):Usuario[]{
+    console.log(usuarios);
+    return usuarios
   }
 
   carregar(usuario:any){

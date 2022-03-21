@@ -23,22 +23,15 @@ export class UsuarioTelaService {
     return this.http.get<Usuario[]>(this.urlUsuario);
   }
 
-  criarUsuario(usuario:Usuario):void{
-    this.http.post<Usuario>(this.urlUsuario, usuario).subscribe(retorno =>{
-      console.log(retorno)
-    });
+  criarUsuario(usuario:Usuario){
+    return this.http.post<Usuario>(this.urlUsuario, usuario);
   }
 
-  atualizarUsuario(usuario:Usuario):void{
-    this.http.put<Usuario>(this.urlUsuario, usuario).subscribe(retorno =>{
-      console.log(retorno)
-    });
+  atualizarUsuario(usuario:Usuario){
+    return this.http.put<Usuario>(this.urlUsuario, usuario);
   }
 
-  excluirUsuario(usuario:Usuario):void{
-
-    this.http.delete<Usuario>(this.urlUsuario + "/" + usuario.cpf).subscribe(retorno =>{
-      console.log(retorno);
-    });
+  excluirUsuario(usuario:Usuario){
+    return this.http.delete<Usuario>(this.urlUsuario + "/" + usuario.cpf);
   }
 }
