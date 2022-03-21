@@ -2,6 +2,7 @@ package com.supermarket.exception;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,9 +10,12 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import javax.persistence.EntityExistsException;
+import javax.persistence.EntityNotFoundException;
 import javax.validation.ConstraintViolationException;
 import java.time.Instant;
 import java.util.*;
@@ -19,6 +23,28 @@ import java.util.stream.Collectors;
 
 @ControllerAdvice
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler({EntityNotFoundException.class, EmptyResultDataAccessException.class})
+    protected ResponseEntity<Object> handleDataBaseNotFoundExceptions(Exception ex) {
+        final Map<String, Object> body = new LinkedHashMap<>();
+        body.put("TIMESTAMP", Instant.now());
+        body.put("STATUS", HttpStatus.NOT_FOUND);
+        body.put("ERRORS", ex.toString());
+        body.put("MESSAGE", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler({EntityExistsException.class})
+    protected ResponseEntity<Object> handleEntityExistsException(EntityExistsException ex) {
+        final Map<String, Object> body = new LinkedHashMap<>();
+        body.put("TIMESTAMP", Instant.now());
+        body.put("STATUS", HttpStatus.BAD_REQUEST);
+        body.put("ERRORS", ex.toString());
+        body.put("MESSAGE", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+
+
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
                                                                   HttpHeaders headers,

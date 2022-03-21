@@ -1,11 +1,13 @@
 package com.supermarket.domain.entity;
 
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.Set;
 
@@ -17,20 +19,18 @@ import java.util.Set;
 @Table(name = "usuario")
 public class Usuario implements Serializable {
     @NotNull
-    @Column(name = "nome", nullable = false)
+    @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 
     @NotNull
     @Id
-    @Size(min = 11, max = 11)
-    @Column(name = "cpf", nullable = false)
+    @Column(name = "cpf", nullable = false, length = 11)
     private String cpf;
-
 
     @Column(name = "biometria", nullable = true)
     private byte[] biometria;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @JoinTable(name = "usuario_tela", joinColumns = {@JoinColumn(name = "cpf")}, inverseJoinColumns = {@JoinColumn(name = "idTela")})
     private Set<Tela> telas;
 
