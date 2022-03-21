@@ -1,5 +1,5 @@
 export interface Tela {
 
-    id:number,
+    idTela:number,
     nome:string
 }

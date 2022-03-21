@@ -20,7 +20,8 @@
                 [settings]="dropdownSettings"
                 [data]="telas"
                 [placeholder]="'Telas'"
-                [(ngModel)]="telasSelecionadas">
+                [(ngModel)]="telasSelecionadas"
+                (onSelect)="onItemSelect($event)">
             </ng-multiselect-dropdown>
         </div>
     </form>
@@ -30,7 +31,8 @@
         Cadastrar
     </button>
 
-    <button mat-raised-button color="primary" class="espacamentoBotoes espacamentoBotoesCima">
+    <button mat-raised-button color="primary" class="espacamentoBotoes espacamentoBotoesCima"
+    (click)="editar()">
         Atualizar
     </button>
 
@@ -75,7 +77,7 @@
                     </i>
                 </a>
                 <a >
-                    <i class="material-icons delete" (click)="excluir()">
+                    <i class="material-icons delete" (click)="excluir(row)">
                         delete
                     </i>
                 </a>

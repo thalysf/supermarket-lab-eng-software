@@ -19,6 +19,7 @@ import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown'
 import { HttpClientModule } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
 import { BiometriaDialogComponent } from './components/biometria-dialog/biometria-dialog.component';
+import { ToastrModule } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { BiometriaDialogComponent } from './components/biometria-dialog/biometri
     MatPaginatorModule,
     NgMultiSelectDropDownModule.forRoot(),
     HttpClientModule,
-    MatDialogModule
+    MatDialogModule,
+    ToastrModule.forRoot()
   ],
   providers: [],
   bootstrap: [AppComponent]
