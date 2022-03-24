@@ -2,7 +2,6 @@ package com.supermarket.service;
 
 import com.supermarket.domain.dto.ProdutoDto;
 import com.supermarket.domain.entity.Produto;
-import com.supermarket.domain.entity.Usuario;
 import com.supermarket.domain.mapper.ProdutoMapper;
 import com.supermarket.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +18,9 @@ public class ProdutoService {
     private final ProdutoMapper produtoMapper;
 
     public void cadastrarProduto(ProdutoDto produtoDto) {
-        produtoRepository.findById(produtoDto.getRfid()).ifPresent(u -> {throw new EntityExistsException();});
+        produtoRepository.findById(produtoDto.getRfid()).ifPresent(u -> {
+            throw new EntityExistsException();
+        });
 
         Produto produto = produtoMapper.produtoDtoToProduto(produtoDto);
         produto.setQtdEstoque(0L);

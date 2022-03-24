@@ -10,10 +10,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@Validated
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/telas")
+@Validated
 public class TelaController {
 
     private final TelaService telaService;

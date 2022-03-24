@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Getter
@@ -17,7 +18,8 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class ProdutoDto {
-    @NotNull
+
+    @NotEmpty
     @Max(100)
     private String nome;
 
@@ -30,7 +32,7 @@ public class ProdutoDto {
     @NotNull
     private byte[] imagem;
 
-    @NotNull
+    @NotEmpty
     @Max(50)
     private String codigoBarras;
 
@@ -43,7 +45,7 @@ public class ProdutoDto {
     @NotNull
     private SetorEnum setor;
 
-    @NotNull
+    @NotEmpty
     @Max(255)
     private String rfid;
 }
