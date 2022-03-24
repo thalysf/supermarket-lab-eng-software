@@ -31,7 +31,7 @@ public class UsuarioService {
     public void atualizarUsuario(UsuarioDto usuarioDto) {
         usuarioRepository.findById(usuarioDto.getCpf()).orElseThrow(EntityNotFoundException::new);
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
-        usuarioMapper.usuarioDtoToUsuario(usuarioRepository.save(usuario));
+        usuarioRepository.save(usuario);
     }
 
     public void deletarUsuario(String cpf) {
