@@ -2,6 +2,8 @@ package com.supermarket.exception;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -10,7 +12,6 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
@@ -22,8 +23,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
+@Order(Ordered.HIGHEST_PRECEDENCE)
 public class ControllerAdvisor extends ResponseEntityExceptionHandler {
-
     @ExceptionHandler({EntityNotFoundException.class, EmptyResultDataAccessException.class})
     protected ResponseEntity<Object> handleDataBaseNotFoundExceptions(Exception ex) {
         final Map<String, Object> body = new LinkedHashMap<>();
@@ -52,7 +53,7 @@ public class ControllerAdvisor extends ResponseEntityExceptionHandler {
                                                                   WebRequest request) {
         Map<String, String> errors = new HashMap<>();
 
-        ex.getBindingResult().getAllErrors().forEach((error) ->{
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
             String fieldName = ((FieldError) error).getField();
             String message = error.getDefaultMessage();
             errors.put(fieldName, message);

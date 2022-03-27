@@ -5,7 +5,6 @@ import com.supermarket.domain.entity.Usuario;
 import com.supermarket.domain.mapper.UsuarioMapper;
 import com.supermarket.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +22,9 @@ public class UsuarioService {
     private final UsuarioMapper usuarioMapper;
 
     public void cadastrarUsuario(UsuarioDto usuarioDto) {
-        usuarioRepository.findById(usuarioDto.getCpf()).ifPresent(u -> {throw new EntityExistsException();});
+        usuarioRepository.findById(usuarioDto.getCpf()).ifPresent(u -> {
+            throw new EntityExistsException();
+        });
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
         usuarioRepository.save(usuario);
     }
@@ -31,7 +32,7 @@ public class UsuarioService {
     public void atualizarUsuario(UsuarioDto usuarioDto) {
         usuarioRepository.findById(usuarioDto.getCpf()).orElseThrow(EntityNotFoundException::new);
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
-        usuarioMapper.usuarioDtoToUsuario(usuarioRepository.save(usuario));
+        usuarioRepository.save(usuario);
     }
 
     public void deletarUsuario(String cpf) {

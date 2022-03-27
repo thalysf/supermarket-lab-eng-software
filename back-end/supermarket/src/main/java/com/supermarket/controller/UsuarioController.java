@@ -8,20 +8,21 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @RestController
-@Validated
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/usuarios")
+@Validated
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastraUsuario(@Valid @RequestBody UsuarioDto usuarioDto) {
+    public void cadastrarUsuario(@Valid @RequestBody UsuarioDto usuarioDto) {
         usuarioService.cadastrarUsuario(usuarioDto);
     }
 
@@ -33,7 +34,7 @@ public class UsuarioController {
 
     @DeleteMapping("/{cpf}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarAtor(@PathVariable String cpf) {
+    public void deletarUsuario(@PathVariable @NotEmpty String cpf) {
         usuarioService.deletarUsuario(cpf);
     }
 
