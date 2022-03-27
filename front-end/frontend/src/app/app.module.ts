@@ -20,6 +20,7 @@ import { HttpClientModule } from '@angular/common/http';
 import {MatDialogModule} from '@angular/material/dialog';
 import { BiometriaDialogComponent } from './components/biometria-dialog/biometria-dialog.component';
 import { ToastrModule } from 'ngx-toastr';
+import { EntradaEstoqueComponent } from './components/entrada-estoque/entrada-estoque.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ToastrModule } from 'ngx-toastr';
     MenuTelasComponent,
     PrincipalComponent,
     UsuarioTelaComponent,
-    BiometriaDialogComponent
+    BiometriaDialogComponent,
+    EntradaEstoqueComponent
   ],
   imports: [
     BrowserModule,

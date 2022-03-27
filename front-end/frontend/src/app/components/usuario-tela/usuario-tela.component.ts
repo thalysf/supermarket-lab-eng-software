@@ -123,7 +123,7 @@ export class UsuarioTelaComponent implements AfterViewInit  {
     
     this.cpf = usuario.cpf;
     this.nome = usuario.nome;
-    this.telasSelecionadas = usuario.acessos;
+    this.telasSelecionadas = usuario.telas;
   }
 
   nomesTelasPorUsuario(usuario: any){

@@ -1,0 +1,51 @@
+<mat-card class="telaMatCard">
+    <mat-card-title class="tituloTela">Entrada de Estoque</mat-card-title>
+    <form style="margin-top: 30px;" (keyup.enter)="inserir()">
+    
+        <mat-form-field class="campo espacamentoCampos">
+            <input matInput placeholder="Código"
+            [(ngModel)] = "codigoBarras" name="codigoBarras" type="text"
+            style="margin-left: 4px;"> 
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" class="botaoPequeno"
+        (click)="inserir()">
+            +
+        </button>
+        <button mat-raised-button color="primary" class="botaoPequeno"
+        (click)="limpar()">
+            -
+        </button>
+        <button mat-raised-button color="primary" class="botaoPequeno"
+        (click)="salvar()">
+            -
+        </button>
+
+    </form>
+
+    <div class="mat-elevation-z2" style="margin-top: 30px;">
+        <table mat-table [dataSource]="dataSource" style="width: 100%;">
+
+          <!-- Nome Produto -->
+          <ng-container matColumnDef="nome">
+            <th mat-header-cell *matHeaderCellDef> Nome </th>
+            <td mat-cell *matCellDef="let produto" > {{produto.nome}} </td>
+          </ng-container>
+
+          <!-- Quantidade -->
+          <ng-container matColumnDef="quantidade">
+              <th mat-header-cell *matHeaderCellDef> Quantidade </th>
+              <td mat-cell *matCellDef="let produto" > {{produto.quantidade}} </td>
+            </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+
+
+        <mat-paginator [pageSizeOptions]="[5, 10, 20]"
+                       showFirstLastButtons 
+                       aria-label="Select page of periodic blocos">
+        </mat-paginator>
+      </div>
+</mat-card>

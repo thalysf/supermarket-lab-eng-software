@@ -1,3 +1,4 @@
+import { EntradaEstoqueComponent } from './components/entrada-estoque/entrada-estoque.component';
 import { UsuarioTelaComponent } from './components/usuario-tela/usuario-tela.component';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
@@ -6,6 +7,10 @@ const routes: Routes = [
   {
     path: "usuario-tela",
     component: UsuarioTelaComponent
+  },
+  {
+    path: "entrada-estoque",
+    component: EntradaEstoqueComponent
   }
 ];
 
