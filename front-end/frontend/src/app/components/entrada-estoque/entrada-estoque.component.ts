@@ -10,7 +10,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
   styleUrls: ['./entrada-estoque.component.css']
 })
 export class EntradaEstoqueComponent implements AfterViewInit {
-
+  
   codigoBarras:string = "";
   produtos:Produto[] = [];
 

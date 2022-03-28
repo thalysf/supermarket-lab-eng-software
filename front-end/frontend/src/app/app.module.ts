@@ -9,18 +9,22 @@ import { MenuTelasComponent } from './home/menu-telas/menu-telas.component';
 import { PrincipalComponent } from './home/principal/principal.component';
 import { UsuarioTelaComponent } from './components/usuario-tela/usuario-tela.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import {MatCardModule} from '@angular/material/card';
-import {MatFormFieldModule} from '@angular/material/form-field';
+import { MatCardModule } from '@angular/material/card';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import {MatButtonModule} from '@angular/material/button';
-import {MatTableModule} from '@angular/material/table';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
-import {NgMultiSelectDropDownModule} from 'ng-multiselect-dropdown'
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown'
 import { HttpClientModule } from '@angular/common/http';
-import {MatDialogModule} from '@angular/material/dialog';
+import { MatDialogModule } from '@angular/material/dialog';
 import { BiometriaDialogComponent } from './components/biometria-dialog/biometria-dialog.component';
 import { ToastrModule } from 'ngx-toastr';
 import { EntradaEstoqueComponent } from './components/entrada-estoque/entrada-estoque.component';
+import { CadastroProdutoComponent } from './components/cadastro-produto/cadastro-produto.component';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatRadioModule } from '@angular/material/radio';
+
 
 @NgModule({
   declarations: [
@@ -30,9 +34,12 @@ import { EntradaEstoqueComponent } from './components/entrada-estoque/entrada-es
     PrincipalComponent,
     UsuarioTelaComponent,
     BiometriaDialogComponent,
-    EntradaEstoqueComponent
+    EntradaEstoqueComponent,
+    CadastroProdutoComponent
   ],
   imports: [
+    MatRadioModule,
+    MatToolbarModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
