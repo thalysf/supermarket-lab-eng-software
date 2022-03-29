@@ -33,7 +33,7 @@ public class ProdutoController {
 
     @DeleteMapping("/{rfid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarProduto(@PathVariable @NotEmpty String rfid) {
+    public void deletarProduto(@PathVariable String rfid) {
         produtoService.deletarProduto(rfid);
     }
 
