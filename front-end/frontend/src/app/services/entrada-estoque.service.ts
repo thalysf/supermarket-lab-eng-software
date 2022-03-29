@@ -8,15 +8,19 @@ import { Injectable } from '@angular/core';
 })
 export class EntradaEstoqueService {
 
-  urlProdutos:string = "http://localhost:8082/produtos";
+  urlProdutos:string = "http://localhost:8082/estoques";
 
   constructor(private http: HttpClient) { }
 
   carregarProduto(codBarras:string):Observable<Produto>{
-    return this.http.get<Produto>(this.urlProdutos + '/' + codBarras);
+    return this.http.get<Produto>(this.urlProdutos + '/codigo_barras/' + codBarras);
   }
 
   atualizarProduto(produto:Produto){
-    return this.http.put<Produto>(this.urlProdutos, produto);
+    const estoque = {
+      codigo_barras: produto.codigo_barras,
+      qtd_estoque: produto.qtd_estoque
+    }
+    return this.http.put<Produto>(this.urlProdutos, estoque);
   }
 }

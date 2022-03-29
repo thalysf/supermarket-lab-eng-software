@@ -9,5 +9,5 @@ export interface Produto {
     categoria?:string,
     setor?:string,
     RFID?:string,
-    quantidade:number
+    qtd_estoque:number
 }
