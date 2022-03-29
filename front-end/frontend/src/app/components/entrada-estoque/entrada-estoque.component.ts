@@ -30,11 +30,19 @@ export class EntradaEstoqueComponent implements AfterViewInit {
   }
 
   inserir(){
-    // PEGA PRODUTO NO BANCO
     if(this.codigoBarras != ""){
       this.entradaEstoqueService.carregarProduto(this.codigoBarras).subscribe(
         data=> this.atualizarProduto(data),
         error=>this.toastr.error('Não foi possível Adicionar o Produto')
+      )
+    }
+  }
+
+  retirar(){
+    if(this.codigoBarras != ""){
+      this.entradaEstoqueService.carregarProduto(this.codigoBarras).subscribe(
+        data=> this.retirarProduto(data),
+        error=>this.toastr.error('Não foi possível Remover o Produto')
       )
     }
   }
@@ -47,10 +55,6 @@ export class EntradaEstoqueComponent implements AfterViewInit {
         return;
       }
     }
-    produto.qtd_estoque += 1;
-    this.produtos.push(produto);
-    this.dataSource.data =this.produtos; 
-    this.codigoBarras = "";
   }
 
   salvar(){
@@ -73,7 +77,13 @@ export class EntradaEstoqueComponent implements AfterViewInit {
     this.dataSource.data = this.produtos;
   }
 
-  limpar(){
-    this.codigoBarras = "";
+  retirarProduto(produto:any){
+    for(var p of this.produtos){
+      if(p.codigo_barras === this.codigoBarras && p.qtd_estoque > 0){
+        p.qtd_estoque -= 1;
+        this.codigoBarras = "";
+        return;
+      }
+    }
   }
 }
