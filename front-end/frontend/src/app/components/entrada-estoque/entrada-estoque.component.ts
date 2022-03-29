@@ -1,3 +1,5 @@
+import { CadastroProdutoService } from './../../services/cadastro-produto.service';
+import { ToastrService } from 'ngx-toastr';
 import { EntradaEstoqueService } from './../../services/entrada-estoque.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -16,47 +18,72 @@ export class EntradaEstoqueComponent implements AfterViewInit {
 
   displayedColumns: string[] = ['nome', 'quantidade'];
 
-  produtoTeste:Produto = {
-    codigo_barras: '7896359036844',
-    quantidade: 1,
-    nome: 'vrau'
-  };
-
   dataSource = new MatTableDataSource<Produto>(this.produtos);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor( public entradaEstoqueService:EntradaEstoqueService ) { }
+  constructor( public entradaEstoqueService:EntradaEstoqueService, private toastr:ToastrService, public cadastroProdutoService: CadastroProdutoService) { }
 
  
   ngAfterViewInit() : void {
     this.dataSource.paginator = this.paginator;
+    this.carregar();
   }
 
   inserir(){
-
-    // PEGA PRODUTO NO BANCO
-
     if(this.codigoBarras != ""){
-      for(var p of this.produtos){
-        if(p.codigo_barras === this.codigoBarras){
-          p.quantidade += 1;
-          this.codigoBarras = "";
-          return;
-        }
+      this.entradaEstoqueService.carregarProduto(this.codigoBarras).subscribe(
+        data=> this.atualizarProduto(data),
+        error=>this.toastr.error('Não foi possível Adicionar o Produto')
+      )
+    }
+  }
+
+  retirar(){
+    if(this.codigoBarras != ""){
+      this.entradaEstoqueService.carregarProduto(this.codigoBarras).subscribe(
+        data=> this.retirarProduto(data),
+        error=>this.toastr.error('Não foi possível Remover o Produto')
+      )
+    }
+  }
+
+  atualizarProduto(produto:any){
+    for(var p of this.produtos){
+      if(p.codigo_barras === this.codigoBarras){
+        p.qtd_estoque += 1;
+        this.codigoBarras = "";
+        return;
       }
-      this.produtos.push(this.produtoTeste);
-      this.dataSource.data =this.produtos; 
-      this.codigoBarras = "";
     }
   }
 
   salvar(){
     for(var p of this.produtos){
-      this.entradaEstoqueService.atualizarProduto(p);
+      this.entradaEstoqueService.atualizarProduto(p).subscribe(
+        data=> this.toastr.success('Operação feita'),
+        error=>this.toastr.error('Não foi possível Salvar os Produtos')
+      )
     }
   }
 
-  limpar(){
-    this.codigoBarras = "";
+  carregar(){
+    this.cadastroProdutoService.carregarProduto().subscribe((produtos: Produto[]) =>
+      this.carregarListaProdutos(produtos)
+    )
+  }
+
+  carregarListaProdutos(produtos: Produto[]): void {
+    this.produtos = produtos;
+    this.dataSource.data = this.produtos;
+  }
+
+  retirarProduto(produto:any){
+    for(var p of this.produtos){
+      if(p.codigo_barras === this.codigoBarras && p.qtd_estoque > 0){
+        p.qtd_estoque -= 1;
+        this.codigoBarras = "";
+        return;
+      }
+    }
   }
 }
