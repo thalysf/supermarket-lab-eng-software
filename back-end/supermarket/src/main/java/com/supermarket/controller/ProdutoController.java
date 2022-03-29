@@ -21,19 +21,19 @@ public class ProdutoController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrarProduto(@Valid @RequestBody ProdutoDto produtoDto) {
+    public void cadastrarProduto(@RequestBody ProdutoDto produtoDto) {
         produtoService.cadastrarProduto(produtoDto);
     }
 
     @PutMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void atualizarProduto(@Valid @RequestBody ProdutoDto produtoDto) {
+    public void atualizarProduto(@RequestBody ProdutoDto produtoDto) {
         produtoService.atualizarProduto(produtoDto);
     }
 
     @DeleteMapping("/{rfid}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarProduto(@PathVariable @NotEmpty String rfid) {
+    public void deletarProduto(@PathVariable String rfid) {
         produtoService.deletarProduto(rfid);
     }
 
