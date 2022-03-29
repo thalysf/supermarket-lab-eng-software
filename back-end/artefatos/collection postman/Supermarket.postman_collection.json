@@ -149,6 +149,127 @@
 					"response": []
 				}
 			]
+		},
+		{
+			"name": "produtos",
+			"item": [
+				{
+					"name": "Criar Produto",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Azeite\",\r\n    \"preco_compra\": 5.2,\r\n    \"preco_venda\": 9.6,\r\n    \"imagem\": [83, 97, 105, 102, 32, 115, 97, 121, 115, 32, 104, 101, 108, 108, 111],\r\n    \"codigo_barras\": \"568754456745\",\r\n    \"fracionado\": false,\r\n    \"setor\": \"CAFETERIA\",\r\n    \"rfid\": \"555444123456789012332221\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Produto",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"Azeite\",\r\n    \"preco_compra\": 6.2,\r\n    \"preco_venda\": 10.6,\r\n    \"imagem\": [83, 97, 105, 102, 32, 115, 97, 121, 115, 32, 104, 101, 108, 108, 111],\r\n    \"codigo_barras\": \"568754456745\",\r\n    \"fracionado\": false,\r\n    \"setor\": \"CAFETERIA\",\r\n    \"rfid\": \"555444123456789012332221\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Produto",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"joao\",\r\n    \"cpf\": \"75538833011\",\r\n    \"biometria\": \"\",\r\n    \"telas\": {\r\n        \"id_tela\": \"1\",\r\n        \"nome\": \"CAIXA\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/produtos/555444123456789012332221",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos",
+								"555444123456789012332221"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar todos Produtos",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"nome\": \"joao\",\r\n    \"cpf\": \"75538833011\",\r\n    \"biometria\": \"\",\r\n    \"telas\": {\r\n        \"id_tela\": \"1\",\r\n        \"nome\": \"CAIXA\"\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/produtos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"produtos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }
