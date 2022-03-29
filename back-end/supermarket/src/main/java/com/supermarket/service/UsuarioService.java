@@ -24,7 +24,7 @@ public class UsuarioService {
 
     public void cadastrarUsuario(UsuarioDto usuarioDto) {
         usuarioRepository.findById(usuarioDto.getCpf()).ifPresent(u -> {
-            throw new EntityExistsException();
+             throw new RegraNegocioException("Usuário já cadastrado!");
         });
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
         usuarioRepository.save(usuario);
