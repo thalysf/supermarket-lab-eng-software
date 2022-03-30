@@ -24,6 +24,7 @@ import { EntradaEstoqueComponent } from './components/entrada-estoque/entrada-es
 import { CadastroProdutoComponent } from './components/cadastro-produto/cadastro-produto.component';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 
 
 @NgModule({
@@ -53,7 +54,8 @@ import { MatRadioModule } from '@angular/material/radio';
     NgMultiSelectDropDownModule.forRoot(),
     HttpClientModule,
     MatDialogModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MatCheckboxModule
   ],
   providers: [],
   bootstrap: [AppComponent]

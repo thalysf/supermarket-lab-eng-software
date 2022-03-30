@@ -41,7 +41,7 @@ public class ProdutoService {
 
     public void atualizarEstoque(EstoqueDTO estoqueDTO) {
         Produto produto = produtoRepository.findByCodigoBarras(estoqueDTO.getCodigoBarras()).orElseThrow(() -> new RegraNegocioException("Código de barras do produto não encontrado!"));
-        produto.setQtdEstoque(produto.getQtdEstoque() + estoqueDTO.getQtdEstoque());
+        produto.setQtdEstoque(estoqueDTO.getQtdEstoque());
         produtoRepository.save(produto);
     }
 

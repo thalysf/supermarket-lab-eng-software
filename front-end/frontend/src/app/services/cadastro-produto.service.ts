@@ -18,12 +18,16 @@ export class CadastroProdutoService {
     return this.http.post<Produto>(this.urlProdutos, produto);
   }
 
+  atualizarProduto(produto:Produto){
+    return this.http.put<Produto>(this.urlProdutos, produto);
+  }
+
   carregarProduto():Observable<Produto[]>{
     return this.http.get<Produto[]>(this.urlProdutos);
   }
 
-  deletarProduto(produto:Produto){
-    return this.http.delete<Produto>(this.urlProdutos);
+  deletarProduto(rfid:any){
+    return this.http.delete<Produto>(this.urlProdutos + "/" + rfid);
   }
 }
 

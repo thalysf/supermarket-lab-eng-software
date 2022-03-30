@@ -8,6 +8,6 @@ export interface Produto {
     fracionado?:boolean,
     categoria?:string,
     setor?:string,
-    RFID?:string,
+    rfid?:string,
     qtd_estoque:number
 }
