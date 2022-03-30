@@ -1,3 +1,5 @@
+import { Byte } from "@angular/compiler/src/util";
+
 export interface Produto {
 
     codigo_barras:string,

@@ -47,7 +47,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   ngOnInit(): void {
   }
 
-  cadastrar() {
+  async cadastrar() {
     const produto: Produto = {
       nome: this.nome,
       preco_venda: this.precoVenda,
@@ -60,11 +60,17 @@ export class CadastroProdutoComponent implements AfterViewInit {
       rfid: this.rfid,
     }
 
+    const buffer = await this.base64ToByteArray(this.imagem)
+    produto.imagem = new Int8Array(buffer)
+    console.log(produto.imagem)
+
     this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
       data => this.carregarProduto(),
       error => this.toastr.error('Não foi possível Cadastrar o Produto')
     );
   }
+
+
 
   atualizar() {
     const produto: Produto = {
@@ -119,7 +125,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
   }
 
   produtoFunc(produto: Produto[]): Produto[] {
-    console.log(produto);
     return produto
   }
 
@@ -136,7 +141,11 @@ export class CadastroProdutoComponent implements AfterViewInit {
     reader.readAsDataURL(this.fileSelected as Blob);
     reader.onloadend = () =>{
       this.imagem = reader.result as string;
-      console.log(this.imagem);
     }
+  }
+
+  async base64ToByteArray(base64String: any) {
+    const blob = await fetch(base64String).then(res => res.blob())
+    return  await new Response(blob).arrayBuffer();
   }
 }

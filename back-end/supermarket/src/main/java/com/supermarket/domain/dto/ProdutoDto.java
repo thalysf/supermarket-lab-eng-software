@@ -30,7 +30,7 @@ public class ProdutoDto {
     private Double precoVenda;
 
     @NotNull
-    private byte[] imagem;
+    private Byte[] imagem;
 
     @NotEmpty
     @Max(50)
