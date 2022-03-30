@@ -21,7 +21,7 @@ public class ProdutoService {
 
     public void cadastrarProduto(ProdutoDto produtoDto) {
         produtoRepository.findById(produtoDto.getRfid()).ifPresent(u -> {
-            throw new RegraNegocioException("Produto não encontrado!");
+            throw new RegraNegocioException("Produto já cadastrado!");
         });
 
         Produto produto = produtoMapper.produtoDtoToProduto(produtoDto);

@@ -3,6 +3,7 @@ package com.supermarket.service;
 import com.supermarket.domain.dto.UsuarioDto;
 import com.supermarket.domain.entity.Usuario;
 import com.supermarket.domain.mapper.UsuarioMapper;
+import com.supermarket.exception.RegraNegocioException;
 import com.supermarket.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,14 +24,14 @@ public class UsuarioService {
 
     public void cadastrarUsuario(UsuarioDto usuarioDto) {
         usuarioRepository.findById(usuarioDto.getCpf()).ifPresent(u -> {
-            throw new EntityExistsException();
+             throw new RegraNegocioException("Usuário já cadastrado!");
         });
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
         usuarioRepository.save(usuario);
     }
 
     public void atualizarUsuario(UsuarioDto usuarioDto) {
-        usuarioRepository.findById(usuarioDto.getCpf()).orElseThrow(EntityNotFoundException::new);
+        usuarioRepository.findById(usuarioDto.getCpf()).orElseThrow(() -> new RegraNegocioException("Usuário não encontrado!"));
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
         usuarioRepository.save(usuario);
     }
