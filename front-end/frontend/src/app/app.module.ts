@@ -25,6 +25,7 @@ import { CadastroProdutoComponent } from './components/cadastro-produto/cadastro
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
     HttpClientModule,
     MatDialogModule,
     ToastrModule.forRoot(),
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatSelectModule 
   ],
   providers: [],
   bootstrap: [AppComponent]

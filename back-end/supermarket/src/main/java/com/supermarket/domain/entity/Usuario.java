@@ -27,8 +27,9 @@ public class Usuario implements Serializable {
     @Column(name = "cpf", nullable = false, length = 11)
     private String cpf;
 
-    @Column(name = "biometria", nullable = true)
-    private byte[] biometria;
+    @Lob
+    @Column(name = "biometria")
+    private String biometria;
 
     @ManyToMany
     @JoinTable(name = "usuario_tela", joinColumns = {@JoinColumn(name = "cpf")}, inverseJoinColumns = {@JoinColumn(name = "idTela")})

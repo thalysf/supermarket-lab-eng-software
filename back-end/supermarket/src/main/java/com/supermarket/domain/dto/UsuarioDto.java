@@ -29,7 +29,7 @@ public class UsuarioDto implements Serializable {
     private String cpf;
 
 
-    private byte[] biometria;
+    private String biometria;
 
     private Set<TelaDto> telas;
 

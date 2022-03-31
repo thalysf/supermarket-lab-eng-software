@@ -6,7 +6,6 @@ import { CadastroProdutoService } from 'src/app/services/cadastro-produto.servic
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
 
 
 
@@ -17,7 +16,7 @@ import { Observable } from 'rxjs';
 })
 export class CadastroProdutoComponent implements AfterViewInit {
 
-
+  setores = ['CAFETERIA', 'SUPERMERCADO']
   nome: string = "";
   precoVenda: number = 0;
   precoCompra: number = 0;
@@ -32,7 +31,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   fileSelected?:Blob;
   imageUrl?:string;
 
-  displayedColumns: string[] = ['nome', 'preco_compra', 'preco_venda', 'codigo_barras', 'RFID', 'quantidade', 'fracionado', 'imagem', 'acao'];
+  displayedColumns: string[] = ['nome', 'preco_compra', 'preco_venda', 'codigo_barras', 'RFID', 'quantidade', 'fracionado', 'setor', 'imagem', 'acao'];
 
   dataSource = new MatTableDataSource<Produto>(this.produtos);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
