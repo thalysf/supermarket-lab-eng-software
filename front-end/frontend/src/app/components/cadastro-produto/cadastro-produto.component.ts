@@ -52,7 +52,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       nome: this.nome,
       preco_venda: this.precoVenda,
       preco_compra: this.precoCompra,
-      imagem: [],
+      imagem: this.imagem,
       fracionado: this.fracionado,
       codigo_barras: this.codigoBarras,
       qtd_estoque: this.qtdEstoque,
@@ -60,9 +60,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       rfid: this.rfid,
     }
 
-    const buffer = await this.base64ToByteArray(this.imagem)
-    produto.imagem = new Int8Array(buffer)
-    console.log(produto.imagem)
+    console.log(this.imagem);
 
     this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
       data => this.carregarProduto(),
@@ -77,7 +75,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       nome: this.nome,
       preco_venda: this.precoVenda,
       preco_compra: this.precoCompra,
-      imagem: [],
+      imagem: this.imagem,
       fracionado: this.fracionado,
       codigo_barras: this.codigoBarras,
       qtd_estoque: this.qtdEstoque,

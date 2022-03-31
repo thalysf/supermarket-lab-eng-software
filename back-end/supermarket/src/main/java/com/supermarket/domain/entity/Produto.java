@@ -24,8 +24,9 @@ public class Produto {
     @Column(name = "preco_venda", nullable = false)
     private Double precoVenda;
 
+    @Lob
     @Column(name = "imagem", nullable = false)
-    private byte[] imagem;
+    private String imagem;
 
     @Column(name = "codigo_barras", nullable = false, length = 50, unique = true)
     private String codigoBarras;
