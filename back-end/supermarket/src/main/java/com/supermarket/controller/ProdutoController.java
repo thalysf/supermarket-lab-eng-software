@@ -15,7 +15,6 @@ import java.util.Set;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/produtos")
-@Validated
 public class ProdutoController {
     private final ProdutoService produtoService;
 

@@ -6,6 +6,7 @@ import { CadastroProdutoService } from 'src/app/services/cadastro-produto.servic
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
 
 
 
@@ -31,7 +32,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   fileSelected?:Blob;
   imageUrl?:string;
 
-  displayedColumns: string[] = ['nome', 'preco_compra', 'preco_venda', 'codigo_barras', 'RFID', 'quantidade', 'fracionado', 'acao'];
+  displayedColumns: string[] = ['nome', 'preco_compra', 'preco_venda', 'codigo_barras', 'RFID', 'quantidade', 'fracionado', 'imagem', 'acao'];
 
   dataSource = new MatTableDataSource<Produto>(this.produtos);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -142,8 +143,21 @@ export class CadastroProdutoComponent implements AfterViewInit {
     }
   }
 
-  async base64ToByteArray(base64String: any) {
-    const blob = await fetch(base64String).then(res => res.blob())
-    return  await new Response(blob).arrayBuffer();
+  expandeImagem(id: any){
+    console.log(id)
+    let img  = document.getElementById(id)
+    if(img){
+      img.style.transform = "scale(2)";
+      img.style.transition = "transform 0.25s ease";
+      img.style.zIndex = '2'
+    }
+  }
+  diminuiImagem(id: any){
+    let img  = document.getElementById(id)
+    if(img){
+      img.style.transform = "scale(1)";
+      img.style.transition = "transform 0.25s ease";
+      img.style.zIndex = '1'
+    }
   }
 }
