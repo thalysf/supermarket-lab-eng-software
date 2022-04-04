@@ -1,5 +1,6 @@
 package com.supermarket.domain.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.AllArgsConstructor;
@@ -23,11 +24,9 @@ public class UsuarioDto implements Serializable {
     @Size(max = 50)
     private String nome;
 
-
     @NotEmpty
     @Size(min = 11, max = 11)
     private String cpf;
-
 
     private String biometria;
 

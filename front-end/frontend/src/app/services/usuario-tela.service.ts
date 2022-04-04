@@ -4,14 +4,15 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { map, catchError } from 'rxjs/operators';
+import {Router} from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioTelaService {
 
-  urlTela:string = "http://localhost:8082/telas";
-  urlUsuario:string = "http://localhost:8082/usuarios";
+  urlTela:string = "http://localhost:8080/telas";
+  urlUsuario:string = "http://localhost:8080/usuarios";
 
   constructor(private http: HttpClient) { }
 

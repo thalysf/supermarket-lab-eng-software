@@ -6,6 +6,7 @@ import { CadastroProdutoService } from 'src/app/services/cadastro-produto.servic
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
+import {Router} from "@angular/router";
 
 
 
@@ -36,8 +37,9 @@ export class CadastroProdutoComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<Produto>(this.produtos);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(public dialog: MatDialog, public cadastroProdutoService: CadastroProdutoService, 
-    private toastr: ToastrService, private sant:DomSanitizer) {
+  constructor(public dialog: MatDialog, public cadastroProdutoService: CadastroProdutoService,
+    private toastr: ToastrService, private sant:DomSanitizer, private router: Router) {
+    this.veririficarUsuario('PRODUTO');
     this.carregarProduto();
   }
   ngAfterViewInit(): void {
@@ -130,7 +132,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
     const target = event.target as HTMLInputElement;
     this.fileSelected = target!.files![0];
     this.imageUrl = this.sant.bypassSecurityTrustUrl(window.URL.createObjectURL(this.fileSelected)) as string
-  
+
     this.convertFileToBase64();
   }
 
@@ -158,5 +160,21 @@ export class CadastroProdutoComponent implements AfterViewInit {
       img.style.transition = "transform 0.25s ease";
       img.style.zIndex = '1'
     }
+  }
+
+
+  veririficarUsuario(tela: string) {
+    if(localStorage.getItem('usuario')) {
+      let usuario = JSON.parse(localStorage.getItem('usuario') || '');
+      for(let i = 0; i < usuario.telas.length; i++ ) {
+        if(usuario.telas[i].nome === tela) {
+          return;
+        }
+      }
+      return this.router.navigate(['/home']);
+    }
+
+    return this.router.navigate(['/login']);
+
   }
 }

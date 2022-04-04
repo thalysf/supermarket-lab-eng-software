@@ -10,4 +10,6 @@ import java.util.Set;
 public interface UsuarioRepository extends CrudRepository<Usuario, String> {
     @Override
     Set<Usuario> findAll();
+
+    Usuario findByCpf(String cpf);
 }

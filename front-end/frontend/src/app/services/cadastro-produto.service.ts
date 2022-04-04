@@ -9,8 +9,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CadastroProdutoService {
-  
-  urlProdutos:string = "http://localhost:8082/produtos";
+
+  urlProdutos:string = "http://localhost:8080/produtos";
 
   constructor(private http: HttpClient) { }
 

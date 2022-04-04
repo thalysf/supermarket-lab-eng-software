@@ -24,14 +24,14 @@ public class Usuario implements Serializable {
 
     @NotNull
     @Id
-    @Column(name = "cpf", nullable = false, length = 11)
+    @Column(name = "cpf", nullable = false, unique = true, length = 11)
     private String cpf;
 
     @Lob
     @Column(name = "biometria")
     private String biometria;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "usuario_tela", joinColumns = {@JoinColumn(name = "cpf")}, inverseJoinColumns = {@JoinColumn(name = "idTela")})
     private Set<Tela> telas;
 

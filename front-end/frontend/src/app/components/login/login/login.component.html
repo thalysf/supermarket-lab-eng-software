@@ -1,0 +1,20 @@
+<form [formGroup]="formulario">
+  <mat-card class="card">
+
+    <div class="input">
+      <mat-form-field>
+        <input formControlName="cpf" matInput placeholder="CPF">
+      </mat-form-field>
+    </div>
+
+    <div class="botao">
+      <button mat-raised-button color="primary" (click)="verificarUsuario()">
+        Login
+      </button>
+    </div>
+
+  </mat-card>
+
+</form>
+
+

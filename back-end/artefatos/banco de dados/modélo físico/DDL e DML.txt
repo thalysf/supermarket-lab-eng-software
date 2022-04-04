@@ -24,4 +24,4 @@ VALUES
 (2, 'CAFETERIA'),
 (3, 'ESTOQUE'),
 (4, 'USUARIO'),
-(5, 'PRESENTES')
+(5, 'PRODUTO')

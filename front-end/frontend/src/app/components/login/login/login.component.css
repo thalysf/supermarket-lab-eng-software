@@ -1,0 +1,13 @@
+.card {
+  width: 200px;
+  margin: 0 auto;
+}
+
+.input {
+  text-align: center;
+}
+
+.botao {
+  display: flex;
+  justify-content: flex-end;
+}

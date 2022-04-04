@@ -5,6 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { Produto } from './../../entity/Produto';
 import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-entrada-estoque',
@@ -12,7 +13,7 @@ import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
   styleUrls: ['./entrada-estoque.component.css']
 })
 export class EntradaEstoqueComponent implements AfterViewInit {
-  
+
   codigoBarras:string = "";
   produtos:Produto[] = [];
 
@@ -21,9 +22,11 @@ export class EntradaEstoqueComponent implements AfterViewInit {
   dataSource = new MatTableDataSource<Produto>(this.produtos);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor( public entradaEstoqueService:EntradaEstoqueService, private toastr:ToastrService, public cadastroProdutoService: CadastroProdutoService) { }
+  constructor( public entradaEstoqueService:EntradaEstoqueService, private toastr:ToastrService, public cadastroProdutoService: CadastroProdutoService, private router: Router) {
+    this.veririficarUsuario('ESTOQUE');
+  }
 
- 
+
   ngAfterViewInit() : void {
     this.dataSource.paginator = this.paginator;
     this.carregar();
@@ -85,5 +88,21 @@ export class EntradaEstoqueComponent implements AfterViewInit {
         return;
       }
     }
+  }
+
+  veririficarUsuario(tela: string) {
+    if(localStorage.getItem('usuario')) {
+      let usuario = JSON.parse(localStorage.getItem('usuario') || '');
+
+      for(let i = 0; i < usuario.telas.length; i++ ) {
+        if(usuario.telas[i].nome === tela) {
+          return;
+        }
+      }
+      return this.router.navigate(['/home']);
+    }
+
+    return this.router.navigate(['/login']);
+
   }
 }

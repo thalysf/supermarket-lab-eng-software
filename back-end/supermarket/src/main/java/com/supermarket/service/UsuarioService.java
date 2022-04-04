@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -38,6 +39,14 @@ public class UsuarioService {
 
     public void deletarUsuario(String cpf) {
         usuarioRepository.deleteById(cpf);
+    }
+
+    public UsuarioDto buscarUsuario(String cpf) {
+        Usuario usuario = usuarioRepository.findByCpf(cpf);
+        if(Objects.isNull(usuario)) {
+            throw new RegraNegocioException("Usuário não encontrado!");
+        }
+        return usuarioMapper.usuarioDtoToUsuario(usuario);
     }
 
     public Set<UsuarioDto> listarUsuarios() {

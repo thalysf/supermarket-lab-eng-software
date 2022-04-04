@@ -26,6 +26,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatRadioModule } from '@angular/material/radio';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
+import { LoginComponent } from './components/login/login/login.component';
+import { HomeComponent } from './components/home/home/home.component';
 
 
 @NgModule({
@@ -37,7 +39,9 @@ import { MatSelectModule } from '@angular/material/select';
     UsuarioTelaComponent,
     BiometriaDialogComponent,
     EntradaEstoqueComponent,
-    CadastroProdutoComponent
+    CadastroProdutoComponent,
+    LoginComponent,
+    HomeComponent
   ],
   imports: [
     MatRadioModule,

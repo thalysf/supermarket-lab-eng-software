@@ -38,9 +38,16 @@ public class UsuarioController {
         usuarioService.deletarUsuario(cpf);
     }
 
+    @GetMapping("{cpf}")
+    @ResponseStatus(HttpStatus.OK)
+    public UsuarioDto buscarUsuario(@PathVariable String cpf) {
+        return usuarioService.buscarUsuario(cpf);
+    }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public Set<UsuarioDto> listarUsuarios() {
         return usuarioService.listarUsuarios();
     }
+
 }

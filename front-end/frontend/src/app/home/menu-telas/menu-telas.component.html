@@ -1,5 +1,5 @@
 <div class="faixa">
-    <button routerLink="/usuario-tela" class="primeiroBotao">USUÁRIOS</button>
-    <button routerLink="/cadastro-produto" class="segundoBotao">CADASTRAR PRODUTO</button>
-    <button routerLink="/entrada-estoque" class="primeiroBotao">ENTRADA ESTOQUE</button>
+    <button routerLink="/usuario-tela" *ngIf="veririficarUsuario('USUARIO')" class="primeiroBotao">USUÁRIOS</button>
+    <button routerLink="/cadastro-produto" *ngIf="veririficarUsuario('PRODUTO')" class="segundoBotao">CADASTRAR PRODUTO</button>
+    <button routerLink="/entrada-estoque" *ngIf="veririficarUsuario('ESTOQUE')" class="primeiroBotao">ENTRADA ESTOQUE</button>
 </div>
