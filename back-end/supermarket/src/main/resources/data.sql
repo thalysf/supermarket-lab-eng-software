@@ -1,0 +1,7 @@
+INSERT INTO tela
+VALUES
+(1, 'CAIXA'),
+(2, 'CAFETERIA'),
+(3, 'ESTOQUE'),
+(4, 'USUARIO'),
+(5, 'PRODUTO');
