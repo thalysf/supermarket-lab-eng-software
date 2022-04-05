@@ -1,6 +1,6 @@
 .card {
   width: 200px;
-  margin: 0 auto;
+  margin: 10px auto;
 }
 
 .input {
@@ -11,3 +11,4 @@
   display: flex;
   justify-content: flex-end;
 }
+
