@@ -1,3 +1,4 @@
+import { Observable } from 'rxjs';
 import { Produto } from './../../entity/Produto';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -176,5 +177,50 @@ export class CadastroProdutoComponent implements AfterViewInit {
 
     return this.router.navigate(['/login']);
 
+  }
+
+  async readerRfid(): Promise<any>{
+    console.log("iniciando leitura")
+    let navegador: any;
+
+    navegador = window.navigator;
+    
+    if (navegador && navegador.serial) {
+      const porta = await navegador.serial.requestPort();
+      
+      await porta.open({ baudRate: 57600 });
+      console.log(porta)
+
+      while (porta.readable) {
+        const reader = porta.readable.getReader();
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) {
+              // |reader| has been canceled.
+              break;
+            }
+            console.log("valor lido:")
+            console.log(buf2hex(value))
+            // Do something with |value|...
+          }
+        } catch (error) {
+          // Handle |error|...
+        } finally {
+          reader.releaseLock();
+        }
+      }
+
+      
+    } else {
+      console.log("Navegador não suporta leitura serial")
+    }
+
+    function buf2hex(buffer: any) 
+    { // buffer is an ArrayBuffer
+      return [...new Uint8Array(buffer)]
+          .map(x => x.toString(16).padStart(2, '0'))
+          .join('');
+    }
   }
 }
