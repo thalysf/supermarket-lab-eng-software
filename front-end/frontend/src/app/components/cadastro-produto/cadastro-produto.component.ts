@@ -7,7 +7,7 @@ import { CadastroProdutoService } from 'src/app/services/cadastro-produto.servic
 import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
-import {Router} from "@angular/router";
+import { Router } from "@angular/router";
 
 
 
@@ -30,8 +30,8 @@ export class CadastroProdutoComponent implements AfterViewInit {
   rfid: string = "";
   produtos: Produto[] = [];
 
-  fileSelected?:Blob;
-  imageUrl?:string;
+  fileSelected?: Blob;
+  imageUrl?: string;
 
   displayedColumns: string[] = ['nome', 'preco_compra', 'preco_venda', 'codigo_barras', 'RFID', 'quantidade', 'fracionado', 'setor', 'imagem', 'acao'];
 
@@ -39,7 +39,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   constructor(public dialog: MatDialog, public cadastroProdutoService: CadastroProdutoService,
-    private toastr: ToastrService, private sant:DomSanitizer, private router: Router) {
+    private toastr: ToastrService, private sant: DomSanitizer, private router: Router) {
     this.veririficarUsuario('PRODUTO');
     this.carregarProduto();
   }
@@ -92,7 +92,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
 
   }
 
-  deletar(produto:any) {
+  deletar(produto: any) {
     this.cadastroProdutoService.deletarProduto(produto.rfid).subscribe(
       data => this.carregarProduto(),
       error => this.toastr.error('Não foi possível Excluir o Produto')
@@ -129,7 +129,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
     return produto
   }
 
-  onSelectNewImage(event:any){
+  onSelectNewImage(event: any) {
     const target = event.target as HTMLInputElement;
     this.fileSelected = target!.files![0];
     this.imageUrl = this.sant.bypassSecurityTrustUrl(window.URL.createObjectURL(this.fileSelected)) as string
@@ -137,26 +137,26 @@ export class CadastroProdutoComponent implements AfterViewInit {
     this.convertFileToBase64();
   }
 
-  convertFileToBase64(){
-    let reader=new FileReader();
+  convertFileToBase64() {
+    let reader = new FileReader();
     reader.readAsDataURL(this.fileSelected as Blob);
-    reader.onloadend = () =>{
+    reader.onloadend = () => {
       this.imagem = reader.result as string;
     }
   }
 
-  expandeImagem(id: any){
+  expandeImagem(id: any) {
     console.log(id)
-    let img  = document.getElementById(id)
-    if(img){
+    let img = document.getElementById(id)
+    if (img) {
       img.style.transform = "scale(2)";
       img.style.transition = "transform 0.25s ease";
       img.style.zIndex = '2'
     }
   }
-  diminuiImagem(id: any){
-    let img  = document.getElementById(id)
-    if(img){
+  diminuiImagem(id: any) {
+    let img = document.getElementById(id)
+    if (img) {
       img.style.transform = "scale(1)";
       img.style.transition = "transform 0.25s ease";
       img.style.zIndex = '1'
@@ -165,10 +165,10 @@ export class CadastroProdutoComponent implements AfterViewInit {
 
 
   veririficarUsuario(tela: string) {
-    if(localStorage.getItem('usuario')) {
+    if (localStorage.getItem('usuario')) {
       let usuario = JSON.parse(localStorage.getItem('usuario') || '');
-      for(let i = 0; i < usuario.telas.length; i++ ) {
-        if(usuario.telas[i].nome === tela) {
+      for (let i = 0; i < usuario.telas.length; i++) {
+        if (usuario.telas[i].nome === tela) {
           return;
         }
       }
@@ -179,15 +179,15 @@ export class CadastroProdutoComponent implements AfterViewInit {
 
   }
 
-  async readerRfid(): Promise<any>{
+  async readerRfid(): Promise<any> {
     console.log("iniciando leitura")
     let navegador: any;
 
     navegador = window.navigator;
-    
+
     if (navegador && navegador.serial) {
       const porta = await navegador.serial.requestPort();
-      
+
       await porta.open({ baudRate: 57600 });
       console.log(porta)
 
@@ -200,9 +200,14 @@ export class CadastroProdutoComponent implements AfterViewInit {
               // |reader| has been canceled.
               break;
             }
-            console.log("valor lido:")
-            console.log(buf2hex(value))
-            // Do something with |value|...
+            console.log("value: ")
+            console.log(value)
+            // const hex = buf2hex(value)
+            // console.log("hex: ")
+            // console.log(hex)
+            // // const ascii = hex2a(hex)
+            // // console.log("ascii: ")
+            // // console.log(ascii)
           }
         } catch (error) {
           // Handle |error|...
@@ -211,16 +216,30 @@ export class CadastroProdutoComponent implements AfterViewInit {
         }
       }
 
-      
+
     } else {
       console.log("Navegador não suporta leitura serial")
     }
 
-    function buf2hex(buffer: any) 
-    { // buffer is an ArrayBuffer
+    function buf2hex(buffer: any) { // buffer is an ArrayBuffer
       return [...new Uint8Array(buffer)]
-          .map(x => x.toString(16).padStart(2, '0'))
-          .join('');
+        .map(x => x.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    function toHexString(byteArray: any) {// Byte Array -> HEX 
+      return Array.from(byteArray, 
+        function(byte: any) { 
+          return ('0' + (byte & 0XFF).toString(16)).slice(-2); }).join() 
+    } 
+
+
+      function hex2a(hexx: any) { // HEX-> ASCII 
+        var hex = hexx.toString(); //força conversão 
+        var str = ''
+        for (var i = 0; i < hex.length; i +-  2) 
+          str += String.fromCharCode(parseInt(hex.substr(i, 2), 16)); 
+        return str;
     }
   }
 }
