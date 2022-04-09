@@ -45,21 +45,26 @@ export class CafeteriaComponent implements OnInit {
   }
 
   addCarrinho(produtoSelecionado: Produto, qtd: number): void {
-    let itemVenda: ItemVenda = {produto: produtoSelecionado, quantidade: qtd}
-
-    let atualizacao: boolean = false;
-
-    for(let item of this.cartaoCliente.produtos_cafeteria){
-      if(produtoSelecionado.codigo_barras === item.produto.codigo_barras){
-          const index = this.cartaoCliente.produtos_cafeteria.indexOf(item)
-          this.cartaoCliente.produtos_cafeteria[index].quantidade = qtd
-
-          atualizacao = true;
-      }
+    if(!this.camposPreenchidos()){
+      this.toastr.error("Preencha os campos antes de incluir um produto no carrinho!");
     }
-    if(!atualizacao){
-      this.cartaoCliente.produtos_cafeteria.push(itemVenda);
-    } 
+    else{
+      let itemVenda: ItemVenda = {produto: produtoSelecionado, quantidade: qtd}
+
+      let atualizacao: boolean = false;
+  
+      for(let item of this.cartaoCliente.produtos_cafeteria){
+        if(produtoSelecionado.codigo_barras === item.produto.codigo_barras){
+            const index = this.cartaoCliente.produtos_cafeteria.indexOf(item)
+            this.cartaoCliente.produtos_cafeteria[index].quantidade = qtd
+  
+            atualizacao = true;
+        }
+      }
+      if(!atualizacao){
+        this.cartaoCliente.produtos_cafeteria.push(itemVenda);
+      } 
+    }
   }
 
   removerCarrinho(index: any): void{
@@ -67,29 +72,45 @@ export class CafeteriaComponent implements OnInit {
   }
 
   async cadastrar() {
-    console.log(this.cartaoCliente)
-    this.cafeteriaService.criarCartaoCliente(this.cartaoCliente).subscribe(
-      data => {
-        this.toastr.success('Cartão Cliente Cadastrado!');
-        this.carregarProduto();
-        this.carregarCartaoCliente();
-      },
-      error => this.toastr.error('Não foi possível Cadastrar o Cartão: ' + error.error.ERRORS)
-    );
+    if(!this.carrinhoPreenchido()){
+      this.toastr.error("Para cadastrar uma compra na Cafeteria deve haver ao menos um produto!");
+    }
+    else if(!this.rfidClientePreenchido())
+    {
+      this.toastr.error("Preencha o RFID do Cliente!");
+    }
+  else {
+      this.cafeteriaService.criarCartaoCliente(this.cartaoCliente).subscribe(
+        data => {
+          this.toastr.success('Cartão Cliente Cadastrado!');
+          this.carregarProduto();
+          this.carregarCartaoCliente();
+        },
+        error => this.toastr.error('Não foi possível Cadastrar o Cartão: ' + error.error.ERRORS)
+      );
+    }
   }
 
 
 
   atualizar() {
-    this.cafeteriaService.atualizarCartaoCliente(this.cartaoCliente).subscribe(
-      data => {
-        this.toastr.success('Cartão Cliente Atualizado!');
-        this.carregarProduto();
-        this.carregarCartaoCliente();
-      },
-      error => this.toastr.error('Não foi possível Atualizar o Produto: ' + error.error.ERRORS)
-    );
-
+    if(!this.carrinhoPreenchido()){
+      this.toastr.error("Para atualizar uma compra na Cafeteria deve haver ao menos um produto!");
+    }
+    else if(!this.rfidClientePreenchido())
+    {
+      this.toastr.error("Preencha o RFID do Cliente!");
+    }
+    else{
+      this.cafeteriaService.atualizarCartaoCliente(this.cartaoCliente).subscribe(
+        data => {
+          this.toastr.success('Cartão Cliente Atualizado!');
+          this.carregarProduto();
+          this.carregarCartaoCliente();
+        },
+        error => this.toastr.error('Não foi possível Atualizar o Produto: ' + error.error.ERRORS)
+      );
+    }
   }
 
   deletar(cartaoCliente: CartaoCliente) {
@@ -134,6 +155,20 @@ export class CafeteriaComponent implements OnInit {
 
   produtoFunc(produto: Produto[]): Produto[] {
     return produto
+  }
+
+  camposPreenchidos(): boolean
+  {
+    return this.cartaoCliente.rfid != ''  && this.produtoSelecionado.nome != '' && this.quantidade > 0;
+  }
+  
+  carrinhoPreenchido(): boolean
+  {
+    return this.cartaoCliente.produtos_cafeteria.length > 0
+  }
+  rfidClientePreenchido(): boolean
+  {
+    return this.cartaoCliente.rfid != ''
   }
 
   veririficarUsuario(tela: string) {

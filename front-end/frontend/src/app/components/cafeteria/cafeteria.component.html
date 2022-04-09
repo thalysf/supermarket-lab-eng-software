@@ -4,11 +4,11 @@
   <form style="margin-top: 30px;">
 
     <mat-form-field class="campo espacamentoCampos">
-        <input matInput placeholder="RFID" [(ngModel)]="cartaoCliente.rfid" name="rfid" type="text" style="margin-left: 4px;">
+        <input matInput placeholder="RFID" [(ngModel)]="cartaoCliente.rfid" name="rfid" type="text" style="margin-left: 4px;" required>
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <mat-select [(ngModel)]="produtoSelecionado" name="produtoSelecionado" placeholder="PRODUTO">
+      <mat-select [(ngModel)]="produtoSelecionado" name="produtoSelecionado" placeholder="PRODUTO" required>
         <mat-option *ngFor="let produto of produtos" [value]="produto">
          {{produto.nome}}
         </mat-option>
@@ -16,21 +16,21 @@
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="QUANTIDADDE" [(ngModel)]="quantidade" name="quantidade" type="number"
+      <input matInput placeholder="QUANTIDADDE" [(ngModel)]="quantidade" name="quantidade" type="number" required 
         style="margin-left: 4px;">
     </mat-form-field>
 
   </form>
 
-  <button mat-raised-button color="accent" class="espacamentoBotao espacamentoBotoesCima" (click)="addCarrinho(produtoSelecionado, quantidade)">
+  <button type="submit" mat-raised-button color="accent" class="espacamentoBotao espacamentoBotoesCima" (click)="addCarrinho(produtoSelecionado, quantidade)">
     Adicionar ao Carrinho
   </button>
 
-  <button mat-raised-button color="primary" class="espacamentoBotao espacamentoBotoesCima" (click)="cadastrar()">
+  <button type="submit" mat-raised-button color="primary" class="espacamentoBotao espacamentoBotoesCima" (click)="cadastrar()">
     Finalizar Compra
   </button>
 
-  <button mat-raised-button color="primary" class=" espacamentoBotao espacamentoBotoesCima" (click)="atualizar()">
+  <button type="submit" mat-raised-button color="primary" class=" espacamentoBotao espacamentoBotoesCima" (click)="atualizar()">
     Atualizar Compra
   </button>
 
