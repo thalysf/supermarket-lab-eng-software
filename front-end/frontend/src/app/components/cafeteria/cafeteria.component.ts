@@ -1,3 +1,4 @@
+import { CafeteriaService } from './../../services/cafeteria.service';
 import { ItemVenda } from './../../entity/ItemVenda';
 import { CartaoCliente } from './../../entity/CartaoCliente';
 import { Produto } from './../../entity/Produto';
@@ -27,7 +28,8 @@ export class CafeteriaComponent implements OnInit {
   dataSourceCarrrinho = new MatTableDataSource<ItemVenda>(this.cartaoCliente.produtos_cafeteria);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(public dialog: MatDialog, public cadastroProdutoService: CadastroProdutoService,
+  constructor(public dialog: MatDialog, public cafeteriaService: CafeteriaService, 
+    public cadastroProdutoService: CadastroProdutoService,
     private toastr: ToastrService, private sant: DomSanitizer, private router: Router) {
     this.veririficarUsuario('CAFETERIA');
     this.carregarProduto();
@@ -69,22 +71,13 @@ export class CafeteriaComponent implements OnInit {
 
   async cadastrar() {
     console.log(this.cartaoCliente)
-    // const produto: Produto = {
-    //   nome: this.nome,
-    //   preco_venda: this.precoVenda,
-    //   preco_compra: this.precoCompra,
-    //   imagem: this.imagem,
-    //   fracionado: this.fracionado,
-    //   codigo_barras: this.codigoBarras,
-    //   qtd_estoque: this.qtdEstoque,
-    //   setor: this.setor,
-    //   rfid: this.rfid,
-    // }
-
-    // this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
-    //   data => this.carregarProduto(),
-    //   error => this.toastr.error('Não foi possível Cadastrar o Produto')
-    // );
+    this.cafeteriaService.criarCartaoCliente(this.cartaoCliente).subscribe(
+      data => {
+        this.toastr.success('Cartão Cliente Cadastrado!');
+        this.carregarProduto()
+      },
+      error => this.toastr.error('Não foi possível Cadastrar o Produto')
+    );
   }
 
 
