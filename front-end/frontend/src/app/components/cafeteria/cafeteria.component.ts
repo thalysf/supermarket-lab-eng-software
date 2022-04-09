@@ -17,7 +17,7 @@ import { Router } from "@angular/router";
 export class CafeteriaComponent implements OnInit {
   produtos: Produto[] = [];
   rfid: string = "";
-  cartaoCliente: CartaoCliente = {rfid: '', produtosCafeteria: []};
+  cartaoCliente: CartaoCliente = {rfid: '', produtosCafeteria: [], cartaoPago: false};
   produtoSelecionado: Produto = {codigo_barras: '', nome: '', qtd_estoque: 0};
   quantidade: number= 0;
 
