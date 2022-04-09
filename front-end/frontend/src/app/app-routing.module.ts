@@ -1,3 +1,4 @@
+import { CafeteriaComponent } from './components/cafeteria/cafeteria.component';
 import { EntradaEstoqueComponent } from './components/entrada-estoque/entrada-estoque.component';
 import { CadastroProdutoComponent } from './components/cadastro-produto/cadastro-produto.component';
 import { UsuarioTelaComponent } from './components/usuario-tela/usuario-tela.component';
@@ -28,6 +29,10 @@ const routes: Routes = [
     path: 'home',
     component: HomeComponent
   },
+  {
+    path: 'cateferia',
+    component: CafeteriaComponent
+  }
 ];
 
 @NgModule({

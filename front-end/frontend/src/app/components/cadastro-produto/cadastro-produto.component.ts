@@ -1,4 +1,3 @@
-import { Observable } from 'rxjs';
 import { Produto } from './../../entity/Produto';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -202,9 +201,9 @@ export class CadastroProdutoComponent implements AfterViewInit {
             }
             console.log("value: ")
             console.log(value)
-            // const hex = buf2hex(value)
-            // console.log("hex: ")
-            // console.log(hex)
+            const hex = buf2hex(value)
+            console.log("hex: ")
+            console.log(hex)
             // // const ascii = hex2a(hex)
             // // console.log("ascii: ")
             // // console.log(ascii)
