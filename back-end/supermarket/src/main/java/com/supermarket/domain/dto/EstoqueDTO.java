@@ -16,5 +16,5 @@ public class EstoqueDTO {
 
     private String codigoBarras;
 
-    private Long qtdEstoque;
+    private Double qtdEstoque;
 }

@@ -36,7 +36,7 @@ public class Produto {
     private Boolean fracionado;
 
     @Column(name = "qtd_estoque", nullable = false)
-    private Long qtdEstoque = 0L;
+    private Double qtdEstoque = 0.0;
 
     @Column(name = "setor", nullable = false)
     @Enumerated(EnumType.STRING)

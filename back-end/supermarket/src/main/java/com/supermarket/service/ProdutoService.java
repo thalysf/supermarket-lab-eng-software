@@ -26,7 +26,7 @@ public class ProdutoService {
         });
 
         Produto produto = produtoMapper.produtoDtoToProduto(produtoDto);
-        produto.setQtdEstoque(0L);
+        produto.setQtdEstoque(0.0);
 
         produtoRepository.save(produto);
     }
@@ -35,12 +35,11 @@ public class ProdutoService {
         produtoRepository.findById(produtoDto.getRfid()).orElseThrow(() -> new RegraNegocioException("Produto não encontrado!"));
 
         Produto produto = produtoMapper.produtoDtoToProduto(produtoDto);
-        produto.setQtdEstoque(0L);
+        produto.setQtdEstoque(0.0);
 
         produtoRepository.save(produto);
     }
 
-    @Transactional
     public void atualizarEstoque(EstoqueDTO estoqueDTO) {
         Produto produto = produtoRepository.findByCodigoBarras(estoqueDTO.getCodigoBarras()).orElseThrow(() -> new RegraNegocioException("Código de barras do produto não encontrado!"));
         produto.setQtdEstoque(estoqueDTO.getQtdEstoque());

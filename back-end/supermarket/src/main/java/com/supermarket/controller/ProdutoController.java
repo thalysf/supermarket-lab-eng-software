@@ -1,5 +1,6 @@
 package com.supermarket.controller;
 
+import com.supermarket.domain.dto.ItemVendaDto;
 import com.supermarket.domain.dto.ProdutoDto;
 import com.supermarket.domain.enums.SetorEnum;
 import com.supermarket.service.ProdutoService;

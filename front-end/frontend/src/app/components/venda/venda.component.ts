@@ -1,3 +1,4 @@
+import { ItemVenda } from './../../entity/ItemVenda';
 import { VendaService } from './../../services/venda.service';
 import { ToastrService } from 'ngx-toastr';
 import { EntradaEstoqueService } from './../../services/entrada-estoque.service';
@@ -13,7 +14,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 })
 export class VendaComponent implements OnInit {
 
-  produtos:Produto[] = [];
+  produtos:ItemVenda[] = [];
   produtoAtual:any;
 
   codigo:any;
@@ -25,7 +26,7 @@ export class VendaComponent implements OnInit {
   fracionado:boolean = false;
 
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
-  dataSource = new MatTableDataSource<Produto>(this.produtos);
+  dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
   constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService, private vendaSerive:VendaService) { }
@@ -37,16 +38,19 @@ export class VendaComponent implements OnInit {
     if(this.produtoAtual != null){
 
       for(let produto of this.produtos){
-        if(produto.codigo_barras === this.codigo){
-          produto.qtd_estoque += this.quantidade;
+        if(produto.produto.codigo_barras === this.codigo){
+          produto.quantidade += this.quantidade;
           this.limpar();
           return;
         }
       }
 
-      this.produtoAtual.qtd_estoque = this.quantidade;
-      this.produtoAtual.preco_compra = this.precoTotalProduto;
-      this.produtos.push(this.produtoAtual);
+      let novoItemVenda:ItemVenda = {
+        quantidade: this.quantidade,
+        produto: this.produtoAtual
+      }
+
+      this.produtos.push(novoItemVenda);
       this.dataSource.data = this.produtos;
 
       this.total += this.precoTotalProduto;
@@ -70,6 +74,7 @@ export class VendaComponent implements OnInit {
     )
   }
 
+
   onChangeCodigo(event:any){
     var texto = event.target.value;
 
@@ -85,6 +90,7 @@ export class VendaComponent implements OnInit {
     this.imagem = produto.imagem;
     this.precoUnitario = produto.preco_venda;
     this.produtoAtual = produto;
+    this.fracionado = produto.fracionado
     if(this.quantidade){
       this.precoTotalProduto = this.quantidade * this.precoUnitario;
     }
@@ -92,8 +98,8 @@ export class VendaComponent implements OnInit {
 
   excluir(produto:any){
     for(var i =0; i < this.produtos.length; i++){
-      if(this.produtos[i].codigo_barras == produto.codigo_barras){
-        this.total -= this.produtos[i].qtd_estoque * (this.produtos[i].preco_venda || 1);
+      if(this.produtos[i].produto.codigo_barras == produto.produto.codigo_barras){
+        this.total -= this.produtos[i].quantidade * (this.produtos[i].produto.preco_venda || 1);
         this.produtos.splice(i, 1);
         this.dataSource.data = this.produtos;
       }

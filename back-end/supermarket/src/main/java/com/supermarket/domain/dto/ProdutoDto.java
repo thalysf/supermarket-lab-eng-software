@@ -40,7 +40,7 @@ public class ProdutoDto {
     private Boolean fracionado;
 
     @NotNull
-    private Long qtdEstoque;
+    private Double qtdEstoque;
 
     @NotNull
     private SetorEnum setor;
