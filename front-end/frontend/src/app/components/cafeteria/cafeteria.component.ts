@@ -1,3 +1,4 @@
+import { CafeteriaService } from './../../services/cafeteria.service';
 import { ItemVenda } from './../../entity/ItemVenda';
 import { CartaoCliente } from './../../entity/CartaoCliente';
 import { Produto } from './../../entity/Produto';
@@ -18,16 +19,17 @@ export class CafeteriaComponent implements OnInit {
   setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   rfid: string = "";
-  cartaoCliente: CartaoCliente = {rfid: '', produtosCafeteria: [], cartaoPago: false};
+  cartaoCliente: CartaoCliente = {rfid: '', produtos_cafeteria: [], cartao_pago: false};
   produtoSelecionado: Produto = {codigo_barras: '', nome: '', qtd_estoque: 0};
   quantidade: number= 0;
 
   displayedColumns: string[] = ['produtoSelecionado', 'quantidade', 'acao'];
 
-  dataSourceCarrrinho = new MatTableDataSource<ItemVenda>(this.cartaoCliente.produtosCafeteria);
+  dataSourceCarrrinho = new MatTableDataSource<ItemVenda>(this.cartaoCliente.produtos_cafeteria);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(public dialog: MatDialog, public cadastroProdutoService: CadastroProdutoService,
+  constructor(public dialog: MatDialog, public cafeteriaService: CafeteriaService, 
+    public cadastroProdutoService: CadastroProdutoService,
     private toastr: ToastrService, private sant: DomSanitizer, private router: Router) {
     this.veririficarUsuario('CAFETERIA');
     this.carregarProduto();
@@ -47,44 +49,35 @@ export class CafeteriaComponent implements OnInit {
 
     let atualizacao: boolean = false;
 
-    for(let item of this.cartaoCliente.produtosCafeteria){
+    for(let item of this.cartaoCliente.produtos_cafeteria){
       if(produtoSelecionado.codigo_barras === item.produto.codigo_barras){
-          const index = this.cartaoCliente.produtosCafeteria.indexOf(item)
-          this.cartaoCliente.produtosCafeteria[index].quantidade = qtd
+          const index = this.cartaoCliente.produtos_cafeteria.indexOf(item)
+          this.cartaoCliente.produtos_cafeteria[index].quantidade = qtd
 
           atualizacao = true;
       }
     }
     if(!atualizacao){
-      this.cartaoCliente.produtosCafeteria.push(itemVenda);
+      this.cartaoCliente.produtos_cafeteria.push(itemVenda);
     } 
 
-    this.dataSourceCarrrinho.data = this.cartaoCliente.produtosCafeteria;
+    this.dataSourceCarrrinho.data = this.cartaoCliente.produtos_cafeteria;
   }
 
   removerCarrinho(index: any): void{
-    this.cartaoCliente.produtosCafeteria.splice(index, 1);
-    this.dataSourceCarrrinho.data = this.cartaoCliente.produtosCafeteria;
+    this.cartaoCliente.produtos_cafeteria.splice(index, 1);
+    this.dataSourceCarrrinho.data = this.cartaoCliente.produtos_cafeteria;
   }
 
   async cadastrar() {
     console.log(this.cartaoCliente)
-    // const produto: Produto = {
-    //   nome: this.nome,
-    //   preco_venda: this.precoVenda,
-    //   preco_compra: this.precoCompra,
-    //   imagem: this.imagem,
-    //   fracionado: this.fracionado,
-    //   codigo_barras: this.codigoBarras,
-    //   qtd_estoque: this.qtdEstoque,
-    //   setor: this.setor,
-    //   rfid: this.rfid,
-    // }
-
-    // this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
-    //   data => this.carregarProduto(),
-    //   error => this.toastr.error('Não foi possível Cadastrar o Produto')
-    // );
+    this.cafeteriaService.criarCartaoCliente(this.cartaoCliente).subscribe(
+      data => {
+        this.toastr.success('Cartão Cliente Cadastrado!');
+        this.carregarProduto()
+      },
+      error => this.toastr.error('Não foi possível Cadastrar o Produto')
+    );
   }
 
 

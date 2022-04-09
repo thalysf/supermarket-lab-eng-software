@@ -13,7 +13,6 @@ import java.util.Set;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/telas")
-@Validated
 public class TelaController {
 
     private final TelaService telaService;
