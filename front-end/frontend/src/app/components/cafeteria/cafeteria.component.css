@@ -13,3 +13,11 @@
 .espacamentoBotao {
     margin-left: 1%;
 }
+.carrinho {
+    width: 100%;
+}
+
+.lista_produtos{
+    display: inline;
+    list-style-type: none;
+}

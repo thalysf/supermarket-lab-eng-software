@@ -4,7 +4,7 @@
   <form style="margin-top: 30px;">
 
     <mat-form-field class="campo espacamentoCampos">
-        <input matInput placeholder="RFID" [(ngModel)]="rfid" name="rfid" type="text" style="margin-left: 4px;">
+        <input matInput placeholder="RFID" [(ngModel)]="cartaoCliente.rfid" name="rfid" type="text" style="margin-left: 4px;">
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
@@ -22,7 +22,7 @@
 
   </form>
 
-  <button mat-raised-button color="accent" class="espacamentoBotao espacamentoBotoesCima" (click)="addCarrinho(produtoSelecionado, quantidade, rfid)">
+  <button mat-raised-button color="accent" class="espacamentoBotao espacamentoBotoesCima" (click)="addCarrinho(produtoSelecionado, quantidade)">
     Adicionar ao Carrinho
   </button>
 
@@ -31,77 +31,46 @@
   </button>
 
   <button mat-raised-button color="primary" class=" espacamentoBotao espacamentoBotoesCima" (click)="atualizar()">
-    Atualizar
+    Atualizar Compra
   </button>
 
   <button mat-raised-button color="primary" class=" espacamentoBotao espacamentoBotoesCima" (click)="limpar()">
     Limpar
   </button>
   
-    <div class="mat-elevation-z2" style="margin-top: 30px;">
-    <h2 style="margin: 5px; color: #FF4081;" *ngIf="rfid">Carrinho do cliente: {{rfid}}</h2>
-    <table mat-table [dataSource]="dataSourceCarrrinho" style="width: 100%;">
-      <ng-container matColumnDef="rfid">
-        <th mat-header-cell *matHeaderCellDef> RFID </th>
-        <td mat-cell *matCellDef="let cartaoCliente"> {{cartaoCliente}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="produtoSelecionado">
-        <th mat-header-cell *matHeaderCellDef> PRODUTO </th>
-        <td mat-cell *matCellDef="let itemVenda"> {{itemVenda.produto.nome}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="quantidade">
-        <th mat-header-cell *matHeaderCellDef> QUANTIDADE </th>
-        <td mat-cell *matCellDef="let itemVenda"> {{itemVenda.quantidade}} </td>
-      </ng-container>
-
-      <ng-container matColumnDef="acao">
-        <th mat-header-cell *matHeaderCellDef style="text-align: right;">Ações</th>
-        <td mat-cell *matCellDef="let i = index" style="text-align: right;">
-            <a >
-                <i class="material-icons delete" (click)="removerCarrinho(i)">
-                    delete
-                </i>
-            </a>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    </table>
-
-
-    <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic blocos">
-    </mat-paginator>
+  <div class="mat-elevation-z2" style="margin-top: 30px;">
+    <mat-card>
+      <mat-form-field class="carrinho" appearance="fill">
+        <mat-label style="color: #FF4081;">Carrinho {{cartaoCliente.rfid}}</mat-label>
+        <mat-chip-list #prodsSelecionados aria-label="Produtos Selecionados">
+          <mat-chip *ngFor="let item of cartaoCliente.produtos_cafeteria" (removed)="removerCarrinho(item)">
+            {{item.produto.nome}}: {{item.quantidade}}
+            <button matChipRemove>
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        </mat-chip-list>
+      </mat-form-field>
+    </mat-card>
   </div>
 
 
-
-
-
-
-  <!-- <div class="mat-elevation-z2" style="margin-top: 30px;">
+    <div class="mat-elevation-z2" style="margin-top: 30px;">
     <table mat-table [dataSource]="dataSource" style="width: 100%;">
-      
-      <ng-container matColumnDef="RFID">
+      <ng-container matColumnDef="rfid">
         <th mat-header-cell *matHeaderCellDef> RFID </th>
-        <td mat-cell *matCellDef="let produto"> {{produto.rfid}} </td>
+        <td mat-cell *matCellDef="let cartaoCliente"> {{cartaoCliente.rfid}} </td>
       </ng-container>
 
-    
-      <ng-container matColumnDef="quantidade">
-        <th mat-header-cell *matHeaderCellDef> Quantidade </th>
-        <td mat-cell *matCellDef="let produto"> {{produto.qtd_estoque}} </td>
+      <ng-container matColumnDef="produtos">
+        <th mat-header-cell *matHeaderCellDef> PRODUTOS </th>
+        <td mat-cell *matCellDef="let cartaoCliente"> 
+          <li *ngFor="let item of cartaoCliente.produtos_cafeteria; let i = index" class="lista_produtos">
+            {{item.produto.nome}}: {{item.quantidade}}
+            <span *ngIf="(i + 1) !== cartaoCliente.produtos_cafeteria.length">, </span>
+          </li>
+        </td>
       </ng-container>
-
-    
-      <ng-container matColumnDef="setor">
-        <th mat-header-cell *matHeaderCellDef> Setor </th>
-        <td mat-cell *matCellDef="let produto"> {{produto.setor}} </td>
-      </ng-container>
-
-    
 
       <ng-container matColumnDef="acao">
         <th mat-header-cell *matHeaderCellDef style="text-align: right;">Ações</th>
@@ -121,5 +90,5 @@
 
     <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons aria-label="Select page of periodic blocos">
     </mat-paginator>
-  </div> -->
+  </div>
 </mat-card>

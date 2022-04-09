@@ -29,7 +29,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { LoginComponent } from './components/login/login/login.component';
 import { HomeComponent } from './components/home/home/home.component';
 import { CafeteriaComponent } from './components/cafeteria/cafeteria.component';
-
+import {MatIconModule} from '@angular/material/icon';
+import {MatChipsModule} from '@angular/material/chips';
 
 @NgModule({
   declarations: [
@@ -63,7 +64,9 @@ import { CafeteriaComponent } from './components/cafeteria/cafeteria.component';
     MatDialogModule,
     ToastrModule.forRoot(),
     MatCheckboxModule,
-    MatSelectModule 
+    MatSelectModule,
+    MatIconModule,
+    MatChipsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
