@@ -26,6 +26,11 @@ export class CadastroProdutoService {
     return this.http.get<Produto[]>(this.urlProdutos);
   }
 
+  carregarProdutoPorSetor(setor: string):Observable<Produto[]>{
+    const urlSetor = this.urlProdutos + "/setor/" + setor
+    return this.http.get<Produto[]>(urlSetor);
+  }
+
   deletarProduto(rfid:any){
     return this.http.delete<Produto>(this.urlProdutos + "/" + rfid);
   }

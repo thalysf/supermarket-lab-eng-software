@@ -15,6 +15,7 @@ import { Router } from "@angular/router";
   styleUrls: ['./cafeteria.component.css']
 })
 export class CafeteriaComponent implements OnInit {
+  setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   rfid: string = "";
   cartaoCliente: CartaoCliente = {rfid: '', produtosCafeteria: [], cartaoPago: false};
@@ -43,13 +44,22 @@ export class CafeteriaComponent implements OnInit {
     let itemVenda: ItemVenda = {produto: produtoSelecionado, quantidade: qtd}
 
     this.cartaoCliente.rfid = rfid;
-    this.cartaoCliente.produtosCafeteria.push(itemVenda);
+
+    let atualizacao: boolean = false;
+
+    for(let item of this.cartaoCliente.produtosCafeteria){
+      if(produtoSelecionado.codigo_barras === item.produto.codigo_barras){
+          const index = this.cartaoCliente.produtosCafeteria.indexOf(item)
+          this.cartaoCliente.produtosCafeteria[index].quantidade = qtd
+
+          atualizacao = true;
+      }
+    }
+    if(!atualizacao){
+      this.cartaoCliente.produtosCafeteria.push(itemVenda);
+    } 
 
     this.dataSourceCarrrinho.data = this.cartaoCliente.produtosCafeteria;
-  }
-
-  updateCartaoCliente(): void{
-
   }
 
   removerCarrinho(index: any): void{
@@ -58,6 +68,7 @@ export class CafeteriaComponent implements OnInit {
   }
 
   async cadastrar() {
+    console.log(this.cartaoCliente)
     // const produto: Produto = {
     //   nome: this.nome,
     //   preco_venda: this.precoVenda,
@@ -120,7 +131,7 @@ export class CafeteriaComponent implements OnInit {
   }
 
   carregarProduto() {
-    this.cadastroProdutoService.carregarProduto().subscribe((produto: Produto[]) =>
+    this.cadastroProdutoService.carregarProdutoPorSetor(this.setor).subscribe((produto: Produto[]) =>
       this.carregarListaProdutos(produto)
     )
   }

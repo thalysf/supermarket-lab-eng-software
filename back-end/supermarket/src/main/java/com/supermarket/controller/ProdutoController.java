@@ -1,14 +1,12 @@
 package com.supermarket.controller;
 
 import com.supermarket.domain.dto.ProdutoDto;
+import com.supermarket.domain.enums.SetorEnum;
 import com.supermarket.service.ProdutoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @RestController
@@ -40,5 +38,11 @@ public class ProdutoController {
     @ResponseStatus(HttpStatus.OK)
     public Set<ProdutoDto> listarProdutos() {
         return produtoService.listarProdutos();
+    }
+
+    @GetMapping("/setor/{setor}")
+    @ResponseStatus(HttpStatus.OK)
+    public Set<ProdutoDto> listarProdutosPorSetor(@PathVariable SetorEnum setor) {
+        return produtoService.listarProdutosPorSetor(setor);
     }
 }

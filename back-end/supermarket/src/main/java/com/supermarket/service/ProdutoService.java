@@ -3,6 +3,7 @@ package com.supermarket.service;
 import com.supermarket.domain.dto.EstoqueDTO;
 import com.supermarket.domain.dto.ProdutoDto;
 import com.supermarket.domain.entity.Produto;
+import com.supermarket.domain.enums.SetorEnum;
 import com.supermarket.domain.mapper.ProdutoMapper;
 import com.supermarket.exception.RegraNegocioException;
 import com.supermarket.repository.ProdutoRepository;
@@ -56,5 +57,9 @@ public class ProdutoService {
 
     public Set<ProdutoDto> listarProdutos() {
         return produtoMapper.setProdutoToSetProdutoDto(produtoRepository.findAll());
+    }
+
+    public Set<ProdutoDto> listarProdutosPorSetor(SetorEnum setor) {
+        return produtoMapper.setProdutoToSetProdutoDto(produtoRepository.findBySetor(setor).orElseThrow(() -> new RegraNegocioException("Setor sem produtos cadastrados!")));
     }
 }
