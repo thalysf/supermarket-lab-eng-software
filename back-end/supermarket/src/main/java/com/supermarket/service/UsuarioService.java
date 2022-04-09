@@ -9,8 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
 import java.util.Objects;
 import java.util.Set;
 
@@ -25,7 +23,7 @@ public class UsuarioService {
 
     public void cadastrarUsuario(UsuarioDto usuarioDto) {
         usuarioRepository.findById(usuarioDto.getCpf()).ifPresent(u -> {
-             throw new RegraNegocioException("Usuário já cadastrado!");
+            throw new RegraNegocioException("Usuário já cadastrado!");
         });
         Usuario usuario = usuarioMapper.usuarioDtoToUsuario(usuarioDto);
         usuarioRepository.save(usuario);
@@ -43,7 +41,7 @@ public class UsuarioService {
 
     public UsuarioDto buscarUsuario(String cpf) {
         Usuario usuario = usuarioRepository.findByCpf(cpf);
-        if(Objects.isNull(usuario)) {
+        if (Objects.isNull(usuario)) {
             throw new RegraNegocioException("Usuário não encontrado!");
         }
         return usuarioMapper.usuarioDtoToUsuario(usuario);

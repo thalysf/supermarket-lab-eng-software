@@ -1,6 +1,6 @@
 package com.supermarket.repository;
 
-import com.supermarket.domain.entity.Usuario;
+import com.supermarket.domain.entity.CartaoCliente;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,9 +9,7 @@ import java.util.Set;
 
 @Repository
 @Transactional
-public interface UsuarioRepository extends CrudRepository<Usuario, String> {
+public interface CafeteriaRepository extends CrudRepository<CartaoCliente, String> {
     @Override
-    Set<Usuario> findAll();
-
-    Usuario findByCpf(String cpf);
+    Set<CartaoCliente> findAll();
 }

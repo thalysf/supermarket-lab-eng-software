@@ -10,12 +10,12 @@ import com.supermarket.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityExistsException;
-import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class ProdutoService {
     private final ProdutoRepository produtoRepository;
     private final ProdutoMapper produtoMapper;

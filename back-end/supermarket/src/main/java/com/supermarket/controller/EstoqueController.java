@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequiredArgsConstructor
 @RequestMapping("/estoques")
-@Validated
 public class EstoqueController {
 
     private final ProdutoService produtoService;

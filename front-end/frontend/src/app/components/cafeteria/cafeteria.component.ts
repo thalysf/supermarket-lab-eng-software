@@ -18,13 +18,13 @@ export class CafeteriaComponent implements OnInit {
   setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   rfid: string = "";
-  cartaoCliente: CartaoCliente = {rfid: '', produtosCafeteria: [], cartaoPago: false};
+  cartaoCliente: CartaoCliente = {rfid: '', produtos_cafeteria: [], cartao_pago: false};
   produtoSelecionado: Produto = {codigo_barras: '', nome: '', qtd_estoque: 0};
   quantidade: number= 0;
 
   displayedColumns: string[] = ['produtoSelecionado', 'quantidade', 'acao'];
 
-  dataSourceCarrrinho = new MatTableDataSource<ItemVenda>(this.cartaoCliente.produtosCafeteria);
+  dataSourceCarrrinho = new MatTableDataSource<ItemVenda>(this.cartaoCliente.produtos_cafeteria);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   constructor(public dialog: MatDialog, public cadastroProdutoService: CadastroProdutoService,
@@ -47,24 +47,24 @@ export class CafeteriaComponent implements OnInit {
 
     let atualizacao: boolean = false;
 
-    for(let item of this.cartaoCliente.produtosCafeteria){
+    for(let item of this.cartaoCliente.produtos_cafeteria){
       if(produtoSelecionado.codigo_barras === item.produto.codigo_barras){
-          const index = this.cartaoCliente.produtosCafeteria.indexOf(item)
-          this.cartaoCliente.produtosCafeteria[index].quantidade = qtd
+          const index = this.cartaoCliente.produtos_cafeteria.indexOf(item)
+          this.cartaoCliente.produtos_cafeteria[index].quantidade = qtd
 
           atualizacao = true;
       }
     }
     if(!atualizacao){
-      this.cartaoCliente.produtosCafeteria.push(itemVenda);
+      this.cartaoCliente.produtos_cafeteria.push(itemVenda);
     } 
 
-    this.dataSourceCarrrinho.data = this.cartaoCliente.produtosCafeteria;
+    this.dataSourceCarrrinho.data = this.cartaoCliente.produtos_cafeteria;
   }
 
   removerCarrinho(index: any): void{
-    this.cartaoCliente.produtosCafeteria.splice(index, 1);
-    this.dataSourceCarrrinho.data = this.cartaoCliente.produtosCafeteria;
+    this.cartaoCliente.produtos_cafeteria.splice(index, 1);
+    this.dataSourceCarrrinho.data = this.cartaoCliente.produtos_cafeteria;
   }
 
   async cadastrar() {
