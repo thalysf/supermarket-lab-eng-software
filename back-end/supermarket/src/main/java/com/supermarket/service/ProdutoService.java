@@ -9,6 +9,7 @@ import com.supermarket.exception.RegraNegocioException;
 import com.supermarket.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityExistsException;
 import javax.persistence.EntityNotFoundException;
@@ -40,6 +41,7 @@ public class ProdutoService {
         produtoRepository.save(produto);
     }
 
+    @Transactional
     public void atualizarEstoque(EstoqueDTO estoqueDTO) {
         Produto produto = produtoRepository.findByCodigoBarras(estoqueDTO.getCodigoBarras()).orElseThrow(() -> new RegraNegocioException("Código de barras do produto não encontrado!"));
         produto.setQtdEstoque(estoqueDTO.getQtdEstoque());
