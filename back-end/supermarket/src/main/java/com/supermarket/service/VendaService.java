@@ -7,6 +7,7 @@ import com.supermarket.domain.mapper.ProdutoMapper;
 import com.supermarket.exception.RegraNegocioException;
 import com.supermarket.repository.ProdutoRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,8 +17,11 @@ import java.util.*;
 @RequiredArgsConstructor
 public class VendaService {
 
+    @Autowired
     private final ProdutoService produtoService;
+    @Autowired
     private final ProdutoRepository produtoRepository;
+    @Autowired
     private final ProdutoMapper produtoMapper;
 
     public void darBaixa( List<ItemVendaDto> itemsVendaDto){
@@ -26,7 +30,7 @@ public class VendaService {
 
         for(ItemVendaDto v : itemsVendaDto){
             ProdutoDto p = produtoService.buscarProdutoCodigoBarras(v.getProduto().getCodigoBarras());
-            if(p != null && p.getQtdEstoque() - v.getQuantidade() > 0){
+            if(p != null && p.getQtdEstoque() - v.getQuantidade() >= 0){
                 p.setQtdEstoque(p.getQtdEstoque() - v.getQuantidade());
                 produtosAsalvar.add(produtoMapper.produtoDtoToProduto(p));
             } else{
