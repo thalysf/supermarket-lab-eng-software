@@ -1,0 +1,40 @@
+<!--<div class="ticket">-->
+<!--  <div>-->
+<!--    <span class="nome">Nome</span>-->
+<!--    <span class="quantidade">Quantidade</span>-->
+<!--    <span class="preco">Preco</span>-->
+<!--  </div>-->
+
+<!--  <div *ngFor="let col of itensVendas">-->
+<!--    <span class="nome">{{col.produto.nome + '   '}}</span>-->
+<!--    <span class="quantidade">{{col.quantidade + '   '}}</span>-->
+<!--    <span class="preco">{{col.produto.preco_venda * col.quantidade}}</span><br>-->
+<!--  </div>-->
+
+<!--</div>-->
+
+<div class="ticket">
+  <table>
+    <thead>
+    <tr>
+      <th class="nome">Nome</th>
+      <th class="quantidade">Quantidade</th>
+      <th class="preco">R$</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr *ngFor="let col of itensVendas">
+      <td class="nome">{{col.produto.nome}}</td>
+      <td class="quantidade">{{col.quantidade}}</td>
+      <td class="preco">{{col.produto.preco_venda}}</td>
+    </tr>
+    </tbody>
+  </table>
+  <div class="botao">
+    <button mat-raised-button color="primary" (click)="imprimir()">
+      Ok!
+    </button>
+  </div>
+</div>
+

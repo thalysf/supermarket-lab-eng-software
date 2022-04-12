@@ -8,7 +8,7 @@ import { Injectable } from '@angular/core';
 })
 export class EntradaEstoqueService {
 
-  urlProdutos:string = "http://localhost:808/estoques";
+  urlProdutos:string = "http://localhost:8080/estoques";
 
   constructor(private http: HttpClient) { }
 

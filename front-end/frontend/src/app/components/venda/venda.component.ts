@@ -6,6 +6,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Produto } from './../../entity/Produto';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-venda',
@@ -25,11 +26,13 @@ export class VendaComponent implements OnInit {
   precoTotalProduto:any;
   fracionado:boolean = false;
 
+  openDialog: boolean = false;
+
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
   dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
-  constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService, private vendaSerive:VendaService) { }
+  constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService, private vendaSerive:VendaService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -126,5 +129,11 @@ export class VendaComponent implements OnInit {
 
   calcularPrecoTotalProduto(){
     this.precoTotalProduto = this.quantidade * this.precoUnitario;
+  }
+
+  imprimir(){
+    localStorage.setItem("itensVendas", JSON.stringify(this.produtos));
+    this.router.navigate(['/imprime-venda']);
+
   }
 }

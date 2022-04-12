@@ -32,6 +32,7 @@ import { VendaComponent } from './components/venda/venda.component';
 import { CafeteriaComponent } from './components/cafeteria/cafeteria.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatChipsModule} from '@angular/material/chips';
+import { ImprimeVendaComponent } from './components/imprime-venda/imprime-venda/imprime-venda.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import {MatChipsModule} from '@angular/material/chips';
     LoginComponent,
     HomeComponent,
     VendaComponent,
-    CafeteriaComponent
+    CafeteriaComponent,
+    ImprimeVendaComponent
   ],
   imports: [
     MatRadioModule,
