@@ -10,8 +10,8 @@
         </mat-form-field>
 
         <mat-form-field class="campo espacamentoCampos">
-            <input matInput placeholder="QUANTIDADE"
-            [(ngModel)] = "quantidade" name="quantidade" type="number" (change)="calcularPrecoTotalProduto()"
+            <input matInput placeholder="QUANTIDADE" (click)="readerBalanca()"
+            [(ngModel)] = "quantidade" name="quantidade" type="text" (change)="calcularPrecoTotalProduto()"
             style="margin-left: 4px;">
         </mat-form-field>
 

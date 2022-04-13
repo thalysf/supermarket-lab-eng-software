@@ -1,3 +1,4 @@
+import { Router } from '@angular/router';
 import { ItemVenda } from './../../entity/ItemVenda';
 import { VendaService } from './../../services/venda.service';
 import { ToastrService } from 'ngx-toastr';
@@ -6,7 +7,6 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Produto } from './../../entity/Produto';
 import { Component, OnInit, ViewChild } from '@angular/core';
-import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-venda',
@@ -26,13 +26,12 @@ export class VendaComponent implements OnInit {
   precoTotalProduto:any;
   fracionado:boolean = false;
 
-  openDialog: boolean = false;
-
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
   dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
-  constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService, private vendaSerive:VendaService, private router: Router) { }
+  constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService, 
+    private vendaSerive:VendaService, private router: Router) { }
 
   ngOnInit(): void {
   }
@@ -72,9 +71,14 @@ export class VendaComponent implements OnInit {
 
   finalizarCompra(){
     this.vendaSerive.realizarVenda(this.produtos).subscribe(
-      data=>this.toastr.success('Venda realizada com sucesso'),
+      data=>this.vendaSucesso(),
       error=>this.toastr.error('Não foi possível realizar a venda')
     )
+  }
+
+  vendaSucesso(){
+    this.toastr.success('Venda realizada com sucesso');
+    this.limpar();
   }
 
 
@@ -131,9 +135,76 @@ export class VendaComponent implements OnInit {
     this.precoTotalProduto = this.quantidade * this.precoUnitario;
   }
 
+
+  async readerBalanca(): Promise<any> {
+    if(this.fracionado){
+    let navegador: any;
+
+    navegador = window.navigator;
+
+    if (navegador && navegador.serial) {
+      const porta = await navegador.serial.requestPort();
+      await porta.open({ baudRate: 4800 });
+
+      while (porta.readable) {
+        const reader = porta.readable.getReader();
+        try {
+          while (true) {
+            const { value, done } = await reader.read();
+            if (done) {
+              break;
+            }
+            const hex = buf2hex(value)
+            const ascii = hex2a(hex)
+            this.formatarPeso(ascii)
+          }
+        } catch (error) {
+        } finally {
+          reader.releaseLock();
+        }
+      }
+
+
+    } else {
+      console.log("Navegador não suporta leitura serial")
+    }
+  }
+
+    function buf2hex(buffer: any) { // buffer is an ArrayBuffer
+      return [...new Uint8Array(buffer)]
+        .map(x => x.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    function toHexString(byteArray: any) {// Byte Array -> HEX 
+      return Array.from(byteArray, 
+        function(byte: any) { 
+          return ('0' + (byte & 0XFF).toString(16)).slice(-2); }).join() 
+    } 
+
+    function hex2a(hexx: any) { // HEX-> ASCII 
+        var hex = hexx.toString(); //força conversão 
+        var str = ''
+        for (var i = 0; i < hex.length; i +=  2) 
+          {
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16)); 
+          }
+        return str;
+    }
+  }
+
+
+  formatarPeso(ascii:any){
+  
+    var valor = Number(ascii);
+    if(!valor){
+      valor = Number(ascii.substring(1));
+    }
+    this.quantidade = valor;
+  }
+
   imprimir(){
     localStorage.setItem("itensVendas", JSON.stringify(this.produtos));
     this.router.navigate(['/imprime-venda']);
-
   }
 }
