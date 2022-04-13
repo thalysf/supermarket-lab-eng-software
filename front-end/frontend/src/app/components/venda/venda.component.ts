@@ -18,6 +18,9 @@ export class VendaComponent implements OnInit {
   produtos:ItemVenda[] = [];
   produtoAtual:any;
 
+  porta:any;
+  reader:any;
+
   codigo:any;
   quantidade:any = 1;
   precoUnitario:any;
@@ -143,24 +146,28 @@ export class VendaComponent implements OnInit {
     navegador = window.navigator;
 
     if (navegador && navegador.serial) {
-      const porta = await navegador.serial.requestPort();
-      await porta.open({ baudRate: 4800 });
+      this.porta = await navegador.serial.requestPort();
+      await this.porta.open({ baudRate: 4800 });
 
-      while (porta.readable) {
-        const reader = porta.readable.getReader();
+      while (this.porta.readable) {
+        this.reader = this.porta.readable.getReader();
         try {
           while (true) {
-            const { value, done } = await reader.read();
-            if (done) {
-              break;
+            if(this.fracionado){
+              const { value, done } = await this.reader.read();
+              const hex = buf2hex(value)
+              const ascii = hex2a(hex)
+              this.formatarPeso(ascii)
+            } else {
+              this.reader.releaseLock();
+              this.porta.close();
+              return;
             }
-            const hex = buf2hex(value)
-            const ascii = hex2a(hex)
-            this.formatarPeso(ascii)
           }
         } catch (error) {
         } finally {
-          reader.releaseLock();
+          this.reader.releaseLock();
+
         }
       }
 

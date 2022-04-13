@@ -22,7 +22,10 @@ export class CafeteriaComponent implements OnInit {
   cartoes: CartaoCliente[] = [];
   cartaoCliente: CartaoCliente = {rfid: '', produtos_cafeteria: [], cartao_pago: false};
   produtoSelecionado: Produto = {codigo_barras: '', nome: '', qtd_estoque: 0};
-  quantidade: number= 0;
+  quantidade: any= 0;
+
+  porta:any;
+  reader:any;
 
   displayedColumns: string[] = ['rfid', 'produtos', 'acao'];
 
@@ -187,29 +190,34 @@ export class CafeteriaComponent implements OnInit {
 
   async readerBalanca(): Promise<any> {
 
+    if(this.produtoSelecionado.fracionado){
     let navegador: any;
 
     navegador = window.navigator;
 
     if (navegador && navegador.serial) {
-      const porta = await navegador.serial.requestPort();
-      await porta.open({ baudRate: 4800 });
+      this.porta = await navegador.serial.requestPort();
+      await this.porta.open({ baudRate: 4800 });
 
-      while (porta.readable) {
-        const reader = porta.readable.getReader();
+      while (this.porta.readable) {
+        this.reader = this.porta.readable.getReader();
         try {
           while (true) {
-            const { value, done } = await reader.read();
-            if (done) {
-              break;
+            const { value, done } = await this.reader.read();
+            if(this.produtoSelecionado.fracionado){
+              const { value, done } = await this.reader.read();
+              const hex = buf2hex(value)
+              const ascii = hex2a(hex)
+              this.formatarPeso(ascii)
+            } else {
+              this.reader.releaseLock();
+              this.porta.close();
+              return;
             }
-            const hex = buf2hex(value)
-            const ascii = hex2a(hex)
-            this.formatarPeso(ascii)
           }
         } catch (error) {
         } finally {
-          reader.releaseLock();
+          this.reader.releaseLock();
         }
       }
     } else {
@@ -238,6 +246,7 @@ export class CafeteriaComponent implements OnInit {
         return str;
     }
   }
+}
 
 
   formatarPeso(ascii:any){
