@@ -50,8 +50,13 @@
     </button>
 
   <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"
-          (click)="imprimir()">
-   Imprimir
+          (click)="requestUsb()">
+   Conectar USB
+  </button>
+
+  <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"
+          [disabled]="status === false" (click)="imprimir()">
+    Imprimir
   </button>
 
     <div class="mat-elevation-z2" style="margin-top: 30px;">

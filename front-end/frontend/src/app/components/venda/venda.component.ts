@@ -7,6 +7,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Produto } from './../../entity/Produto';
 import { Component, OnInit, ViewChild } from '@angular/core';
+import {PrintService, UsbDriver} from "ng-thermal-print";
 
 @Component({
   selector: 'app-venda',
@@ -31,12 +32,31 @@ export class VendaComponent implements OnInit {
 
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
   dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
+
+  status: boolean = false;
+  usbPrintDriver: UsbDriver;
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
-  constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService, 
-    private vendaSerive:VendaService, private router: Router) { }
+  constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService,
+    private vendaSerive:VendaService, private router: Router, private printService: PrintService) {
+      this.usbPrintDriver = new UsbDriver();
+      this.printService.isConnected.subscribe(result => {
+        this.status = result;
+        if (result) {
+          console.log('Connected to printer!!!');
+        } else {
+          console.log('Not connected to printer.');
+        }
+      });
+  }
 
   ngOnInit(): void {
+  }
+
+  requestUsb() {
+    this.usbPrintDriver.requestUsb().subscribe(result => {
+      this.printService.setDriver(this.usbPrintDriver, 'ESC/POS');
+    });
   }
 
   inserir(){
@@ -183,18 +203,18 @@ export class VendaComponent implements OnInit {
         .join('');
     }
 
-    function toHexString(byteArray: any) {// Byte Array -> HEX 
-      return Array.from(byteArray, 
-        function(byte: any) { 
-          return ('0' + (byte & 0XFF).toString(16)).slice(-2); }).join() 
-    } 
+    function toHexString(byteArray: any) {// Byte Array -> HEX
+      return Array.from(byteArray,
+        function(byte: any) {
+          return ('0' + (byte & 0XFF).toString(16)).slice(-2); }).join()
+    }
 
-    function hex2a(hexx: any) { // HEX-> ASCII 
-        var hex = hexx.toString(); //força conversão 
+    function hex2a(hexx: any) { // HEX-> ASCII
+        var hex = hexx.toString(); //força conversão
         var str = ''
-        for (var i = 0; i < hex.length; i +=  2) 
+        for (var i = 0; i < hex.length; i +=  2)
           {
-            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16)); 
+            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
           }
         return str;
     }
@@ -202,7 +222,7 @@ export class VendaComponent implements OnInit {
 
 
   formatarPeso(ascii:any){
-  
+
     var valor = Number(ascii);
     if(!valor){
       valor = Number(ascii.substring(1));
@@ -212,6 +232,31 @@ export class VendaComponent implements OnInit {
 
   imprimir(){
     localStorage.setItem("itensVendas", JSON.stringify(this.produtos));
-    this.router.navigate(['/imprime-venda']);
+    var esc = '\x1B';
+    var newLine = '\x0A';
+    var cmds = esc + "@";
+    cmds += esc + '!' + '\x38';
+    cmds += 'Produtos';
+    cmds += newLine + newLine;
+    cmds += esc + '!' + '\x00';
+    let total = 0;
+    for (let i = 0; i < this.produtos.length; i++) {
+      //total = this.produtos[i].produto.preco_venda * this.produtos[i].quantidade;
+      cmds += `${this.produtos[i].produto.nome}   ${this.produtos[i].quantidade}   ${this.produtos[i].produto.preco_venda}`;
+      cmds += newLine;
+    }
+    cmds += newLine + newLine;
+    cmds += `TOTAL   9.22`;
+    cmds += esc + '!' + '\x00';
+    cmds += newLine + newLine;
+    cmds += new Date();
+
+    //this.router.navigate(['/imprime-venda']);
+    this.printService.init()
+      .setSize('normal')
+      .writeLine(cmds)
+      .feed(4)
+      .cut('full')
+      .flush();
   }
 }
