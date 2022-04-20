@@ -239,14 +239,16 @@ export class VendaComponent implements OnInit {
     cmds += 'Produtos';
     cmds += newLine + newLine;
     cmds += esc + '!' + '\x00';
-    let total = 0;
+    let total: any = 0;
+    let totalCompra: any = 0;
     for (let i = 0; i < this.produtos.length; i++) {
-      //total = this.produtos[i].produto.preco_venda * this.produtos[i].quantidade;
-      cmds += `${this.produtos[i].produto.nome}   ${this.produtos[i].quantidade}   ${this.produtos[i].produto.preco_venda}`;
+      total = (this.produtos[i].produto.preco_venda || 0) * this.produtos[i].quantidade;
+      totalCompra += total;
+      cmds += `${this.produtos[i].produto.nome}   ${this.produtos[i].quantidade}   ${total}`;
       cmds += newLine;
     }
     cmds += newLine + newLine;
-    cmds += `TOTAL   9.22`;
+    cmds += `TOTAL   ${totalCompra}`;
     cmds += esc + '!' + '\x00';
     cmds += newLine + newLine;
     cmds += new Date();
