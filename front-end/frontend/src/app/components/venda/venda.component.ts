@@ -117,7 +117,6 @@ export class VendaComponent implements OnInit {
   }
 
   carregarProduto(produto:any){
-    console.log(produto);
     this.imagem = produto.imagem;
     this.precoUnitario = produto.preco_venda;
     this.produtoAtual = produto;
@@ -125,6 +124,8 @@ export class VendaComponent implements OnInit {
     if(this.quantidade){
       this.precoTotalProduto = this.quantidade * this.precoUnitario;
     }
+
+    this.readerBalanca();
   }
 
   excluir(produto:any){
