@@ -1,3 +1,4 @@
+import { BalancaService } from './../../services/balanca.service';
 import { Router } from '@angular/router';
 import { ItemVenda } from './../../entity/ItemVenda';
 import { VendaService } from './../../services/venda.service';
@@ -5,7 +6,6 @@ import { ToastrService } from 'ngx-toastr';
 import { EntradaEstoqueService } from './../../services/entrada-estoque.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import { Produto } from './../../entity/Produto';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {PrintService, UsbDriver} from "ng-thermal-print";
 
@@ -18,9 +18,6 @@ export class VendaComponent implements OnInit {
 
   produtos:ItemVenda[] = [];
   produtoAtual:any;
-
-  porta:any;
-  reader:any;
 
   codigo:any;
   quantidade:any = 1;
@@ -38,7 +35,9 @@ export class VendaComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
   constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService,
-    private vendaSerive:VendaService, private router: Router, private printService: PrintService) {
+    private vendaSerive:VendaService, private router: Router, private printService: PrintService,
+    private balancaService:BalancaService) {
+
       this.usbPrintDriver = new UsbDriver();
       this.printService.isConnected.subscribe(result => {
         this.status = result;
@@ -107,7 +106,8 @@ export class VendaComponent implements OnInit {
 
   onChangeCodigo(event:any){
     var texto = event.target.value;
-
+    console.log(texto);
+    console.log(this.codigo)
     if(texto.length == 12){
       this.entradaEstoqueService.carregarProduto(texto).subscribe(
         data=> this.carregarProduto(data),
@@ -117,6 +117,7 @@ export class VendaComponent implements OnInit {
   }
 
   carregarProduto(produto:any){
+    console.log(produto);
     this.imagem = produto.imagem;
     this.precoUnitario = produto.preco_venda;
     this.produtoAtual = produto;
@@ -166,27 +167,41 @@ export class VendaComponent implements OnInit {
     navegador = window.navigator;
 
     if (navegador && navegador.serial) {
-      this.porta = await navegador.serial.requestPort();
-      await this.porta.open({ baudRate: 4800 });
 
-      while (this.porta.readable) {
-        this.reader = this.porta.readable.getReader();
+      await this.balancaService.inicializarPorta();
+
+      if(!this.balancaService.getPorta()){
+        this.balancaService.porta = await navegador.serial.requestPort();
+        await this.balancaService.porta.open({ baudRate: 4800 });
+      }
+
+      try{
+        await this.balancaService.porta.open({ baudRate: 4800 });
+      } catch(err){
+
+      }
+      while (this.balancaService.porta.readable) {
+        try{
+          this.balancaService.reader = this.balancaService.porta.readable.getReader();
+        } catch(err){
+
+        }
         try {
           while (true) {
             if(this.fracionado){
-              const { value, done } = await this.reader.read();
+              const { value, done } = await this.balancaService.reader.read();
               const hex = buf2hex(value)
               const ascii = hex2a(hex)
               this.formatarPeso(ascii)
             } else {
-              this.reader.releaseLock();
-              this.porta.close();
+              this.balancaService.reader.releaseLock();
+              this.balancaService.porta.close();
               return;
             }
           }
         } catch (error) {
         } finally {
-          this.reader.releaseLock();
+          this.balancaService.reader.releaseLock();
 
         }
       }
