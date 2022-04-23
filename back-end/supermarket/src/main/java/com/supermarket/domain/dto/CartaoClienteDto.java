@@ -16,9 +16,9 @@ import java.util.Set;
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class CartaoClienteDto {
 
-    String rfid;
+    private String rfid;
 
-    Set<ItemVendaDto> produtosCafeteria;
+    private Set<ItemVendaDto> produtosCafeteria;
 
-    Boolean cartaoPago;
+    private Boolean cartaoPago;
 }

@@ -18,11 +18,9 @@ import java.util.Set;
 @Entity
 @Table(name = "usuario")
 public class Usuario implements Serializable {
-    @NotNull
     @Column(name = "nome", nullable = false, length = 50)
     private String nome;
 
-    @NotNull
     @Id
     @Column(name = "cpf", nullable = false, unique = true, length = 11)
     private String cpf;

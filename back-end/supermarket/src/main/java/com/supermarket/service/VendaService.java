@@ -24,7 +24,7 @@ public class VendaService {
     @Autowired
     private final ProdutoMapper produtoMapper;
 
-    public void darBaixa( List<ItemVendaDto> itemsVendaDto){
+    public void realizarVenda(List<ItemVendaDto> itemsVendaDto){
 
         Set<Produto> produtosAsalvar = new HashSet<Produto>();
 

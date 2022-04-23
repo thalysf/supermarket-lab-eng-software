@@ -1,9 +1,6 @@
 package com.supermarket.controller;
 
 import com.supermarket.domain.dto.ItemVendaDto;
-import com.supermarket.domain.dto.ProdutoDto;
-import com.supermarket.domain.entity.Produto;
-import com.supermarket.service.ProdutoService;
 import com.supermarket.service.VendaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -21,6 +18,6 @@ public class VendaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void darBaixaVendas(@RequestBody List<ItemVendaDto> itemsVendaDto){ vendaService.darBaixa(itemsVendaDto);
+    public void darBaixaVendas(@RequestBody List<ItemVendaDto> itemsVendaDto){ vendaService.realizarVenda(itemsVendaDto);
     }
 }
