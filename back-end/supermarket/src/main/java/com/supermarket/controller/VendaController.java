@@ -1,12 +1,12 @@
 package com.supermarket.controller;
 
-import com.supermarket.domain.dto.ItemVendaDto;
+import com.supermarket.domain.dto.VendaDto;
+import com.supermarket.exception.RegraNegocioException;
 import com.supermarket.service.VendaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @CrossOrigin
@@ -18,6 +18,12 @@ public class VendaController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void darBaixaVendas(@RequestBody List<ItemVendaDto> itemsVendaDto){ vendaService.realizarVenda(itemsVendaDto);
+    public void realizarVenda(@RequestBody VendaDto vendaDto) {
+        try{
+            vendaService.realizarVenda(vendaDto);
+        }
+        catch (DataIntegrityViolationException e){
+            throw new RegraNegocioException("Cartao já associado a uma venda.");
+        }
     }
 }

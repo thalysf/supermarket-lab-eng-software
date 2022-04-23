@@ -13,4 +13,6 @@ public interface CafeteriaMapper {
     CartaoClienteDto cartaoClienteDtoToCartaoCliente(CartaoCliente cartaoCliente);
 
     Set<CartaoClienteDto> setCartaoClienteToSetCartaoClienteDto(Set<CartaoCliente> cartaoClientes);
+
+    Set<CartaoCliente> setCartaoClienteDtoToSetCartaoCliente(Set<CartaoClienteDto> cartaoClientesDto);
 }

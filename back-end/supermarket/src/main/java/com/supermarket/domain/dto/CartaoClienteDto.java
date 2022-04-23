@@ -18,6 +18,8 @@ public class CartaoClienteDto {
 
     private String rfid;
 
+    private String cpf;
+
     private Set<ItemVendaDto> produtosCafeteria;
 
     private Boolean cartaoPago;

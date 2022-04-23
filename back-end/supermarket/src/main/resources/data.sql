@@ -1,3 +1,8 @@
+delete from usuario_tela;
+delete from usuario;
+delete from tela;
+
+
 INSERT INTO tela
 VALUES
 (1, 'CAIXA'),

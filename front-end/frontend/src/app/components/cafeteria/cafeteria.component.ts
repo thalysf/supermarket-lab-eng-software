@@ -20,14 +20,14 @@ export class CafeteriaComponent implements OnInit {
   setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   cartoes: CartaoCliente[] = [];
-  cartaoCliente: CartaoCliente = {rfid: '', produtos_cafeteria: [], cartao_pago: false};
+  cartaoCliente: CartaoCliente = {rfid: '', cpf: '', produtos_cafeteria: [], cartao_pago: false};
   produtoSelecionado: Produto = {codigo_barras: '', nome: '', qtd_estoque: 0};
   quantidade: any= 0;
 
   porta:any;
   reader:any;
 
-  displayedColumns: string[] = ['rfid', 'produtos', 'acao'];
+  displayedColumns: string[] = ['rfid', 'cpf', 'cartao_pago', 'produtos', 'acao'];
 
   dataSource = new MatTableDataSource<CartaoCliente>(this.cartoes);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -82,6 +82,10 @@ export class CafeteriaComponent implements OnInit {
     {
       this.toastr.error("Preencha o RFID do Cliente!");
     }
+    else if(!this.cpfClientePreenchido())
+    {
+      this.toastr.error("Preencha o CPF do Cliente!");
+    }
   else {
       this.cafeteriaService.criarCartaoCliente(this.cartaoCliente).subscribe(
         data => {
@@ -103,6 +107,10 @@ export class CafeteriaComponent implements OnInit {
     else if(!this.rfidClientePreenchido())
     {
       this.toastr.error("Preencha o RFID do Cliente!");
+    }
+    else if(!this.cpfClientePreenchido())
+    {
+      this.toastr.error("Preencha o CPF do Cliente!");
     }
     else{
       this.cafeteriaService.atualizarCartaoCliente(this.cartaoCliente).subscribe(
@@ -128,7 +136,7 @@ export class CafeteriaComponent implements OnInit {
   }
 
   limpar() {
-    this.cartaoCliente = {rfid: '', produtos_cafeteria: [], cartao_pago: false};
+    this.cartaoCliente = {rfid: '', cpf: '', produtos_cafeteria: [], cartao_pago: false};
     this.produtoSelecionado = {codigo_barras: '', nome: '', qtd_estoque: 0};
     this.quantidade = 0;
   }
@@ -153,6 +161,7 @@ export class CafeteriaComponent implements OnInit {
   carregarListaCartaoCliente(cartoes: CartaoCliente[]): void {
     this.cartoes = cartoes;
     this.dataSource.data = this.cartoes
+    console.log(cartoes)
   }
   
 
@@ -162,7 +171,7 @@ export class CafeteriaComponent implements OnInit {
 
   camposPreenchidos(): boolean
   {
-    return this.cartaoCliente.rfid != ''  && this.produtoSelecionado.nome != '' && this.quantidade > 0;
+    return this.cartaoCliente.rfid != ''  &&  this.cartaoCliente.cpf != '' && this.produtoSelecionado.nome != '' && this.quantidade > 0;
   }
   
   carrinhoPreenchido(): boolean
@@ -172,6 +181,11 @@ export class CafeteriaComponent implements OnInit {
   rfidClientePreenchido(): boolean
   {
     return this.cartaoCliente.rfid != ''
+  }
+
+  cpfClientePreenchido(): boolean
+  {
+    return this.cartaoCliente.cpf != ''
   }
 
   veririficarUsuario(tela: string) {

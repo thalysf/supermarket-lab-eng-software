@@ -35,8 +35,18 @@
 
         <section class="espacamentoCampos" style="display: inline;">
             <mat-checkbox class="example-margin" [(ngModel)]="fracionado" name="fracionado" [disabled]="true">Fracionado</mat-checkbox>
-          </section>
+        </section>
 
+
+        <div class="multiselect espacamentoCampos">
+            <ng-multiselect-dropdown name="cartoes"
+                [formControl]="formControlCartoes"
+                [settings]="dropdownSettings"
+                [data]="cartoes"
+                [placeholder]="'Cartões'"
+                [(ngModel)]="cartoesSelecionados">
+            </ng-multiselect-dropdown>
+        </div>
     </form>
 
     <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"

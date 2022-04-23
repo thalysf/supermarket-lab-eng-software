@@ -62,8 +62,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
       rfid: this.rfid,
     }
 
-    console.log(this.imagem);
-
     this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
       data => this.carregarProduto(),
       error => this.toastr.error('Não foi possível Cadastrar o Produto')

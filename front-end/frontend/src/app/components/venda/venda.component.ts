@@ -1,3 +1,4 @@
+import { Venda } from './../../entity/Venda';
 import { BalancaService } from './../../services/balanca.service';
 import { Router } from '@angular/router';
 import { ItemVenda } from './../../entity/ItemVenda';
@@ -8,6 +9,10 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {PrintService, UsbDriver} from "ng-thermal-print";
+import { CafeteriaService } from 'src/app/services/cafeteria.service';
+import { CartaoCliente } from 'src/app/entity/CartaoCliente';
+import { FormControl } from '@angular/forms';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-venda',
@@ -18,6 +23,7 @@ export class VendaComponent implements OnInit {
 
   produtos:ItemVenda[] = [];
   produtoAtual:any;
+  venda: Venda = {cpf: '', data: new Date(), cartoes: [], produtos_supermercado: []};
 
   codigo:any;
   quantidade:any = 1;
@@ -26,6 +32,12 @@ export class VendaComponent implements OnInit {
   imagem:any;
   precoTotalProduto:any;
   fracionado:boolean = false;
+  cartoes: CartaoCliente[] = []
+  cartoesSelecionados: CartaoCliente[] = []
+  dropdownSettings: IDropdownSettings = {};
+
+
+  public formControlCartoes = new FormControl([]);
 
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
   dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
@@ -34,7 +46,7 @@ export class VendaComponent implements OnInit {
   usbPrintDriver: UsbDriver;
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
-  constructor(public entradaEstoqueService:EntradaEstoqueService, private toastr: ToastrService,
+  constructor(public entradaEstoqueService:EntradaEstoqueService, public cafeteriaService: CafeteriaService,private toastr: ToastrService,
     private vendaSerive:VendaService, private router: Router, private printService: PrintService,
     private balancaService:BalancaService) {
 
@@ -47,6 +59,14 @@ export class VendaComponent implements OnInit {
           console.log('Not connected to printer.');
         }
       });
+      this.dropdownSettings = {
+        idField: 'rfid',
+        textField: 'cpf',
+        selectAllText: 'Selecionar todos',
+        allowSearchFilter: true
+      };
+
+      this.carregarCartoesCliente();
   }
 
   ngOnInit(): void {
@@ -92,10 +112,26 @@ export class VendaComponent implements OnInit {
   }
 
   finalizarCompra(){
-    this.vendaSerive.realizarVenda(this.produtos).subscribe(
-      data=>this.vendaSucesso(),
-      error=>this.toastr.error('Não foi possível realizar a venda')
+    if(this.cartoesSelecionados.length === 0){
+      this.toastr.error("Selecione ao menos um cartão")
+    }
+    else{
+      this.prepararVenda()
+      this.vendaSerive.realizarVenda(this.venda).subscribe(
+        data=>this.vendaSucesso(),
+        error=>this.toastr.error('Não foi possível realizar a venda')
     )
+    }
+  }
+
+  prepararVenda()
+  {
+    this.venda.cpf = this.cartoesSelecionados[0].cpf;
+    this.venda.cartoes = this.cartoes.filter(a => this.cartoesSelecionados.some(b => a.rfid === b.rfid));  
+    this.venda.cartoes.forEach(c => c.cartao_pago = true)
+    this.venda.produtos_supermercado = this.produtos;
+    this.venda.data = new Date();
+    console.log(this.venda)
   }
 
   vendaSucesso(){
@@ -106,8 +142,6 @@ export class VendaComponent implements OnInit {
 
   onChangeCodigo(event:any){
     var texto = event.target.value;
-    console.log(texto);
-    console.log(this.codigo)
     if(texto.length == 12){
       this.entradaEstoqueService.carregarProduto(texto).subscribe(
         data=> this.carregarProduto(data),
@@ -128,6 +162,11 @@ export class VendaComponent implements OnInit {
     this.readerBalanca();
   }
 
+  carregarCartoesCliente() {
+    this.cafeteriaService.carregarCartaoClientes().subscribe((cartoes: CartaoCliente[]) => this.cartoes = cartoes);
+  }
+
+
   excluir(produto:any){
     for(var i =0; i < this.produtos.length; i++){
       if(this.produtos[i].produto.codigo_barras == produto.produto.codigo_barras){
@@ -139,7 +178,6 @@ export class VendaComponent implements OnInit {
   }
 
   expandeImagem(id: any) {
-    console.log(id)
     let img = document.getElementById(id)
     if (img) {
       img.style.transform = "scale(2)";

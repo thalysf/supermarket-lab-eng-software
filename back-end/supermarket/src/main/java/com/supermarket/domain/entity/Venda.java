@@ -28,10 +28,10 @@ public class Venda implements Serializable {
     private String cpf;
 
     @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "produtos_supermercado_venda", joinColumns = {@JoinColumn(name = "id_item_venda")}, inverseJoinColumns = {@JoinColumn(name = "id_venda")})
+    @JoinTable(name = "produtos_supermercado_venda", joinColumns = {@JoinColumn(name = "id_venda")}, inverseJoinColumns = {@JoinColumn(name = "id_item_venda")})
     private Set<ItemVenda> produtosSupermercado;
 
-    @OneToMany(cascade = CascadeType.PERSIST)
-    @JoinTable(name = "cartoes_venda", joinColumns = {@JoinColumn(name = "rfid")}, inverseJoinColumns = {@JoinColumn(name = "id_venda")})
+    @OneToMany(cascade = CascadeType.MERGE)
+    @JoinTable(name = "cartoes_venda", joinColumns = {@JoinColumn(name = "id_venda")}, inverseJoinColumns = {@JoinColumn(name = "rfid")})
     private Set<CartaoCliente> cartoes;
 }

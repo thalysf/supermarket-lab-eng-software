@@ -9,6 +9,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -46,4 +47,17 @@ public class Produto implements Serializable {
     @Id
     @Column(name = "rfid", nullable = false)
     private String rfid;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Produto produto = (Produto) o;
+        return Objects.equals(nome, produto.nome) && Objects.equals(codigoBarras, produto.codigoBarras) && Objects.equals(fracionado, produto.fracionado) && setor == produto.setor && Objects.equals(rfid, produto.rfid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(nome, codigoBarras, fracionado, setor, rfid);
+    }
 }
