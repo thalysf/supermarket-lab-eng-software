@@ -20,6 +20,8 @@ public class CartaoClienteDto {
 
     private String cpf;
 
+    private String nome;
+
     private Set<ItemVendaDto> produtosCafeteria;
 
     private Boolean cartaoPago;

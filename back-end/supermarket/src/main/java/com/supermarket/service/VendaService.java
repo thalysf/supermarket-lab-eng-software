@@ -8,12 +8,10 @@ import com.supermarket.domain.mapper.CafeteriaMapper;
 import com.supermarket.domain.mapper.ProdutoMapper;
 import com.supermarket.domain.mapper.VendaMapper;
 import com.supermarket.exception.RegraNegocioException;
-import com.supermarket.repository.CafeteriaRepository;
+import com.supermarket.repository.CartaoClienteRepository;
 import com.supermarket.repository.ProdutoRepository;
 import com.supermarket.repository.VendaRepository;
 import lombok.RequiredArgsConstructor;
-import org.postgresql.util.PSQLException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,7 +23,7 @@ import java.util.*;
 public class VendaService {
 
     private final ProdutoRepository produtoRepository;
-    private final CafeteriaRepository cafeteriaRepository;
+    private final CartaoClienteRepository cartaoClienteRepository;
     private final VendaRepository vendaRepository;
 
     private final ProdutoMapper produtoMapper;
@@ -41,7 +39,7 @@ public class VendaService {
             c.setCartaoPago(true);
         });
 
-        cafeteriaRepository.saveAll(cafeteriaMapper.setCartaoClienteDtoToSetCartaoCliente(vendaDto.getCartoes()));
+        cartaoClienteRepository.saveAll(cafeteriaMapper.setCartaoClienteDtoToSetCartaoCliente(vendaDto.getCartoes()));
         produtoRepository.saveAll(produtosAsalvar);
         vendaRepository.save(vendaMapper.vendaDtoToVenda(vendaDto));
     }

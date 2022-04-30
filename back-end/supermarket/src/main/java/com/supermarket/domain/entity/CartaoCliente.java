@@ -22,6 +22,9 @@ public class CartaoCliente implements Serializable {
     @Column(name = "cpf", length = 11)
     private String cpf;
 
+    @Column(name = "nome", length = 120)
+    private String nome;
+
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(name = "cartao_cliente_item_venda", joinColumns = {@JoinColumn(name = "id_item_venda")}, inverseJoinColumns = {@JoinColumn(name = "rfid")})
     private Set<ItemVenda> produtosCafeteria;

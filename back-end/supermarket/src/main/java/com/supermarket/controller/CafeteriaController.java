@@ -6,8 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import java.util.Set;
 
 @RestController
@@ -17,22 +15,16 @@ import java.util.Set;
 public class CafeteriaController {
     private final CafeteriaService cafeteriaService;
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public void cadastrarCartaoCliente(@Valid @RequestBody CartaoClienteDto cartaoClienteDto) {
-        cafeteriaService.cadastrarCartaoCliente(cartaoClienteDto);
-    }
-
     @PutMapping
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void atualizarCartaoCliente(@Valid @RequestBody CartaoClienteDto cartaoClienteDto) {
-        cafeteriaService.atualizarCartaoCliente(cartaoClienteDto);
+    @ResponseStatus(HttpStatus.OK)
+    public void incluirProdutosCafeteriaNoCartao(@RequestBody CartaoClienteDto cartaoClienteDto) {
+        cafeteriaService.incluirProdutosCafeteriaNoCartao(cartaoClienteDto);
     }
 
-    @DeleteMapping("/{rfid}")
+    @DeleteMapping
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deletarCartaoCliente(@PathVariable @NotEmpty String rfid) {
-        cafeteriaService.deletarCartaoCliente(rfid);
+    public void limparProdutosCartao(@RequestBody CartaoClienteDto cartaoClienteDto) {
+        cafeteriaService.limparProdutosCartao(cartaoClienteDto);
     }
 
     @GetMapping("{rfid}")

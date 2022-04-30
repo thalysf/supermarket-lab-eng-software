@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Repository
 @Transactional
-public interface CafeteriaRepository extends CrudRepository<CartaoCliente, String> {
+public interface CartaoClienteRepository extends CrudRepository<CartaoCliente, String> {
     @Override
     Set<CartaoCliente> findAll();
 }

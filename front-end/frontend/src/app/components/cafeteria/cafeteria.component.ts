@@ -20,14 +20,14 @@ export class CafeteriaComponent implements OnInit {
   setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   cartoes: CartaoCliente[] = [];
-  cartaoCliente: CartaoCliente = {rfid: '', cpf: '', produtos_cafeteria: [], cartao_pago: false};
   produtoSelecionado: Produto = {codigo_barras: '', nome: '', qtd_estoque: 0};
+  cartaoSelecionado: CartaoCliente = {rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false};
   quantidade: any= 0;
 
   porta:any;
   reader:any;
 
-  displayedColumns: string[] = ['rfid', 'cpf', 'cartao_pago', 'produtos', 'acao'];
+  displayedColumns: string[] = ['nome', 'rfid', 'cpf', 'cartao_pago', 'produtos', 'acao'];
 
   dataSource = new MatTableDataSource<CartaoCliente>(this.cartoes);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -56,78 +56,48 @@ export class CafeteriaComponent implements OnInit {
 
       let atualizacao: boolean = false;
   
-      for(let item of this.cartaoCliente.produtos_cafeteria){
+      for(let item of this.cartaoSelecionado.produtos_cafeteria){
         if(produtoSelecionado.codigo_barras === item.produto.codigo_barras){
-            const index = this.cartaoCliente.produtos_cafeteria.indexOf(item)
-            this.cartaoCliente.produtos_cafeteria[index].quantidade = qtd
+            const index = this.cartaoSelecionado.produtos_cafeteria.indexOf(item)
+            this.cartaoSelecionado.produtos_cafeteria[index].quantidade = qtd
   
             atualizacao = true;
         }
       }
       if(!atualizacao){
-        this.cartaoCliente.produtos_cafeteria.push(itemVenda);
+        this.cartaoSelecionado.produtos_cafeteria.push(itemVenda);
       } 
     }
   }
 
   removerCarrinho(index: any): void{
-    this.cartaoCliente.produtos_cafeteria.splice(index, 1);
+    this.cartaoSelecionado.produtos_cafeteria.splice(index, 1);
   }
 
-  async cadastrar() {
+  async addProdutosAoCartao() {
     if(!this.carrinhoPreenchido()){
-      this.toastr.error("Para cadastrar uma compra na Cafeteria deve haver ao menos um produto!");
+      this.toastr.error("Para finalizar uma compra na Cafeteria deve haver ao menos um produto!");
     }
-    else if(!this.rfidClientePreenchido())
+    else if(!this.clienteSelecionado())
     {
-      this.toastr.error("Preencha o RFID do Cliente!");
-    }
-    else if(!this.cpfClientePreenchido())
-    {
-      this.toastr.error("Preencha o CPF do Cliente!");
+      this.toastr.error("Selecione o Cliente!");
     }
   else {
-      this.cafeteriaService.criarCartaoCliente(this.cartaoCliente).subscribe(
+      this.cafeteriaService.addProdutosAoCartaoCliente(this.cartaoSelecionado).subscribe(
         data => {
-          this.toastr.success('Cartão Cliente Cadastrado!');
+          this.toastr.success('Produtos adicionados ao cartão!');
           this.carregarProduto();
           this.carregarCartaoCliente();
         },
-        error => this.toastr.error('Não foi possível Cadastrar o Cartão: ' + error.error.ERRORS)
+        error => this.toastr.error('Não foi possível Adicionar protudos ao Cartão: ' + error.error.ERRORS)
       );
     }
   }
 
-
-
-  atualizar() {
-    if(!this.carrinhoPreenchido()){
-      this.toastr.error("Para atualizar uma compra na Cafeteria deve haver ao menos um produto!");
-    }
-    else if(!this.rfidClientePreenchido())
-    {
-      this.toastr.error("Preencha o RFID do Cliente!");
-    }
-    else if(!this.cpfClientePreenchido())
-    {
-      this.toastr.error("Preencha o CPF do Cliente!");
-    }
-    else{
-      this.cafeteriaService.atualizarCartaoCliente(this.cartaoCliente).subscribe(
-        data => {
-          this.toastr.success('Cartão Cliente Atualizado!');
-          this.carregarProduto();
-          this.carregarCartaoCliente();
-        },
-        error => this.toastr.error('Não foi possível Atualizar o Produto: ' + error.error.ERRORS)
-      );
-    }
-  }
-
-  deletar(cartaoCliente: CartaoCliente) {
-    this.cafeteriaService.excluirCartaoCliente(cartaoCliente).subscribe(
+  limparProdutosCartao(cartaoCliente: CartaoCliente) {
+    this.cafeteriaService.limparProdutosCartao(this.cartaoSelecionado).subscribe(
       data => {
-        this.toastr.success('Cartão Cliente Deletado!');
+        this.toastr.success('Produtos removidos do Cartão Cliente!');
         this.carregarProduto();
         this.carregarCartaoCliente();
       },
@@ -136,7 +106,7 @@ export class CafeteriaComponent implements OnInit {
   }
 
   limpar() {
-    this.cartaoCliente = {rfid: '', cpf: '', produtos_cafeteria: [], cartao_pago: false};
+    this.cartaoSelecionado = {rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false};
     this.produtoSelecionado = {codigo_barras: '', nome: '', qtd_estoque: 0};
     this.quantidade = 0;
   }
@@ -171,21 +141,17 @@ export class CafeteriaComponent implements OnInit {
 
   camposPreenchidos(): boolean
   {
-    return this.cartaoCliente.rfid != ''  &&  this.cartaoCliente.cpf != '' && this.produtoSelecionado.nome != '' && this.quantidade > 0;
+    return this.cartaoSelecionado.nome != '' && this.produtoSelecionado.nome != '' && this.quantidade > 0;
   }
   
-  carrinhoPreenchido(): boolean
+  clienteSelecionado(): boolean
   {
-    return this.cartaoCliente.produtos_cafeteria.length > 0
-  }
-  rfidClientePreenchido(): boolean
-  {
-    return this.cartaoCliente.rfid != ''
+    return this.cartaoSelecionado.nome != '';
   }
 
-  cpfClientePreenchido(): boolean
+  carrinhoPreenchido(): boolean
   {
-    return this.cartaoCliente.cpf != ''
+    return this.cartaoSelecionado.produtos_cafeteria.length > 0;
   }
 
   veririficarUsuario(tela: string) {

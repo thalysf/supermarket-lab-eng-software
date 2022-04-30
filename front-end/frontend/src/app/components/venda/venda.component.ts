@@ -61,7 +61,7 @@ export class VendaComponent implements OnInit {
       });
       this.dropdownSettings = {
         idField: 'rfid',
-        textField: 'cpf',
+        textField: 'nome',
         selectAllText: 'Selecionar todos',
         allowSearchFilter: true
       };
@@ -73,9 +73,9 @@ export class VendaComponent implements OnInit {
   }
 
   requestUsb() {
-    this.usbPrintDriver.requestUsb().subscribe(result => {
-      this.printService.setDriver(this.usbPrintDriver, 'ESC/POS');
-    });
+      this.usbPrintDriver.requestUsb().subscribe(result => {
+        this.printService.setDriver(this.usbPrintDriver, 'ESC/POS');
+      });
   }
 
   inserir(){
@@ -126,8 +126,8 @@ export class VendaComponent implements OnInit {
 
   prepararVenda()
   {
-    this.venda.cpf = this.cartoesSelecionados[0].cpf;
     this.venda.cartoes = this.cartoes.filter(a => this.cartoesSelecionados.some(b => a.rfid === b.rfid));  
+    this.venda.cpf = this.venda.cartoes[0].cpf;
     this.venda.cartoes.forEach(c => c.cartao_pago = true)
     this.venda.produtos_supermercado = this.produtos;
     this.venda.data = new Date();
@@ -163,7 +163,10 @@ export class VendaComponent implements OnInit {
   }
 
   carregarCartoesCliente() {
-    this.cafeteriaService.carregarCartaoClientes().subscribe((cartoes: CartaoCliente[]) => this.cartoes = cartoes);
+    this.cafeteriaService.carregarCartaoClientes().subscribe((cartoes: CartaoCliente[]) =>{
+       this.cartoes = cartoes;
+       console.log(this.cartoes)
+      });
   }
 
 

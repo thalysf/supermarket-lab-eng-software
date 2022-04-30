@@ -17,15 +17,11 @@ export class CafeteriaService {
     return this.http.get<CartaoCliente[]>(this.urlCafeteria);
   }
 
-  criarCartaoCliente(cartaoCliente:CartaoCliente){
-    return this.http.post<CartaoCliente>(this.urlCafeteria, cartaoCliente);
-  }
-
-  atualizarCartaoCliente(cartaoCliente:CartaoCliente){
+  addProdutosAoCartaoCliente(cartaoCliente:CartaoCliente){
     return this.http.put<CartaoCliente>(this.urlCafeteria, cartaoCliente);
   }
 
-  excluirCartaoCliente(cartaoCliente:CartaoCliente){
-    return this.http.delete<CartaoCliente>(this.urlCafeteria + "/" + cartaoCliente.rfid);
+  limparProdutosCartao(cartaoCliente:CartaoCliente){
+    return this.http.delete<CartaoCliente>(this.urlCafeteria, {body: cartaoCliente});
   }
 }

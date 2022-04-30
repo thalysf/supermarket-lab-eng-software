@@ -4,7 +4,7 @@ import com.supermarket.domain.dto.CartaoClienteDto;
 import com.supermarket.domain.entity.CartaoCliente;
 import com.supermarket.domain.mapper.CafeteriaMapper;
 import com.supermarket.exception.RegraNegocioException;
-import com.supermarket.repository.CafeteriaRepository;
+import com.supermarket.repository.CartaoClienteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,35 +15,30 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Transactional
 public class CafeteriaService {
-    private final CafeteriaRepository cafeteriaRepository;
+    private final CartaoClienteRepository cartaoClienteRepository;
 
     private final CafeteriaMapper cafeteriaMapper;
 
-    public void cadastrarCartaoCliente(CartaoClienteDto cartaoClienteDto) {
-        cafeteriaRepository.findById(cartaoClienteDto.getRfid()).ifPresent(u -> {
-            throw new RegraNegocioException("Cartão já cadastrado!");
-        });
+    public void incluirProdutosCafeteriaNoCartao(CartaoClienteDto cartaoClienteDto) {
+        cartaoClienteRepository.findById(cartaoClienteDto.getRfid()).orElseThrow(() -> new RegraNegocioException("Cartão não encontrado!"));
         CartaoCliente cartaoCliente = cafeteriaMapper.cartaoClienteDtoToCartaoCliente(cartaoClienteDto);
-        cafeteriaRepository.save(cartaoCliente);
+        cartaoClienteRepository.save(cartaoCliente);
     }
 
-    public void atualizarCartaoCliente(CartaoClienteDto cartaoClienteDto) {
-        cafeteriaRepository.findById(cartaoClienteDto.getRfid()).orElseThrow(() -> new RegraNegocioException("Cartão não encontrado!"));
+    public void limparProdutosCartao(CartaoClienteDto cartaoClienteDto) {
+        cartaoClienteDto.setProdutosCafeteria(null);
+        cartaoClienteRepository.findById(cartaoClienteDto.getRfid()).orElseThrow(() -> new RegraNegocioException("Cartão não encontrado!"));
         CartaoCliente cartaoCliente = cafeteriaMapper.cartaoClienteDtoToCartaoCliente(cartaoClienteDto);
-        cafeteriaRepository.save(cartaoCliente);
-    }
-
-    public void deletarCartaoCliente(String rfid) {
-        cafeteriaRepository.deleteById(rfid);
+        cartaoClienteRepository.save(cartaoCliente);
     }
 
     public CartaoClienteDto buscarCartaoCliente(String rfid) {
-        CartaoCliente cartaoCliente = cafeteriaRepository.findById(rfid).orElseThrow(() -> new RegraNegocioException("Cartão não encontrado!"));
+        CartaoCliente cartaoCliente = cartaoClienteRepository.findById(rfid).orElseThrow(() -> new RegraNegocioException("Cartão não encontrado!"));
 
         return cafeteriaMapper.cartaoClienteDtoToCartaoCliente(cartaoCliente);
     }
 
     public Set<CartaoClienteDto> listarCartaoClientes() {
-        return cafeteriaMapper.setCartaoClienteToSetCartaoClienteDto(cafeteriaRepository.findAll());
+        return cafeteriaMapper.setCartaoClienteToSetCartaoClienteDto(cartaoClienteRepository.findAll());
     }
 }
