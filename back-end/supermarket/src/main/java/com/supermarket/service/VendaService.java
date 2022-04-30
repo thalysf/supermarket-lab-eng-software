@@ -4,7 +4,7 @@ import com.supermarket.domain.dto.ItemVendaDto;
 import com.supermarket.domain.dto.ProdutoDto;
 import com.supermarket.domain.dto.VendaDto;
 import com.supermarket.domain.entity.Produto;
-import com.supermarket.domain.mapper.CafeteriaMapper;
+import com.supermarket.domain.mapper.CartaoClienteMapper;
 import com.supermarket.domain.mapper.ProdutoMapper;
 import com.supermarket.domain.mapper.VendaMapper;
 import com.supermarket.exception.RegraNegocioException;
@@ -27,7 +27,7 @@ public class VendaService {
     private final VendaRepository vendaRepository;
 
     private final ProdutoMapper produtoMapper;
-    private final CafeteriaMapper cafeteriaMapper;
+    private final CartaoClienteMapper cartaoClienteMapper;
     private final VendaMapper vendaMapper;
 
     private Set<Produto> produtosAsalvar = new HashSet<Produto>();
@@ -39,7 +39,7 @@ public class VendaService {
             c.setCartaoPago(true);
         });
 
-        cartaoClienteRepository.saveAll(cafeteriaMapper.setCartaoClienteDtoToSetCartaoCliente(vendaDto.getCartoes()));
+        cartaoClienteRepository.saveAll(cartaoClienteMapper.setCartaoClienteDtoToSetCartaoCliente(vendaDto.getCartoes()));
         produtoRepository.saveAll(produtosAsalvar);
         vendaRepository.save(vendaMapper.vendaDtoToVenda(vendaDto));
     }

@@ -2,7 +2,7 @@ import { CafeteriaService } from './../../services/cafeteria.service';
 import { ItemVenda } from './../../entity/ItemVenda';
 import { CartaoCliente } from './../../entity/CartaoCliente';
 import { Produto } from './../../entity/Produto';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { CadastroProdutoService } from 'src/app/services/cadastro-produto.service';
@@ -20,19 +20,19 @@ export class CafeteriaComponent implements OnInit {
   setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   cartoes: CartaoCliente[] = [];
-  produtoSelecionado: Produto = {codigo_barras: '', nome: '', qtd_estoque: 0};
-  cartaoSelecionado: CartaoCliente = {rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false};
-  quantidade: any= 0;
+  produtoSelecionado: Produto = { codigo_barras: '', nome: '', qtd_estoque: 0 };
+  cartaoSelecionado: CartaoCliente = { rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false };
+  quantidade: any = 0;
 
-  porta:any;
-  reader:any;
+  porta: any;
+  reader: any;
 
   displayedColumns: string[] = ['nome', 'rfid', 'cpf', 'cartao_pago', 'produtos', 'acao'];
 
   dataSource = new MatTableDataSource<CartaoCliente>(this.cartoes);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(public dialog: MatDialog, public cafeteriaService: CafeteriaService, 
+  constructor(public dialog: MatDialog, public cafeteriaService: CafeteriaService,
     public cadastroProdutoService: CadastroProdutoService,
     private toastr: ToastrService, private sant: DomSanitizer, private router: Router) {
     this.veririficarUsuario('CAFETERIA');
@@ -44,45 +44,44 @@ export class CafeteriaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
+
   }
 
   addCarrinho(produtoSelecionado: Produto, qtd: number): void {
-    if(!this.camposPreenchidos()){
-      this.toastr.error("Preencha os campos antes de incluir um produto no carrinho!");
+    if (!this.camposPreenchidos()) {
+      this.toastr.warning("Preencha os campos antes de incluir um produto no carrinho!");
     }
-    else{
-      let itemVenda: ItemVenda = {produto: produtoSelecionado, quantidade: qtd}
+    else {
+      let itemVenda: ItemVenda = { produto: produtoSelecionado, quantidade: qtd }
 
       let atualizacao: boolean = false;
-  
-      for(let item of this.cartaoSelecionado.produtos_cafeteria){
-        if(produtoSelecionado.codigo_barras === item.produto.codigo_barras){
-            const index = this.cartaoSelecionado.produtos_cafeteria.indexOf(item)
-            this.cartaoSelecionado.produtos_cafeteria[index].quantidade = qtd
-  
-            atualizacao = true;
+
+      for (let item of this.cartaoSelecionado.produtos_cafeteria) {
+        if (produtoSelecionado.codigo_barras === item.produto.codigo_barras) {
+          const index = this.cartaoSelecionado.produtos_cafeteria.indexOf(item)
+          this.cartaoSelecionado.produtos_cafeteria[index].quantidade = qtd
+
+          atualizacao = true;
         }
       }
-      if(!atualizacao){
+      if (!atualizacao) {
         this.cartaoSelecionado.produtos_cafeteria.push(itemVenda);
-      } 
+      }
     }
   }
 
-  removerCarrinho(index: any): void{
+  removerCarrinho(index: any): void {
     this.cartaoSelecionado.produtos_cafeteria.splice(index, 1);
   }
 
-  async addProdutosAoCartao() {
-    if(!this.carrinhoPreenchido()){
-      this.toastr.error("Para finalizar uma compra na Cafeteria deve haver ao menos um produto!");
+  addProdutosAoCartao() {
+    if (!this.carrinhoPreenchido()) {
+      this.toastr.warning("Para finalizar uma compra na Cafeteria deve haver ao menos um produto!");
     }
-    else if(!this.clienteSelecionado())
-    {
-      this.toastr.error("Selecione o Cliente!");
+    else if (!this.clienteSelecionado()) {
+      this.toastr.warning("Selecione o Cliente!");
     }
-  else {
+    else {
       this.cafeteriaService.addProdutosAoCartaoCliente(this.cartaoSelecionado).subscribe(
         data => {
           this.toastr.success('Produtos adicionados ao cartão!');
@@ -95,19 +94,19 @@ export class CafeteriaComponent implements OnInit {
   }
 
   limparProdutosCartao(cartaoCliente: CartaoCliente) {
-    this.cafeteriaService.limparProdutosCartao(this.cartaoSelecionado).subscribe(
+    this.cafeteriaService.limparProdutosCartao(cartaoCliente).subscribe(
       data => {
         this.toastr.success('Produtos removidos do Cartão Cliente!');
         this.carregarProduto();
         this.carregarCartaoCliente();
       },
-      error => this.toastr.error('Não foi possível Excluir o Cartão Cliente: ' + error.error.ERRORS)
+      error => this.toastr.error('Não foi possível Limpar os Produtos do Cartão Cliente: ' + error.error.ERRORS)
     )
   }
 
   limpar() {
-    this.cartaoSelecionado = {rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false};
-    this.produtoSelecionado = {codigo_barras: '', nome: '', qtd_estoque: 0};
+    this.cartaoSelecionado = { rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false };
+    this.produtoSelecionado = { codigo_barras: '', nome: '', qtd_estoque: 0 };
     this.quantidade = 0;
   }
 
@@ -131,26 +130,22 @@ export class CafeteriaComponent implements OnInit {
   carregarListaCartaoCliente(cartoes: CartaoCliente[]): void {
     this.cartoes = cartoes;
     this.dataSource.data = this.cartoes
-    console.log(cartoes)
   }
-  
+
 
   produtoFunc(produto: Produto[]): Produto[] {
     return produto
   }
 
-  camposPreenchidos(): boolean
-  {
+  camposPreenchidos(): boolean {
     return this.cartaoSelecionado.nome != '' && this.produtoSelecionado.nome != '' && this.quantidade > 0;
   }
-  
-  clienteSelecionado(): boolean
-  {
+
+  clienteSelecionado(): boolean {
     return this.cartaoSelecionado.nome != '';
   }
 
-  carrinhoPreenchido(): boolean
-  {
+  carrinhoPreenchido(): boolean {
     return this.cartaoSelecionado.produtos_cafeteria.length > 0;
   }
 
@@ -170,69 +165,69 @@ export class CafeteriaComponent implements OnInit {
 
   async readerBalanca(): Promise<any> {
 
-    if(this.produtoSelecionado.fracionado){
-    let navegador: any;
+    if (this.produtoSelecionado.fracionado) {
+      let navegador: any;
 
-    navegador = window.navigator;
+      navegador = window.navigator;
 
-    if (navegador && navegador.serial) {
-      this.porta = await navegador.serial.requestPort();
-      await this.porta.open({ baudRate: 4800 });
+      if (navegador && navegador.serial) {
+        this.porta = await navegador.serial.requestPort();
+        await this.porta.open({ baudRate: 4800 });
 
-      while (this.porta.readable) {
-        this.reader = this.porta.readable.getReader();
-        try {
-          while (true) {
-            const { value, done } = await this.reader.read();
-            if(this.produtoSelecionado.fracionado){
+        while (this.porta.readable) {
+          this.reader = this.porta.readable.getReader();
+          try {
+            while (true) {
               const { value, done } = await this.reader.read();
-              const hex = buf2hex(value)
-              const ascii = hex2a(hex)
-              this.formatarPeso(ascii)
-            } else {
-              this.reader.releaseLock();
-              this.porta.close();
-              return;
+              if (this.produtoSelecionado.fracionado) {
+                const { value, done } = await this.reader.read();
+                const hex = buf2hex(value)
+                const ascii = hex2a(hex)
+                this.formatarPeso(ascii)
+              } else {
+                this.reader.releaseLock();
+                this.porta.close();
+                return;
+              }
             }
+          } catch (error) {
+          } finally {
+            this.reader.releaseLock();
           }
-        } catch (error) {
-        } finally {
-          this.reader.releaseLock();
         }
+      } else {
+        this.toastr.error("Navegador não suporta leitura serial");
       }
-    } else {
-      console.log("Navegador não suporta leitura serial")
-    }
 
-    function buf2hex(buffer: any) { // buffer is an ArrayBuffer
-      return [...new Uint8Array(buffer)]
-        .map(x => x.toString(16).padStart(2, '0'))
-        .join('');
-    }
+      function buf2hex(buffer: any) { // buffer is an ArrayBuffer
+        return [...new Uint8Array(buffer)]
+          .map(x => x.toString(16).padStart(2, '0'))
+          .join('');
+      }
 
-    function toHexString(byteArray: any) {// Byte Array -> HEX 
-      return Array.from(byteArray, 
-        function(byte: any) { 
-          return ('0' + (byte & 0XFF).toString(16)).slice(-2); }).join() 
-    } 
+      function toHexString(byteArray: any) {// Byte Array -> HEX 
+        return Array.from(byteArray,
+          function (byte: any) {
+            return ('0' + (byte & 0XFF).toString(16)).slice(-2);
+          }).join()
+      }
 
-    function hex2a(hexx: any) { // HEX-> ASCII 
+      function hex2a(hexx: any) { // HEX-> ASCII 
         var hex = hexx.toString(); //força conversão 
         var str = ''
-        for (var i = 0; i < hex.length; i +=  2) 
-          {
-            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16)); 
-          }
+        for (var i = 0; i < hex.length; i += 2) {
+          str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+        }
         return str;
+      }
     }
   }
-}
 
 
-  formatarPeso(ascii:any){
-  
+  formatarPeso(ascii: any) {
+
     var valor = Number(ascii);
-    if(!valor){
+    if (!valor) {
       valor = Number(ascii.substring(1));
     }
     this.quantidade = valor;

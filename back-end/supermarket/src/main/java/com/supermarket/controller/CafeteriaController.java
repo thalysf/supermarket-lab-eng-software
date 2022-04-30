@@ -27,11 +27,6 @@ public class CafeteriaController {
         cafeteriaService.limparProdutosCartao(cartaoClienteDto);
     }
 
-    @GetMapping("{rfid}")
-    @ResponseStatus(HttpStatus.OK)
-    public CartaoClienteDto buscarCartaoCliente(@PathVariable String rfid) {
-        return cafeteriaService.buscarCartaoCliente(rfid);
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)

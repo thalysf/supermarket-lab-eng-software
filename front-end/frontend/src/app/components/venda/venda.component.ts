@@ -49,14 +49,15 @@ export class VendaComponent implements OnInit {
   constructor(public entradaEstoqueService:EntradaEstoqueService, public cafeteriaService: CafeteriaService,private toastr: ToastrService,
     private vendaSerive:VendaService, private router: Router, private printService: PrintService,
     private balancaService:BalancaService) {
+      this.veririficarUsuario("VENDA");
 
       this.usbPrintDriver = new UsbDriver();
       this.printService.isConnected.subscribe(result => {
         this.status = result;
         if (result) {
-          console.log('Connected to printer!!!');
+          toastr.success('Impressora conectada!!!');
         } else {
-          console.log('Not connected to printer.');
+          toastr.warning('Impressora não conectada.');
         }
       });
       this.dropdownSettings = {
@@ -118,12 +119,12 @@ export class VendaComponent implements OnInit {
     else{
       this.prepararVenda()
       this.vendaSerive.realizarVenda(this.venda).subscribe(
-        data=>this.vendaSucesso(),
-        error=>this.toastr.error('Não foi possível realizar a venda')
+        data=> this.vendaSucesso(),
+        error=>this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
     )
     }
   }
-
+  
   prepararVenda()
   {
     this.venda.cartoes = this.cartoes.filter(a => this.cartoesSelecionados.some(b => a.rfid === b.rfid));  
@@ -131,11 +132,10 @@ export class VendaComponent implements OnInit {
     this.venda.cartoes.forEach(c => c.cartao_pago = true)
     this.venda.produtos_supermercado = this.produtos;
     this.venda.data = new Date();
-    console.log(this.venda)
   }
 
   vendaSucesso(){
-    this.toastr.success('Venda realizada com sucesso');
+    this.toastr.success('Venda realizada com sucesso!');
     this.limpar();
   }
 
@@ -145,7 +145,7 @@ export class VendaComponent implements OnInit {
     if(texto.length == 12){
       this.entradaEstoqueService.carregarProduto(texto).subscribe(
         data=> this.carregarProduto(data),
-        error=>this.toastr.error('Não foi possível encontrar o Produto')
+        error=>this.toastr.error('Não foi possível encontrar o Produto'+ error.error.ERRORS)
       )
     }
   }
@@ -163,10 +163,7 @@ export class VendaComponent implements OnInit {
   }
 
   carregarCartoesCliente() {
-    this.cafeteriaService.carregarCartaoClientes().subscribe((cartoes: CartaoCliente[]) =>{
-       this.cartoes = cartoes;
-       console.log(this.cartoes)
-      });
+    this.cafeteriaService.carregarCartaoClientes().subscribe((cartoes: CartaoCliente[]) => this.cartoes = cartoes);
   }
 
 
@@ -250,7 +247,7 @@ export class VendaComponent implements OnInit {
 
 
     } else {
-      console.log("Navegador não suporta leitura serial")
+      this.toastr.error("Navegador não suporta leitura serial");
     }
   }
 
@@ -317,5 +314,21 @@ export class VendaComponent implements OnInit {
       .feed(4)
       .cut('full')
       .flush();
+  }
+
+  veririficarUsuario(tela: string) {
+    if (localStorage.getItem('usuario')) {
+      let usuario = JSON.parse(localStorage.getItem('usuario') || '');
+
+      for (let i = 0; i < usuario.telas.length; i++) {
+        if (usuario.telas[i].nome === tela) {
+          return;
+        }
+      }
+      return this.router.navigate(['/home']);
+    }
+
+    return this.router.navigate(['/login']);
+
   }
 }

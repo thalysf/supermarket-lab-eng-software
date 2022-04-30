@@ -1,3 +1,4 @@
+import { CartaoclienteComponent } from './components/cartaocliente/cartaocliente.component';
 import { VendaComponent } from './components/venda/venda.component';
 import { EntradaEstoqueComponent } from './components/entrada-estoque/entrada-estoque.component';
 import { CadastroProdutoComponent } from './components/cadastro-produto/cadastro-produto.component';
@@ -42,6 +43,10 @@ const routes: Routes = [
   {
     path: 'imprime-venda',
     component: ImprimeVendaComponent
+  },
+  {
+    path: 'cartaocliente',
+    component: CartaoclienteComponent
   }
 ];
 

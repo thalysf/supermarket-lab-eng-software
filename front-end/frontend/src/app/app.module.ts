@@ -33,6 +33,7 @@ import { CafeteriaComponent } from './components/cafeteria/cafeteria.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatChipsModule} from '@angular/material/chips';
 import { ImprimeVendaComponent } from './components/imprime-venda/imprime-venda/imprime-venda.component';
+import { CartaoclienteComponent } from './components/cartaocliente/cartaocliente.component';
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import { ImprimeVendaComponent } from './components/imprime-venda/imprime-venda/
     HomeComponent,
     VendaComponent,
     CafeteriaComponent,
-    ImprimeVendaComponent
+    ImprimeVendaComponent,
+    CartaoclienteComponent
   ],
   imports: [
     MatRadioModule,

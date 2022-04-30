@@ -5,11 +5,12 @@ delete from tela;
 
 INSERT INTO tela
 VALUES
-(1, 'CAIXA'),
+(1, 'VENDA'),
 (2, 'CAFETERIA'),
 (3, 'ESTOQUE'),
 (4, 'USUARIO'),
-(5, 'PRODUTO');
+(5, 'PRODUTO'),
+(6, 'CARTAOCLIENTE');
 
 INSERT INTO usuario
 VALUES
@@ -21,4 +22,5 @@ VALUES
 ('75538833011', 2),
 ('75538833011', 3),
 ('75538833011', 4),
-('75538833011', 5);
+('75538833011', 5),
+('75538833011', 6);

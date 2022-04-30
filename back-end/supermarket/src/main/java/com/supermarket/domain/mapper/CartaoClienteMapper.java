@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.Set;
 
 @Mapper(componentModel = "spring")
-public interface CafeteriaMapper {
+public interface CartaoClienteMapper {
     CartaoCliente cartaoClienteDtoToCartaoCliente(CartaoClienteDto cartaoClienteDto);
 
     CartaoClienteDto cartaoClienteDtoToCartaoCliente(CartaoCliente cartaoCliente);

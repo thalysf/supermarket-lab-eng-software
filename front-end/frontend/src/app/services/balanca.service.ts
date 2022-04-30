@@ -25,10 +25,7 @@ export class BalancaService {
       navegador = window.navigator;
       if (navegador && navegador.serial) {
         const portas = await navegador.serial.getPorts();
-        console.log(portas);
         if(localStorage.getItem('balancaIndex')){
-          console.log(Number(localStorage.getItem('balancaIndex')))
-          console.log(portas.length);
           this.porta = portas[Number(localStorage.getItem('balancaIndex')) - 1]; // retirar o -1
         }
         else {

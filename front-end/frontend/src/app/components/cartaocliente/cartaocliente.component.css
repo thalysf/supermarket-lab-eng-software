@@ -1,0 +1,28 @@
+.espacamentoCampos {
+    margin-left: 3%;
+}
+
+.multiselect{
+    width:400px; 
+    display: inline-block;
+}
+
+.campo{
+    width: 250px;
+}
+
+.espacamentoBotoesCima{
+    margin-top: 20px;
+}
+
+.espacamentoInicioBotoes{
+    margin-left: 70%;
+}
+
+.espacamentoBotoes{
+    margin-left: 7px;
+}
+
+.espacamentoPrimeiroBotao{
+    margin-left: 20px;
+}

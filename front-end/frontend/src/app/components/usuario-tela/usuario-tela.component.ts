@@ -65,12 +65,6 @@ export class UsuarioTelaComponent implements AfterViewInit {
     );
 
     this.carregarUsuarios();
-
-    // Biometria
-    //const dialogRef = this.dialog.open(BiometriaDialogComponent);
-    //dialogRef.afterClosed().subscribe(result => {
-    //  console.log(`Dialog result: ${result}`);
-    //});
   }
 
   editar() {
