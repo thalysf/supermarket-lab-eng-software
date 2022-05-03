@@ -12,7 +12,7 @@ import {CartaoCliente} from "../../../entity/CartaoCliente";
 export class FiscalSaidaComponent implements OnInit {
 
   formulario: FormGroup = this.formBuilder.group({});
-  cartaoCliente: any;
+  cartaoCliente: CartaoCliente =  { cartao_pago: false, cpf: '', nome: '', produtos_cafeteria: [], rfid: '' }
 
   constructor( private formBuilder: FormBuilder, private toastr:ToastrService, private cartaoClienteService: CartaoClienteService) { }
 
@@ -29,9 +29,13 @@ export class FiscalSaidaComponent implements OnInit {
       this.cartaoClienteService.buscarCartaoClientePorRfid(this.formulario.get('rfid')?.value).subscribe(
         data => {
           this.cartaoCliente = data;
-          if(this.cartaoCliente.cartao_pago === false) {
+          if(this.cartaoCliente.cartao_pago === false && this.cartaoCliente.produtos_cafeteria.length > 0) {
             this.toastr.error('Cartão ainda não foi pago!')
-          } else {
+          }
+          else if(this.cartaoCliente.produtos_cafeteria.length === 0){
+            this.toastr.warning('Cartão vazio!')
+          } 
+          else {
             this.toastr.success('Cartão pago com sucesso!')
           }
         },
