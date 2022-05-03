@@ -50,4 +50,9 @@ public class CartaoClienteService {
             return true;
         } else return produtosCafeteria.isEmpty();
     }
+
+    public CartaoClienteDto buscarCartaoClientePorRfid(String rfid) {
+        CartaoCliente cartaoCliente = cartaoClienteRepository.findById(rfid).orElseThrow(() -> new RegraNegocioException("Cartão não encontrado!"));
+         return cartaoClienteMapper.cartaoClienteDtoToCartaoCliente(cartaoCliente);
+    }
 }

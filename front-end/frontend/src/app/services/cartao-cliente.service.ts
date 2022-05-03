@@ -25,4 +25,8 @@ export class CartaoClienteService {
   excluirCartaoCliente(cartaoCliente:CartaoCliente){
     return this.http.delete<CartaoCliente>(this.urlCartaoCliente + "/" + cartaoCliente.rfid);
   }
+
+  buscarCartaoClientePorRfid(rfid: string) {
+    return this.http.get<CartaoCliente>(this.urlCartaoCliente + "/rfid/" + rfid);
+  }
 }

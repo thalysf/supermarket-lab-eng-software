@@ -10,6 +10,7 @@ import {LoginComponent} from "./components/login/login/login.component";
 import {HomeComponent} from "./components/home/home/home.component";
 import { CafeteriaComponent } from './components/cafeteria/cafeteria.component';
 import {ImprimeVendaComponent} from "./components/imprime-venda/imprime-venda/imprime-venda.component";
+import {FiscalSaidaComponent} from "./components/fiscal-saida/fiscal-saida/fiscal-saida.component";
 
 const routes: Routes = [
   {
@@ -52,6 +53,10 @@ const routes: Routes = [
   {
     path: 'relatorios',
     component: RelatoriosComponent
+  },
+  {
+    path: 'fiscal-saida',
+    component: FiscalSaidaComponent
   }
 ];
 

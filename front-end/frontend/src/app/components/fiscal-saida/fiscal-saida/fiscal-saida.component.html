@@ -1,0 +1,15 @@
+<app-principal></app-principal>
+<mat-card class="telaMatCard">
+  <mat-card-title class="tituloTela">FISCAL DE SAÍDA</mat-card-title>
+  <form [formGroup]="formulario" style="margin-top: 30px">
+    <mat-form-field class="campo espacamentoCampos">
+      <input matInput placeholder="RFID" formControlName="rfid" name="rfid" type="text" style="margin-left: 4px;">
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" class="botaoPequeno"
+            (click)="verificarCartaoCliente()">
+      Verificar RFID
+    </button>
+  </form>
+
+</mat-card>

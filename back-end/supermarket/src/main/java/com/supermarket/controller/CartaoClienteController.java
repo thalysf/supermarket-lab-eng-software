@@ -40,4 +40,10 @@ public class CartaoClienteController {
     public Set<CartaoClienteDto> listarCartaoClientes() {
         return cartaoClienteService.listarCartaoClientes();
     }
+
+    @GetMapping("/rfid/{rfid}")
+    @ResponseStatus(HttpStatus.OK)
+    public CartaoClienteDto buscarCartaoClientePorRfid(@PathVariable String rfid) {
+        return cartaoClienteService.buscarCartaoClientePorRfid(rfid);
+    }
 }
