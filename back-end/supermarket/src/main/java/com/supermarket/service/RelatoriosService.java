@@ -1,7 +1,9 @@
 package com.supermarket.service;
 
 import com.supermarket.domain.dto.RelatorioSetorDto;
+import com.supermarket.domain.entity.ItemVenda;
 import com.supermarket.domain.entity.Usuario;
+import com.supermarket.domain.entity.Venda;
 import com.supermarket.repository.UsuarioRepository;
 import com.supermarket.repository.VendaRepository;
 import net.sf.jasperreports.engine.*;
@@ -51,7 +53,19 @@ public class RelatoriosService {
         RelatorioSetorDto relatorioSetorDto = new RelatorioSetorDto();
         relatorioSetorDto.setDataInicio(dataInicio);
         relatorioSetorDto.setDataFim(dataFim);
-        relatorioSetorDto.setTotalCafeteria(12.0);
+
+        Set<Venda> vendas = vendaRepository.findVendaPorPeriodo(dataInicio, dataFim);
+
+        Double totalMercado = 0.0;
+        Double totalCafeteria = 0.0;
+
+        for (Venda v : vendas){
+            for (ItemVenda iv : v.getProdutosSupermercado()){
+                totalMercado += iv.getProduto().getPrecoVenda();
+            }
+        }
+
+        relatorioSetorDto.setTotalCafeteria(totalMercado);
         relatorioSetorDto.setTotalMercado(28.5);
 
         File file = ResourceUtils.getFile("classpath:relatorioSetor.jrxml");
