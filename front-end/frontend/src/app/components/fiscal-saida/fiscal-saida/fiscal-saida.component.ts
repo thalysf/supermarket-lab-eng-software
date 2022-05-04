@@ -3,6 +3,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
 import {CartaoClienteService} from "../../../services/cartao-cliente.service";
 import {CartaoCliente} from "../../../entity/CartaoCliente";
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-fiscal-saida',
@@ -14,9 +15,10 @@ export class FiscalSaidaComponent implements OnInit {
   formulario: FormGroup = this.formBuilder.group({});
   cartaoCliente: CartaoCliente =  { cartao_pago: false, cpf: '', nome: '', produtos_cafeteria: [], rfid: '' }
 
-  constructor( private formBuilder: FormBuilder, private toastr:ToastrService, private cartaoClienteService: CartaoClienteService) { }
+  constructor(private router: Router, private formBuilder: FormBuilder, private toastr:ToastrService, private cartaoClienteService: CartaoClienteService) { }
 
   ngOnInit(): void {
+    this.veririficarUsuario('FISCAL');
     this.formulario = this.formBuilder.group({
       rfid: ['', [Validators.required]]
     });
@@ -44,6 +46,21 @@ export class FiscalSaidaComponent implements OnInit {
     }
   }
 
+  veririficarUsuario(tela: string) {
+    if (localStorage.getItem('usuario')) {
+      let usuario = JSON.parse(localStorage.getItem('usuario') || '');
+
+      for (let i = 0; i < usuario.telas.length; i++) {
+        if (usuario.telas[i].nome === tela) {
+          return;
+        }
+      }
+      return this.router.navigate(['/home']);
+    }
+
+    return this.router.navigate(['/login']);
+
+  }
 
 
 }

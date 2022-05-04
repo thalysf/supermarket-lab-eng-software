@@ -18,7 +18,7 @@ export class RelatoriosComponent implements OnInit {
 
   gerarRelatorio(){
 
-    window.open("http://localhost:8082/relatorios", "_blank");
+    window.open("http://localhost:8080/relatorios", "_blank");
   }
 
   veririficarUsuario(tela: string) {
