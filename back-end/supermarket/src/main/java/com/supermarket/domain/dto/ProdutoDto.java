@@ -31,4 +31,6 @@ public class ProdutoDto {
     private SetorEnum setor;
 
     private String rfid;
+
+    private String tipo;
 }

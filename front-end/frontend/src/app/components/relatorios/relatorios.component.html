@@ -1,6 +1,22 @@
 <app-principal></app-principal>
 <mat-card class="telaMatCard">
     <mat-card-title class="tituloTela">Relatórios</mat-card-title>
+    <br>
+    <mat-form-field class="campo espacamentoCampos">
+        <input matInput placeholder="DATA INICIO"
+        [(ngModel)]="dataInicio" name="dataInicio" type="date"
+        style="margin-left: 4px;">
+    </mat-form-field>
+
+    <mat-form-field class="campo espacamentoCampos">
+        <input matInput placeholder="DATA FIM"
+        [(ngModel)]="dataFim" name="dataFim" type="date"
+        style="margin-left: 4px;">
+    </mat-form-field>
+
+    <br>
+    <br>
+
     <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima" (click)="gerarRelatorio()">
         Relatório Vendas
     </button>
@@ -13,7 +29,7 @@
         Relatório Cafeteria
     </button>
     
-    <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima">
+    <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima" (click)="gerarRelatorioPorSetor()">
         Relatório Produto
     </button>
 

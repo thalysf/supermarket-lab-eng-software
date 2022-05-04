@@ -28,6 +28,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   setor: string = "";
   rfid: string = "";
   produtos: Produto[] = [];
+  tipoProduto: string = "";
 
   fileSelected?: Blob;
   imageUrl?: string;
