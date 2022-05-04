@@ -40,6 +40,9 @@ public class Produto implements Serializable {
     @Column(name = "qtd_estoque", nullable = false)
     private Double qtdEstoque = 0.0;
 
+    @Column(name="tipo")
+    private String tipo;
+
     @Column(name = "setor", nullable = false)
     @Enumerated(EnumType.STRING)
     private SetorEnum setor;

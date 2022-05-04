@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Blank_A4" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ef8243c6-9c40-4a4c-ad86-bb50c5a5e90b">
+    <property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
+    <queryString>
+        <![CDATA[]]>
+    </queryString>
+    <field name="totalMercado" class="java.lang.Double"/>
+    <field name="totalCafeteria" class="java.lang.Double"/>
+    <field name="dataInicio" class="java.util.Date"/>
+    <field name="dataFim" class="java.util.Date"/>
+    <background>
+        <band splitType="Stretch"/>
+    </background>
+    <columnHeader>
+        <band height="39" splitType="Stretch">
+            <textField>
+                <reportElement x="0" y="5" width="555" height="28" uuid="66375d2f-da95-4a75-838d-d8dffaaa4d9f">
+                    <property name="com.jaspersoft.studio.unit.height" value="px"/>
+                    <property name="com.jaspersoft.studio.unit.width" value="px"/>
+                </reportElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font isBold="true"/>
+                </textElement>
+                <textFieldExpression><![CDATA["RELATÓRIO VALOR POR CAFETERIA E MERCADO"]]></textFieldExpression>
+            </textField>
+        </band>
+    </columnHeader>
+    <detail>
+        <band height="125" splitType="Stretch">
+            <textField>
+                <reportElement x="10" y="40" width="80" height="20" uuid="d4bd3ec7-dec9-400c-b0de-55f610063b70"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA["Total Mercado:"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="10" y="60" width="80" height="20" uuid="fa18ea43-8ffb-4f4a-ba92-8dc7bc01cdee"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA["Total Cafeteria:"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="10" y="0" width="30" height="30" uuid="3c3e665f-db42-4221-9bc0-a9f823562d73"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA["De:"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="40" y="0" width="60" height="30" uuid="54ed984c-5941-4bca-afcb-2d1adaeacfee"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[new SimpleDateFormat("MM/dd/yyyy").format($F{dataInicio})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="100" y="0" width="30" height="30" uuid="a62277a2-2417-42e6-9f4a-717cf68df94a"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA["Até:"]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="130" y="0" width="60" height="30" uuid="6b3211a8-7d2d-4198-95bb-1be46784d35a"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[new SimpleDateFormat("MM/dd/yyyy").format($F{dataFim})]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="40" width="130" height="20" uuid="b26549ce-9011-46fe-b250-8a672bc2bf07"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA["R$ " + $F{totalMercado}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="90" y="60" width="130" height="20" uuid="25888a4e-12f2-410e-9c2b-124ed911b342"/>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA["R$ " + $F{totalCafeteria}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>

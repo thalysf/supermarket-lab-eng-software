@@ -1,3 +1,4 @@
+import { RelatorioService } from './../../services/relatorio.service';
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -9,7 +10,10 @@ import { Router } from '@angular/router';
 })
 export class RelatoriosComponent implements OnInit {
 
-  constructor(private router: Router) {
+  dataInicio:any;
+  dataFim:any;
+
+  constructor(private router: Router, private relatorioService:RelatorioService) {
     this.veririficarUsuario('RELATORIOS');
    }
 
@@ -19,6 +23,14 @@ export class RelatoriosComponent implements OnInit {
   gerarRelatorio(){
 
     window.open("http://localhost:8082/relatorios", "_blank");
+  }
+
+
+
+  gerarRelatorioPorSetor(){
+
+    window.open("http://localhost:8082/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    //this.relatorioService.gerarRelatorioSetor(this.dataInicio, this.dataFim);
   }
 
   veririficarUsuario(tela: string) {
@@ -32,8 +44,6 @@ export class RelatoriosComponent implements OnInit {
       }
       return this.router.navigate(['/home']);
     }
-
     return this.router.navigate(['/login']);
-
   }
 }
