@@ -84,7 +84,7 @@ public class RelatoriosService {
     }
 
     public ResponseEntity<byte[]> exportarRelatorioProduto(Date dataInicio, Date dataFim) throws JRException, FileNotFoundException {
-
+        Set<Venda> vendas = vendaRepository.findAll();
         RelatorioProdutoDto relatorioProdutoDto = new RelatorioProdutoDto();
         relatorioProdutoDto.setInicio(dataInicio);
         relatorioProdutoDto.setFim(dataFim);
