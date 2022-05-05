@@ -96,27 +96,48 @@ public class RelatoriosService {
 
 
     public ResponseEntity<byte[]> exportarRelatorioProduto(Date dataInicio, Date dataFim) throws JRException, FileNotFoundException {
-        Set<Venda> vendas = vendaRepository.findAll();
+        Set<ItemVenda> vendas = vendaRepository.findItemVendaPorPeriodo(dataInicio, dataFim);
+        Set<CartaoCliente> cartoes = vendaRepository.findCartaoVendaPorPeriodo(dataInicio, dataFim);
+
+        Map<String, Double> produtosVendidos = new HashMap<>();
+
+        vendas.forEach(venda ->{
+            if(produtosVendidos.containsKey(venda.getProduto().getNome())){
+                Double valorAtual = produtosVendidos.get(venda.getProduto().getNome());
+                Double valorNovo = venda.getQuantidade() * venda.getProduto().getPrecoVenda();
+                produtosVendidos.put(venda.getProduto().getNome(), valorNovo + valorAtual);
+            }
+            else{
+                Double valorNovo = venda.getQuantidade() * venda.getProduto().getPrecoVenda();
+                produtosVendidos.put(venda.getProduto().getNome(), valorNovo);
+            }
+
+        });
+
+        cartoes.forEach(cartaoCliente -> {
+            cartaoCliente.getProdutosCafeteria().forEach(venda ->{
+                if(produtosVendidos.containsKey(venda.getProduto().getNome())){
+                    Double valorAtual = produtosVendidos.get(venda.getProduto().getNome());
+                    Double valorNovo = venda.getQuantidade() * venda.getProduto().getPrecoVenda();
+                    produtosVendidos.put(venda.getProduto().getNome(), valorNovo + valorAtual);
+                }
+                else{
+                    Double valorNovo = venda.getQuantidade() * venda.getProduto().getPrecoVenda();
+                    produtosVendidos.put(venda.getProduto().getNome(), valorNovo);
+                }
+            });
+        });
+
         RelatorioProdutoDto relatorioProdutoDto = new RelatorioProdutoDto();
         relatorioProdutoDto.setInicio(dataInicio);
         relatorioProdutoDto.setFim(dataFim);
 
-        RelatorioItemProdutoDto relatorioItemProdutoDto1 = new RelatorioItemProdutoDto();
-        relatorioItemProdutoDto1.setNome("leite");
-        relatorioItemProdutoDto1.setTotal(55.0F);
-
-        RelatorioItemProdutoDto relatorioItemProdutoDto2 = new RelatorioItemProdutoDto();
-        relatorioItemProdutoDto2.setNome("cafe");
-        relatorioItemProdutoDto2.setTotal(65.0F);
-
-        RelatorioItemProdutoDto relatorioItemProdutoDto3 = new RelatorioItemProdutoDto();
-        relatorioItemProdutoDto3.setNome("picanha");
-        relatorioItemProdutoDto3.setTotal(105.0F);
+        RelatorioItemProdutoDto relatorioItemProdutoDto = new RelatorioItemProdutoDto();
 
         List<RelatorioItemProdutoDto> produtos = new ArrayList<>();
-        produtos.add(relatorioItemProdutoDto1);
-        produtos.add(relatorioItemProdutoDto2);
-        produtos.add(relatorioItemProdutoDto3);
+        produtosVendidos.forEach((prod, valorTotal) ->{
+            produtos.add(new RelatorioItemProdutoDto(prod, valorTotal));
+        });
 
         relatorioProdutoDto.setProdutos(produtos);
 

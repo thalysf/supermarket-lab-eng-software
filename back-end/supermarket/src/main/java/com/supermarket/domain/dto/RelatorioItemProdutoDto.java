@@ -11,5 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RelatorioItemProdutoDto {
     private String nome;
-    private Float total;
+    private Double total;
 }

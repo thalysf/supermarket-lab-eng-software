@@ -23,6 +23,4 @@ public interface VendaRepository extends CrudRepository<Venda, Long> {
 
     @Query("select v.cartoes from Venda v where v.data BETWEEN ?1 AND ?2")
     Set<CartaoCliente> findCartaoVendaPorPeriodo(Date dataInicio, Date fim);
-
-
 }

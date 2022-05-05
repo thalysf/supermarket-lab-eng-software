@@ -6,7 +6,7 @@ import { Injectable } from '@angular/core';
 })
 export class RelatorioService {
 
-  url: string = "http://localhost:8082/relatorios"
+  url: string = "http://localhost:8080/relatorios"
 
   constructor(private http: HttpClient) { }
 

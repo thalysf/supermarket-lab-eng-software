@@ -5,15 +5,15 @@
 		<![CDATA[]]>
 	</queryString>
 	<field name="nome" class="java.lang.String"/>
-	<field name="total" class="java.lang.Float"/>
+	<field name="total" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="170" y="0" width="240" height="20" uuid="000eb188-fc9b-40e3-b9ab-34fccdc16f74"/>
-				<textFieldExpression><![CDATA["Produto" + $F{nome} + "| " +  "Total" + $F{total}]]></textFieldExpression>
+				<reportElement x="90" y="0" width="240" height="20" uuid="000eb188-fc9b-40e3-b9ab-34fccdc16f74"/>
+				<textFieldExpression><![CDATA[$F{nome} + " |  " + $F{total}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
