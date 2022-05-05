@@ -20,7 +20,7 @@ export class CafeteriaComponent implements OnInit {
   setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   cartoes: CartaoCliente[] = [];
-  produtoSelecionado: Produto = { codigo_barras: '', nome: '', qtd_estoque: 0 };
+  produtoSelecionado: Produto = { codigo_barras: '', nome: '', qtd_estoque: 0, tipo:'' };
   cartaoSelecionado: CartaoCliente = { rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false };
   quantidade: any = 0;
 
@@ -106,7 +106,7 @@ export class CafeteriaComponent implements OnInit {
 
   limpar() {
     this.cartaoSelecionado = { rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false };
-    this.produtoSelecionado = { codigo_barras: '', nome: '', qtd_estoque: 0 };
+    this.produtoSelecionado = { codigo_barras: '', nome: '', qtd_estoque: 0, tipo:'' };
     this.quantidade = 0;
   }
 

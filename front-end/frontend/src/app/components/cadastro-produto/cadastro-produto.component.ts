@@ -33,7 +33,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   fileSelected?: Blob;
   imageUrl?: string;
 
-  displayedColumns: string[] = ['nome', 'preco_compra', 'preco_venda', 'codigo_barras', 'RFID', 'quantidade', 'fracionado', 'setor', 'imagem', 'acao'];
+  displayedColumns: string[] = ['nome', 'preco_compra', 'preco_venda', 'codigo_barras', 'RFID', 'quantidade', 'fracionado', 'tipo','setor', 'imagem', 'acao'];
 
   dataSource = new MatTableDataSource<Produto>(this.produtos);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
@@ -61,6 +61,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       qtd_estoque: this.qtdEstoque,
       setor: this.setor,
       rfid: this.rfid,
+      tipo: this.tipoProduto
     }
 
     this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
@@ -82,6 +83,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       qtd_estoque: this.qtdEstoque,
       setor: this.setor,
       rfid: this.rfid,
+      tipo: this.tipoProduto
     }
     this.cadastroProdutoService.atualizarProduto(produto).subscribe(
       data => this.carregarProduto(),
