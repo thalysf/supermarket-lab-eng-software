@@ -3,6 +3,7 @@ package com.supermarket.domain.dto;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.supermarket.domain.enums.SetorEnum;
+import com.supermarket.domain.enums.TipoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,5 @@ public class ProdutoDto {
 
     private String rfid;
 
-    private String tipo;
+    private TipoEnum tipo;
 }

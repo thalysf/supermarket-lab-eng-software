@@ -5,6 +5,7 @@ import com.supermarket.exception.RegraNegocioException;
 import com.supermarket.service.VendaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/vendas")
 public class VendaController {
 
+    @Autowired
     private final VendaService vendaService;
 
     @PostMapping

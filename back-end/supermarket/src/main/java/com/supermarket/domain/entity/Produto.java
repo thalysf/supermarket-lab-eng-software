@@ -1,6 +1,7 @@
 package com.supermarket.domain.entity;
 
 import com.supermarket.domain.enums.SetorEnum;
+import com.supermarket.domain.enums.TipoEnum;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -41,7 +42,8 @@ public class Produto implements Serializable {
     private Double qtdEstoque = 0.0;
 
     @Column(name="tipo")
-    private String tipo;
+    @Enumerated(EnumType.STRING)
+    private TipoEnum tipo;
 
     @Column(name = "setor", nullable = false)
     @Enumerated(EnumType.STRING)

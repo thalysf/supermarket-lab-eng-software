@@ -37,11 +37,21 @@ public class RelatoriosController {
         return relatoriosService.exportarRelatorioSetor(dtInicio, dtFim);
     }
 
+
     @GetMapping("/produto/{dataInicio}/{dataFim}")
     public ResponseEntity<byte[]> gerarRelatorioPorProduto(@PathVariable(value="dataInicio") String dataInicio,
                                                          @PathVariable(value="dataFim") String dataFim) throws JRException, FileNotFoundException, ParseException {
         Date dtInicio = new SimpleDateFormat("yyyy-MM-dd").parse(dataInicio);
         Date dtFim = new SimpleDateFormat("yyyy-MM-dd").parse(dataFim);
         return relatoriosService.exportarRelatorioProduto(dtInicio, dtFim);
+    }
+
+    @GetMapping("/tipo/{dataInicio}/{dataFim}")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<byte[]> gerarRelatorioPorTipo(@PathVariable(value="dataInicio") String dataInicio,
+                                                        @PathVariable(value="dataFim") String dataFim) throws FileNotFoundException, JRException, ParseException {
+        Date dtInicio = new SimpleDateFormat("yyyy-MM-dd").parse(dataInicio);
+        Date dtFim = new SimpleDateFormat("yyyy-MM-dd").parse(dataFim);
+        return relatoriosService.exportarRelatorioTipo(dtInicio, dtFim);
     }
 }

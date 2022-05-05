@@ -22,19 +22,25 @@ export class RelatoriosComponent implements OnInit {
 
   gerarRelatorio(){
 
-    window.open("http://localhost:8080/relatorios", "_blank");
+    window.open("http://localhost:8082/relatorios", "_blank");
   }
 
 
 
   gerarRelatorioPorSetor(){
 
-    window.open("http://localhost:8080/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    window.open("http://localhost:8082/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
     //this.relatorioService.gerarRelatorioSetor(this.dataInicio, this.dataFim);
   }
 
   gerarRelatorioPorProduto(){
-    window.open("http://localhost:8080/relatorios/produto/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    window.open("http://localhost:8082/relatorios/produto/" + this.dataInicio + '/' + this.dataFim, "_blank");
+  }
+
+  gerarRelatorioPorTipo(){
+
+    window.open("http://localhost:8082/relatorios/tipo/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    //this.relatorioService.gerarRelatorioSetor(this.dataInicio, this.dataFim);
   }
 
   veririficarUsuario(tela: string) {

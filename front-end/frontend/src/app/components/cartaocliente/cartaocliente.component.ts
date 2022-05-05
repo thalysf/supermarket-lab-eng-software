@@ -39,6 +39,7 @@ export class CartaoclienteComponent implements OnInit {
     if (this.cartaoValido(this.cartaoCliente)) {
       this.cartaoCliente.cartao_pago = false;
       this.cartaoCliente.produtos_cafeteria = [];
+      console.log(this.cartaoCliente);
       this.cartaoClienteService.criarCartaoCliente(this.cartaoCliente).subscribe(
         data => {
           this.carregarcartoes();

@@ -18,6 +18,7 @@ import { Router } from "@angular/router";
 export class CadastroProdutoComponent implements AfterViewInit {
 
   setores = ['CAFETERIA', 'SUPERMERCADO']
+  tipos = ['TIPO01', 'TIPO02']
   nome: string = "";
   precoVenda: number = 0;
   precoCompra: number = 0;
@@ -60,6 +61,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       codigo_barras: this.codigoBarras,
       qtd_estoque: this.qtdEstoque,
       setor: this.setor,
+      tipo: this.tipoProduto,
       rfid: this.rfid,
       tipo: this.tipoProduto
     }
