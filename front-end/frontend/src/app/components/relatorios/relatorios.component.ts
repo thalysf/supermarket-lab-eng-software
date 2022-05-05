@@ -29,8 +29,12 @@ export class RelatoriosComponent implements OnInit {
 
   gerarRelatorioPorSetor(){
 
-    window.open("http://localhost:8082/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    window.open("http://localhost:8080/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
     //this.relatorioService.gerarRelatorioSetor(this.dataInicio, this.dataFim);
+  }
+
+  gerarRelatorioPorProduto(){
+    window.open("http://localhost:8080/relatorios/produto/" + this.dataInicio + '/' + this.dataFim, "_blank");
   }
 
   veririficarUsuario(tela: string) {
