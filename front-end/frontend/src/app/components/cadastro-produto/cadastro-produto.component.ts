@@ -61,7 +61,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
       codigo_barras: this.codigoBarras,
       qtd_estoque: this.qtdEstoque,
       setor: this.setor,
-      tipo: this.tipoProduto,
       rfid: this.rfid,
       tipo: this.tipoProduto
     }
