@@ -42,8 +42,11 @@
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="TIPO" [(ngModel)]="tipoProduto" name="tipoProduto" type="text"
-        style="margin-left: 4px;">
+      <mat-select [(ngModel)]="tipoProduto" name="tipoProduto" placeholder="TIPO">
+        <mat-option *ngFor="let tipo of tipos" [value]="tipo">
+          {{tipo}}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <section class="espacamentoCampos" style="display: inline;">

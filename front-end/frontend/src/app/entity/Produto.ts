@@ -9,5 +9,6 @@ export interface Produto {
     fracionado?:boolean,
     setor?:string,
     rfid?:string,
-    qtd_estoque:number
+    qtd_estoque:number,
+    tipo?:any
 }
