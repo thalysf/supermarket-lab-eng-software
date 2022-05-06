@@ -1,10 +1,6 @@
 package com.supermarket.service;
 
-import com.supermarket.domain.dto.RelatorioItemProdutoDto;
-import com.supermarket.domain.dto.RelatorioProdutoDto;
-import com.supermarket.domain.dto.RelatorioSetorDto;
-import com.supermarket.domain.dto.RelatorioTipoDto;
-import com.supermarket.domain.dto.TipoInformacoesDto;
+import com.supermarket.domain.dto.*;
 import com.supermarket.domain.entity.CartaoCliente;
 import com.supermarket.domain.entity.ItemVenda;
 import com.supermarket.domain.entity.Usuario;
@@ -27,6 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.*;
 
 @Service
+@Transactional
 public class RelatoriosService {
 
     @Autowired
@@ -35,27 +32,6 @@ public class RelatoriosService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public ResponseEntity<byte[]> exportarRelatorio() throws JRException, FileNotFoundException {
-
-        String teste = "aaaaaaaaaaa";
-
-        Usuario usuario = usuarioRepository.findByCpf("75538833011");
-
-        File file = ResourceUtils.getFile("classpath:relatorio_teste.jrxml");
-        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
-        List<Usuario> data = new ArrayList<>();
-        data.add(usuario);
-        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
-        Map<String, Object> parameters = new HashMap<>();
-       // parameters.put("testevar", "Alexandre");
-        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
-        byte[] dataBytes = JasperExportManager.exportReportToPdf(jasperPrint);
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=relatorio.pdf");
-        return ResponseEntity.ok().headers(httpHeaders).contentType(MediaType.APPLICATION_PDF).body(dataBytes);
-    }
-
-    @Transactional
     public ResponseEntity<byte[]> exportarRelatorioSetor(Date dataInicio, Date dataFim) throws JRException, FileNotFoundException {
 
         RelatorioSetorDto relatorioSetorDto = new RelatorioSetorDto();
@@ -132,8 +108,6 @@ public class RelatoriosService {
         relatorioProdutoDto.setInicio(dataInicio);
         relatorioProdutoDto.setFim(dataFim);
 
-        RelatorioItemProdutoDto relatorioItemProdutoDto = new RelatorioItemProdutoDto();
-
         List<RelatorioItemProdutoDto> produtos = new ArrayList<>();
         produtosVendidos.forEach((prod, valorTotal) ->{
             produtos.add(new RelatorioItemProdutoDto(prod, valorTotal));
@@ -144,6 +118,50 @@ public class RelatoriosService {
         File file = ResourceUtils.getFile("src/main/resources/produtos.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         List<RelatorioProdutoDto> data = new ArrayList<>();
+        data.add(relatorioProdutoDto);
+
+        JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);
+        Map<String, Object> parameters = new HashMap<>();
+        JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, parameters, dataSource);
+
+        byte[] dataBytes = JasperExportManager.exportReportToPdf(jasperPrint);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.set(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=relatorio.pdf");
+        return ResponseEntity.ok().headers(httpHeaders).contentType(MediaType.APPLICATION_PDF).body(dataBytes);
+    }
+
+    public ResponseEntity<byte[]> exportarRelatorioCliente(Date dataInicio, Date dataFim) throws JRException, FileNotFoundException {
+        Set<Venda> vendas = vendaRepository.findVendaPorPeriodo(dataInicio, dataFim);
+
+        Map<String, Double> vendasClientes = new HashMap<>();
+
+        vendas.forEach(venda ->{
+            String nomeCliente = venda.getNome();
+            Long idVenda = venda.getId_venda();
+            Set<ItemVenda> itens_venda = vendaRepository.findItemVendaPorIdVenda(idVenda);
+            Set<CartaoCliente> cartoes = vendaRepository.findCartaoClientePorIdVenda(idVenda);
+
+            vendasClientes.put(nomeCliente, 0D);
+            itens_venda.forEach(i -> vendasClientes.put(nomeCliente,  vendasClientes.get(nomeCliente) + (i.getQuantidade() * i.getProduto().getPrecoVenda())));
+            cartoes.forEach(c -> {
+                c.getProdutosCafeteria().forEach(i -> vendasClientes.put(nomeCliente,  vendasClientes.get(nomeCliente) + (i.getQuantidade() * i.getProduto().getPrecoVenda())));
+            });
+        });
+
+        RelatorioClienteDto relatorioProdutoDto = new RelatorioClienteDto();
+        relatorioProdutoDto.setInicio(dataInicio);
+        relatorioProdutoDto.setFim(dataFim);
+
+        List<RelatorioItemClienteDto> clientes = new ArrayList<>();
+        vendasClientes.forEach((prod, valorTotal) ->{
+            clientes.add(new RelatorioItemClienteDto(prod, valorTotal));
+        });
+
+        relatorioProdutoDto.setClientes(clientes);
+
+        File file = ResourceUtils.getFile("src/main/resources/clientes.jrxml");
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        List<RelatorioClienteDto> data = new ArrayList<>();
         data.add(relatorioProdutoDto);
 
         JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(data);

@@ -23,7 +23,7 @@ export class VendaComponent implements OnInit {
 
   produtos:ItemVenda[] = [];
   produtoAtual:any;
-  venda: Venda = {cpf: '', data: new Date(), cartoes: [], produtos_supermercado: []};
+  venda: Venda = {cpf: '',nome: '', data: new Date(), cartoes: [], produtos_supermercado: []};
 
   codigo:any;
   quantidade:any = 1;
@@ -129,6 +129,7 @@ export class VendaComponent implements OnInit {
   {
     this.venda.cartoes = this.cartoes.filter(a => this.cartoesSelecionados.some(b => a.rfid === b.rfid));  
     this.venda.cpf = this.venda.cartoes[0].cpf;
+    this.venda.nome = this.venda.cartoes[0].nome;
     this.venda.cartoes.forEach(c => c.cartao_pago = true)
     this.venda.produtos_supermercado = this.produtos;
     this.venda.data = new Date();

@@ -20,27 +20,21 @@ export class RelatoriosComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  gerarRelatorio(){
-
-    window.open("http://localhost:8080/relatorios", "_blank");
-  }
-
-
 
   gerarRelatorioPorSetor(){
-
     window.open("http://localhost:8080/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
-    //this.relatorioService.gerarRelatorioSetor(this.dataInicio, this.dataFim);
   }
 
   gerarRelatorioPorProduto(){
     window.open("http://localhost:8080/relatorios/produto/" + this.dataInicio + '/' + this.dataFim, "_blank");
   }
 
-  gerarRelatorioPorTipo(){
+  gerarRelatorioPorCliente(){
+    window.open("http://localhost:8080/relatorios/cliente/" + this.dataInicio + '/' + this.dataFim, "_blank");
+  }
 
+  gerarRelatorioPorTipo(){
     window.open("http://localhost:8080/relatorios/tipo/" + this.dataInicio + '/' + this.dataFim, "_blank");
-    //this.relatorioService.gerarRelatorioSetor(this.dataInicio, this.dataFim);
   }
 
   veririficarUsuario(tela: string) {

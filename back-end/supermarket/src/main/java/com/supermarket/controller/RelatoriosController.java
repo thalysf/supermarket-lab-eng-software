@@ -22,12 +22,6 @@ public class RelatoriosController {
     @Autowired
     private RelatoriosService relatoriosService;
 
-    @GetMapping()
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<byte[]> gerarRelatorio() throws JRException, FileNotFoundException {
-        return relatoriosService.exportarRelatorio();
-    }
-
     @GetMapping("/setor/{dataInicio}/{dataFim}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<byte[]> gerarRelatorioPorSetor(@PathVariable(value="dataInicio") String dataInicio,
@@ -44,6 +38,15 @@ public class RelatoriosController {
         Date dtInicio = new SimpleDateFormat("yyyy-MM-dd").parse(dataInicio);
         Date dtFim = new SimpleDateFormat("yyyy-MM-dd").parse(dataFim);
         return relatoriosService.exportarRelatorioProduto(dtInicio, dtFim);
+    }
+
+
+    @GetMapping("/cliente/{dataInicio}/{dataFim}")
+    public ResponseEntity<byte[]> gerarRelatorioPorCliente(@PathVariable(value="dataInicio") String dataInicio,
+                                                           @PathVariable(value="dataFim") String dataFim) throws JRException, FileNotFoundException, ParseException {
+        Date dtInicio = new SimpleDateFormat("yyyy-MM-dd").parse(dataInicio);
+        Date dtFim = new SimpleDateFormat("yyyy-MM-dd").parse(dataFim);
+        return relatoriosService.exportarRelatorioCliente(dtInicio, dtFim);
     }
 
     @GetMapping("/tipo/{dataInicio}/{dataFim}")

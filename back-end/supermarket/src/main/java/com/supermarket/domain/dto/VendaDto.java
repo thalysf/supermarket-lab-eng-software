@@ -20,6 +20,8 @@ public class VendaDto {
 
     private String cpf;
 
+    private String nome;
+
     private Set<ItemVendaDto> produtosSupermercado;
 
     private Set<CartaoClienteDto> cartoes;

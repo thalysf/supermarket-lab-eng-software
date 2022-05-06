@@ -27,6 +27,9 @@ public class Venda implements Serializable {
     @Column(name = "cpf", nullable = false, length = 11)
     private String cpf;
 
+    @Column(name = "nome", length = 80)
+    private String nome;
+
     @OneToMany(cascade = CascadeType.PERSIST)
     @JoinTable(name = "produtos_supermercado_venda", joinColumns = {@JoinColumn(name = "id_venda")}, inverseJoinColumns = {@JoinColumn(name = "id_item_venda")})
     private Set<ItemVenda> produtosSupermercado;

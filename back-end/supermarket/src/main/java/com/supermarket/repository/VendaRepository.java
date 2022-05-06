@@ -18,9 +18,19 @@ public interface VendaRepository extends CrudRepository<Venda, Long> {
     @Override
     Set<Venda> findAll();
 
+    @Query("select v from Venda v where v.data BETWEEN ?1 AND ?2")
+    Set<Venda> findVendaPorPeriodo(Date dataInicio, Date fim);
+
     @Query("select v.produtosSupermercado from Venda v where v.data BETWEEN ?1 AND ?2")
     Set<ItemVenda> findItemVendaPorPeriodo(Date dataInicio, Date fim);
 
     @Query("select v.cartoes from Venda v where v.data BETWEEN ?1 AND ?2")
     Set<CartaoCliente> findCartaoVendaPorPeriodo(Date dataInicio, Date fim);
+
+
+    @Query("select v.produtosSupermercado from Venda v where v.id_venda = ?1")
+    Set<ItemVenda> findItemVendaPorIdVenda(Long id_venda);
+
+    @Query("select v.cartoes from Venda v where v.id_venda = ?1")
+    Set<CartaoCliente> findCartaoClientePorIdVenda(Long id_venda);
 }
