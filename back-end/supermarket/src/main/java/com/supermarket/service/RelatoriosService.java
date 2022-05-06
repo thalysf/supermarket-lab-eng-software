@@ -182,7 +182,7 @@ public class RelatoriosService {
         RelatorioTipoDto relatorioTipoDto = new RelatorioTipoDto();
 
         List<TipoInformacoesDto> lista = new ArrayList<>();
-        
+
         for (CartaoCliente c : cartoes){
             vendas.addAll(c.getProdutosCafeteria());
         }
@@ -190,6 +190,7 @@ public class RelatoriosService {
         for(TipoEnum tipo : TipoEnum.values()){
             TipoInformacoesDto tipoInformacoesDto = new TipoInformacoesDto();
             tipoInformacoesDto.setNome(tipo.getDescricao());
+            tipoInformacoesDto.setTotal(0.0);
             lista.add(tipoInformacoesDto);
         }
 
