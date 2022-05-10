@@ -26,7 +26,7 @@ public class CartaoCliente implements Serializable {
     private String nome;
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(name = "cartao_cliente_item_venda", joinColumns = {@JoinColumn(name = "id_item_venda")}, inverseJoinColumns = {@JoinColumn(name = "rfid")})
+    @JoinTable(name = "cartao_cliente_item_venda", joinColumns = {@JoinColumn(name = "rfid")}, inverseJoinColumns = {@JoinColumn(name = "id_item_venda")})
     private Set<ItemVenda> produtosCafeteria;
 
     private Boolean cartaoPago;

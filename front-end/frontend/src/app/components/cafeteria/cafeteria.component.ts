@@ -10,6 +10,8 @@ import { ToastrService } from 'ngx-toastr';
 import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from "@angular/router";
+import {CartaoClienteService} from "../../services/cartao-cliente.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-cafeteria',
@@ -20,54 +22,85 @@ export class CafeteriaComponent implements OnInit {
   setor: string = "CAFETERIA";
   produtos: Produto[] = [];
   cartoes: CartaoCliente[] = [];
-  produtoSelecionado: Produto = { codigo_barras: '', nome: '', qtd_estoque: 0, tipo:'' };
-  cartaoSelecionado: CartaoCliente = { rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false };
+  produtoSelecionado: any;
+  cartaoSelecionado: any = {};
   quantidade: any = 0;
+  rfidSelecionado: boolean = false;
 
   porta: any;
   reader: any;
 
-  displayedColumns: string[] = ['nome', 'rfid', 'cpf', 'cartao_pago', 'produtos', 'acao'];
+  formulario: FormGroup = this.formBuilder.group({});
 
-  dataSource = new MatTableDataSource<CartaoCliente>(this.cartoes);
+  // displayedColumns: string[] = ['nome', 'rfid', 'cpf', 'cartao_pago', 'produtos', 'acao'];
+  displayedColumns: string[] = ['nome', 'preco_venda', 'qtd', 'acao'];
+
+  dataSource = new MatTableDataSource<ItemVenda>(this.cartaoSelecionado.produtos_cafeteria);
+  // dataSource = new MatTableDataSource<CartaoCliente>(this.cartoes);
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   constructor(public dialog: MatDialog, public cafeteriaService: CafeteriaService,
-    public cadastroProdutoService: CadastroProdutoService,
-    private toastr: ToastrService, private sant: DomSanitizer, private router: Router) {
+    public cadastroProdutoService: CadastroProdutoService, private formBuilder: FormBuilder,
+    private toastr: ToastrService, private sant: DomSanitizer, private router: Router, private cartaoClienteService: CartaoClienteService ) {
     this.veririficarUsuario('CAFETERIA');
-    this.carregarProduto();
-    this.carregarCartaoCliente();
+    // this.carregarProduto();
+    // this.carregarCartaoCliente();
   }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
   }
 
   ngOnInit(): void {
-
+    this.formulario = this.formBuilder.group({
+      rfid: ['', [Validators.required]],
+      codigoBarras: ['', [Validators.required]],
+      quantidade: [1, [Validators.required]]
+    });
   }
 
-  addCarrinho(produtoSelecionado: Produto, qtd: number): void {
-    if (!this.camposPreenchidos()) {
-      this.toastr.warning("Preencha os campos antes de incluir um produto no carrinho!");
-    }
-    else {
-      let itemVenda: ItemVenda = { produto: produtoSelecionado, quantidade: qtd }
+  bucarCartaoClientePorRfid() {
+    this.cartaoClienteService.buscarCartaoClientePorRfid(this.formulario.get('rfid')?.value).subscribe(
+      data => {
+        this.cartaoSelecionado = data;
+        this.rfidSelecionado = true;
+        this.toastr.success('Cartão Cliente encontrado!');
+      },
+      error => this.toastr.error('Rfid não encontrado!')
+    );
+  }
 
-      let atualizacao: boolean = false;
+  bucarProdutoPorCodigoDeBarras() {
+    this.cadastroProdutoService.buscarProdutoPorCodigoDeBarras(this.formulario.get('codigoBarras')?.value).subscribe(
+      data => {
+        this.produtoSelecionado = data;
+        this.addCarrinho(this.produtoSelecionado, this.formulario.get('quantidade')?.value);
+        this.toastr.success('Produto adicionado no carrinho!');
+      },
+      error => this.toastr.error('Produto não encontrado!')
+    );
+  }
 
-      for (let item of this.cartaoSelecionado.produtos_cafeteria) {
-        if (produtoSelecionado.codigo_barras === item.produto.codigo_barras) {
-          const index = this.cartaoSelecionado.produtos_cafeteria.indexOf(item)
-          this.cartaoSelecionado.produtos_cafeteria[index].quantidade = qtd
 
-          atualizacao = true;
-        }
+  addCarrinho(produtoSelecionado: any, qtd: number): void {
+
+    let itemVenda: ItemVenda = { produto: produtoSelecionado, quantidade: qtd };
+
+    let atualizacao: boolean = false;
+
+    for (let item of this.cartaoSelecionado.produtos_cafeteria) {
+      if (produtoSelecionado.codigo_barras === item.produto.codigo_barras) {
+        const index = this.cartaoSelecionado.produtos_cafeteria.indexOf(item);
+        this.cartaoSelecionado.produtos_cafeteria[index].quantidade = Number(this.cartaoSelecionado.produtos_cafeteria[index].quantidade);
+        qtd = Number(qtd);
+        this.cartaoSelecionado.produtos_cafeteria[index].quantidade += qtd;
+        atualizacao = true;
       }
-      if (!atualizacao) {
-        this.cartaoSelecionado.produtos_cafeteria.push(itemVenda);
-      }
     }
+    if (!atualizacao) {
+      this.cartaoSelecionado.produtos_cafeteria.push(itemVenda);
+      this.dataSource.data = this.cartaoSelecionado.produtos_cafeteria;
+    }
+
   }
 
   removerCarrinho(index: any): void {
@@ -75,22 +108,15 @@ export class CafeteriaComponent implements OnInit {
   }
 
   addProdutosAoCartao() {
-    if (!this.carrinhoPreenchido()) {
-      this.toastr.warning("Para finalizar uma compra na Cafeteria deve haver ao menos um produto!");
-    }
-    else if (!this.clienteSelecionado()) {
-      this.toastr.warning("Selecione o Cliente!");
-    }
-    else {
+
       this.cafeteriaService.addProdutosAoCartaoCliente(this.cartaoSelecionado).subscribe(
         data => {
           this.toastr.success('Produtos adicionados ao cartão!');
-          this.carregarProduto();
-          this.carregarCartaoCliente();
         },
         error => this.toastr.error('Não foi possível Adicionar protudos ao Cartão: ' + error.error.ERRORS)
       );
-    }
+
+
   }
 
   limparProdutosCartao(cartaoCliente: CartaoCliente) {
@@ -105,9 +131,10 @@ export class CafeteriaComponent implements OnInit {
   }
 
   limpar() {
-    this.cartaoSelecionado = { rfid: '', cpf: '', nome: '', produtos_cafeteria: [], cartao_pago: false };
-    this.produtoSelecionado = { codigo_barras: '', nome: '', qtd_estoque: 0, tipo:'' };
-    this.quantidade = 0;
+    this.formulario.get('rfid')?.setValue('');
+    this.formulario.get('codigoBarras')?.setValue('');
+    this.formulario.get('quantidade')?.setValue(1);
+    this.rfidSelecionado = false;
   }
 
   carregarProduto() {
@@ -129,16 +156,15 @@ export class CafeteriaComponent implements OnInit {
 
   carregarListaCartaoCliente(cartoes: CartaoCliente[]): void {
     this.cartoes = cartoes;
-    this.dataSource.data = this.cartoes
   }
 
 
   produtoFunc(produto: Produto[]): Produto[] {
-    return produto
+    return produto;
   }
 
   camposPreenchidos(): boolean {
-    return this.cartaoSelecionado.nome != '' && this.produtoSelecionado.nome != '' && this.quantidade > 0;
+    return this.cartaoSelecionado && this.produtoSelecionado && this.quantidade > 0;
   }
 
   clienteSelecionado(): boolean {
@@ -205,15 +231,15 @@ export class CafeteriaComponent implements OnInit {
           .join('');
       }
 
-      function toHexString(byteArray: any) {// Byte Array -> HEX 
+      function toHexString(byteArray: any) {// Byte Array -> HEX
         return Array.from(byteArray,
           function (byte: any) {
             return ('0' + (byte & 0XFF).toString(16)).slice(-2);
           }).join()
       }
 
-      function hex2a(hexx: any) { // HEX-> ASCII 
-        var hex = hexx.toString(); //força conversão 
+      function hex2a(hexx: any) { // HEX-> ASCII
+        var hex = hexx.toString(); //força conversão
         var str = ''
         for (var i = 0; i < hex.length; i += 2) {
           str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));

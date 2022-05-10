@@ -5,4 +5,5 @@ export interface CartaoCliente{
     nome: string;
     produtos_cafeteria: ItemVenda[];
     cartao_pago: boolean;
+
 }

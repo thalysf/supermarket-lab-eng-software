@@ -3,10 +3,16 @@
     <mat-card-title class="tituloTela">Vendas</mat-card-title>
     <form style="margin-top: 30px;">
 
+      <mat-form-field class="campo espacamentoCampos">
+        <input matInput placeholder="RFID DO CARTÃO"
+               [(ngModel)] = "rfid" name="cartao" type="text" (keyup.enter)="bucarCartaoClientePorRfid()"
+               style="margin-left: 4px;">
+      </mat-form-field>
+
         <mat-form-field class="campo espacamentoCampos">
             <input matInput placeholder="CÓDIGO PRODUTO"
             [(ngModel)] = "codigo" name="codigo-produto" type="text" max="13"
-            style="margin-left: 4px;" (input)="onChangeCodigo($event)">
+            style="margin-left: 4px;" (keyup.enter)="incluirProduto()">
         </mat-form-field>
 
         <mat-form-field class="campo espacamentoCampos">
@@ -37,20 +43,10 @@
             <mat-checkbox class="example-margin" [(ngModel)]="fracionado" name="fracionado" [disabled]="true">Fracionado</mat-checkbox>
         </section>
 
-
-        <div class="multiselect espacamentoCampos">
-            <ng-multiselect-dropdown name="cartoes"
-                [formControl]="formControlCartoes"
-                [settings]="dropdownSettings"
-                [data]="cartoes"
-                [placeholder]="'Cartões'"
-                [(ngModel)]="cartoesSelecionados">
-            </ng-multiselect-dropdown>
-        </div>
     </form>
 
     <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"
-    (click)="inserir()">
+    (click)="incluirProduto()">
         Adicionar
     </button>
 
@@ -60,14 +56,18 @@
     </button>
 
   <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"
-        [disabled]="status === true" (click)="requestUsb()">
+         (click)="requestUsb()">
    Conectar USB
   </button>
 
   <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"
-          [disabled]="status === false" (click)="imprimir()">
+          [disabled]="!impressoraTermicaService.printerStatus" (click)="imprimirTeste()">
     Imprimir
   </button>
+<!--  <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"-->
+<!--          [disabled]="status === false" (click)="imprimir()">-->
+<!--    Imprimir-->
+<!--  </button>-->
 
     <div class="mat-elevation-z2" style="margin-top: 30px;">
         <table mat-table [dataSource]="dataSource" style="width: 100%;">

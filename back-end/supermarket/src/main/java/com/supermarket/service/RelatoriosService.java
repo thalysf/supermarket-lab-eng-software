@@ -115,7 +115,7 @@ public class RelatoriosService {
 
         relatorioProdutoDto.setProdutos(produtos);
 
-        File file = ResourceUtils.getFile("src/main/resources/produtos.jrxml");
+        File file = ResourceUtils.getFile("classpath:produtos.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         List<RelatorioProdutoDto> data = new ArrayList<>();
         data.add(relatorioProdutoDto);
@@ -159,7 +159,7 @@ public class RelatoriosService {
 
         relatorioProdutoDto.setClientes(clientes);
 
-        File file = ResourceUtils.getFile("src/main/resources/clientes.jrxml");
+        File file = ResourceUtils.getFile("classpath:clientes.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
         List<RelatorioClienteDto> data = new ArrayList<>();
         data.add(relatorioProdutoDto);

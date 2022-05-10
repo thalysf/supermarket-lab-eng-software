@@ -46,4 +46,10 @@ public class ProdutoController {
     public Set<ProdutoDto> listarProdutosPorSetor(@PathVariable SetorEnum setor) {
         return produtoService.listarProdutosPorSetor(setor);
     }
+
+    @GetMapping("/codigo-barras/{codigoBarras}")
+    @ResponseStatus(HttpStatus.OK)
+    public ProdutoDto buscarProdutoPorSetor(@PathVariable String codigoBarras) {
+        return produtoService.buscarProdutoCodigoBarras(codigoBarras);
+    }
 }

@@ -1,18 +1,20 @@
-import { Venda } from './../../entity/Venda';
-import { BalancaService } from './../../services/balanca.service';
-import { Router } from '@angular/router';
-import { ItemVenda } from './../../entity/ItemVenda';
-import { VendaService } from './../../services/venda.service';
-import { ToastrService } from 'ngx-toastr';
-import { EntradaEstoqueService } from './../../services/entrada-estoque.service';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatTableDataSource } from '@angular/material/table';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {Venda} from './../../entity/Venda';
+import {BalancaService} from './../../services/balanca.service';
+import {Router} from '@angular/router';
+import {ItemVenda} from './../../entity/ItemVenda';
+import {VendaService} from './../../services/venda.service';
+import {ToastrService} from 'ngx-toastr';
+import {EntradaEstoqueService} from './../../services/entrada-estoque.service';
+import {MatPaginator} from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {PrintService, UsbDriver} from "ng-thermal-print";
-import { CafeteriaService } from 'src/app/services/cafeteria.service';
-import { CartaoCliente } from 'src/app/entity/CartaoCliente';
-import { FormControl } from '@angular/forms';
-import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import {CafeteriaService} from 'src/app/services/cafeteria.service';
+import {CartaoCliente} from 'src/app/entity/CartaoCliente';
+import {FormControl} from '@angular/forms';
+import {IDropdownSettings} from 'ng-multiselect-dropdown';
+import {CartaoClienteService} from "../../services/cartao-cliente.service";
+import {ImpressoraTermicaService} from "../../services/impressora-termica";
 
 @Component({
   selector: 'app-venda',
@@ -21,21 +23,23 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 })
 export class VendaComponent implements OnInit {
 
-  produtos:ItemVenda[] = [];
-  produtoAtual:any;
-  venda: Venda = {cpf: '',nome: '', data: new Date(), cartoes: [], produtos_supermercado: []};
+  produtos: ItemVenda[] = [];
+  produtoAtual: any;
+  venda: Venda = {cpf: '', nome: '', data: new Date(), cartoes: [], produtos_supermercado: []};
 
-  codigo:any;
-  quantidade:any = 1;
-  precoUnitario:any;
-  total:any = 0;
-  imagem:any;
-  precoTotalProduto:any;
-  fracionado:boolean = false;
+  codigo: any;
+  quantidade: any = 1;
+  precoUnitario: any;
+  total: any = 0;
+  imagem: any;
+  precoTotalProduto: any;
+  fracionado: boolean = false;
   cartoes: CartaoCliente[] = []
   cartoesSelecionados: CartaoCliente[] = []
   dropdownSettings: IDropdownSettings = {};
-
+  cartao: CartaoCliente = {rfid: '', cpf: '', nome: '', cartao_pago: false, produtos_cafeteria: []};
+  rfid: any;
+  produtosRecibo: any;
 
   public formControlCartoes = new FormControl([]);
 
@@ -43,54 +47,61 @@ export class VendaComponent implements OnInit {
   dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
 
   status: boolean = false;
-  usbPrintDriver: UsbDriver;
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
-  constructor(public entradaEstoqueService:EntradaEstoqueService, public cafeteriaService: CafeteriaService,private toastr: ToastrService,
-    private vendaSerive:VendaService, private router: Router, private printService: PrintService,
-    private balancaService:BalancaService) {
-      this.veririficarUsuario("VENDA");
+  constructor(public entradaEstoqueService: EntradaEstoqueService, public cafeteriaService: CafeteriaService, private toastr: ToastrService,
+              private vendaSerive: VendaService, private router: Router, private printService: PrintService,
+              private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService, public impressoraTermicaService: ImpressoraTermicaService) {
+    this.veririficarUsuario("VENDA");
+    this.impressoraTermicaService.getLocalStorageImpressora();
 
-      this.usbPrintDriver = new UsbDriver();
-      this.printService.isConnected.subscribe(result => {
-        this.status = result;
-        if (result) {
-          toastr.success('Impressora conectada!!!');
-        } else {
-          toastr.warning('Impressora não conectada.');
-        }
-      });
-      this.dropdownSettings = {
-        idField: 'rfid',
-        textField: 'nome',
-        selectAllText: 'Selecionar todos',
-        allowSearchFilter: true
-      };
+    this.dropdownSettings = {
+      idField: 'rfid',
+      textField: 'nome',
+      selectAllText: 'Selecionar todos',
+      allowSearchFilter: true
+    };
 
-      this.carregarCartoesCliente();
+    this.carregarCartoesCliente();
   }
 
   ngOnInit(): void {
   }
 
   requestUsb() {
-      this.usbPrintDriver.requestUsb().subscribe(result => {
-        this.printService.setDriver(this.usbPrintDriver, 'ESC/POS');
-      });
+    this.impressoraTermicaService.requestUsb().then(r => console.log("Conectado"));
   }
 
-  inserir(){
-    if(this.produtoAtual != null){
+  imprimirTeste() {
+    this.impressoraTermicaService.imprimir();
+  }
 
-      for(let produto of this.produtos){
-        if(produto.produto.codigo_barras === this.codigo){
+  bucarCartaoClientePorRfid() {
+    this.cartaoClienteService.buscarCartaoClientePorRfid(this.rfid).subscribe(
+      data => {
+        this.cartao = data;
+        this.cartoesSelecionados.push(this.cartao);
+        this.toastr.success('Cartão Cliente encontrado!');
+        this.cartao.produtos_cafeteria.forEach(p => {
+          this.produtos.push(p);
+        })
+        this.dataSource.data = this.produtos;
+      },
+      error => this.toastr.error('Rfid não encontrado!')
+    );
+  }
+
+  inserir() {
+    if (this.produtoAtual != null) {
+      for (let produto of this.produtos) {
+        if (produto.produto.codigo_barras === this.codigo) {
           produto.quantidade += this.quantidade;
           this.limpar();
           return;
         }
       }
 
-      let novoItemVenda:ItemVenda = {
+      let novoItemVenda: ItemVenda = {
         quantidade: this.quantidade,
         produto: this.produtoAtual
       }
@@ -104,7 +115,7 @@ export class VendaComponent implements OnInit {
     }
   }
 
-  limpar(){
+  limpar() {
     this.produtoAtual = null;
     this.codigo = "";
     this.quantidade = 1;
@@ -112,22 +123,19 @@ export class VendaComponent implements OnInit {
     this.precoTotalProduto = 0;
   }
 
-  finalizarCompra(){
-    if(this.cartoesSelecionados.length === 0){
-      this.toastr.error("Selecione ao menos um cartão")
-    }
-    else{
-      this.prepararVenda()
-      this.vendaSerive.realizarVenda(this.venda).subscribe(
-        data=> this.vendaSucesso(),
-        error=>this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
+  finalizarCompra() {
+    this.prepararVenda();
+    this.vendaSerive.realizarVenda(this.venda).subscribe(
+      data => this.vendaSucesso(),
+      error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
     )
-    }
+
   }
-  
-  prepararVenda()
-  {
-    this.venda.cartoes = this.cartoes.filter(a => this.cartoesSelecionados.some(b => a.rfid === b.rfid));  
+
+  prepararVenda() {
+    this.produtosRecibo = this.produtos;
+    this.produtos = this.produtos.filter(p => p.produto.setor === 'SUPERMERCADO');
+    this.venda.cartoes = this.cartoesSelecionados;
     this.venda.cpf = this.venda.cartoes[0].cpf;
     this.venda.nome = this.venda.cartoes[0].nome;
     this.venda.cartoes.forEach(c => c.cartao_pago = true)
@@ -135,28 +143,30 @@ export class VendaComponent implements OnInit {
     this.venda.data = new Date();
   }
 
-  vendaSucesso(){
+  vendaSucesso() {
     this.toastr.success('Venda realizada com sucesso!');
     this.limpar();
   }
 
 
-  onChangeCodigo(event:any){
-    var texto = event.target.value;
-    if(texto.length == 12){
-      this.entradaEstoqueService.carregarProduto(texto).subscribe(
-        data=> this.carregarProduto(data),
-        error=>this.toastr.error('Não foi possível encontrar o Produto'+ error.error.ERRORS)
-      )
-    }
+  incluirProduto() {
+    var texto = this.codigo;
+    this.entradaEstoqueService.carregarProduto(texto).subscribe(
+      data => {
+        this.carregarProduto(data);
+        this.inserir();
+      },
+      error => this.toastr.error('Não foi possível encontrar o Produto' + error.error.ERRORS)
+    )
+
   }
 
-  carregarProduto(produto:any){
+  carregarProduto(produto: any) {
     this.imagem = produto.imagem;
     this.precoUnitario = produto.preco_venda;
     this.produtoAtual = produto;
     this.fracionado = produto.fracionado
-    if(this.quantidade){
+    if (this.quantidade) {
       this.precoTotalProduto = this.quantidade * this.precoUnitario;
     }
 
@@ -168,9 +178,9 @@ export class VendaComponent implements OnInit {
   }
 
 
-  excluir(produto:any){
-    for(var i =0; i < this.produtos.length; i++){
-      if(this.produtos[i].produto.codigo_barras == produto.produto.codigo_barras){
+  excluir(produto: any) {
+    for (var i = 0; i < this.produtos.length; i++) {
+      if (this.produtos[i].produto.codigo_barras == produto.produto.codigo_barras) {
         this.total -= this.produtos[i].quantidade * (this.produtos[i].produto.preco_venda || 1);
         this.produtos.splice(i, 1);
         this.dataSource.data = this.produtos;
@@ -186,6 +196,7 @@ export class VendaComponent implements OnInit {
       img.style.zIndex = '2'
     }
   }
+
   diminuiImagem(id: any) {
     let img = document.getElementById(id)
     if (img) {
@@ -195,62 +206,62 @@ export class VendaComponent implements OnInit {
     }
   }
 
-  calcularPrecoTotalProduto(){
+  calcularPrecoTotalProduto() {
     this.precoTotalProduto = this.quantidade * this.precoUnitario;
   }
 
 
   async readerBalanca(): Promise<any> {
-    if(this.fracionado){
-    let navegador: any;
+    if (this.fracionado) {
+      let navegador: any;
 
-    navegador = window.navigator;
+      navegador = window.navigator;
 
-    if (navegador && navegador.serial) {
+      if (navegador && navegador.serial) {
 
-      await this.balancaService.inicializarPorta();
+        await this.balancaService.inicializarPorta();
 
-      if(!this.balancaService.getPorta()){
-        this.balancaService.porta = await navegador.serial.requestPort();
-        await this.balancaService.porta.open({ baudRate: 4800 });
-      }
-
-      try{
-        await this.balancaService.porta.open({ baudRate: 4800 });
-      } catch(err){
-
-      }
-      while (this.balancaService.porta.readable) {
-        try{
-          this.balancaService.reader = this.balancaService.porta.readable.getReader();
-        } catch(err){
-
+        if (!this.balancaService.getPorta()) {
+          this.balancaService.porta = await navegador.serial.requestPort();
+          await this.balancaService.porta.open({baudRate: 4800});
         }
+
         try {
-          while (true) {
-            if(this.fracionado){
-              const { value, done } = await this.balancaService.reader.read();
-              const hex = buf2hex(value)
-              const ascii = hex2a(hex)
-              this.formatarPeso(ascii)
-            } else {
-              this.balancaService.reader.releaseLock();
-              this.balancaService.porta.close();
-              return;
-            }
-          }
-        } catch (error) {
-        } finally {
-          this.balancaService.reader.releaseLock();
+          await this.balancaService.porta.open({baudRate: 4800});
+        } catch (err) {
 
         }
+        while (this.balancaService.porta.readable) {
+          try {
+            this.balancaService.reader = this.balancaService.porta.readable.getReader();
+          } catch (err) {
+
+          }
+          try {
+            while (true) {
+              if (this.fracionado) {
+                const {value, done} = await this.balancaService.reader.read();
+                const hex = buf2hex(value)
+                const ascii = hex2a(hex)
+                this.formatarPeso(ascii)
+              } else {
+                this.balancaService.reader.releaseLock();
+                this.balancaService.porta.close();
+                return;
+              }
+            }
+          } catch (error) {
+          } finally {
+            this.balancaService.reader.releaseLock();
+
+          }
+        }
+
+
+      } else {
+        this.toastr.error("Navegador não suporta leitura serial");
       }
-
-
-    } else {
-      this.toastr.error("Navegador não suporta leitura serial");
     }
-  }
 
     function buf2hex(buffer: any) { // buffer is an ArrayBuffer
       return [...new Uint8Array(buffer)]
@@ -260,32 +271,34 @@ export class VendaComponent implements OnInit {
 
     function toHexString(byteArray: any) {// Byte Array -> HEX
       return Array.from(byteArray,
-        function(byte: any) {
-          return ('0' + (byte & 0XFF).toString(16)).slice(-2); }).join()
+        function (byte: any) {
+          return ('0' + (byte & 0XFF).toString(16)).slice(-2);
+        }).join()
     }
 
     function hex2a(hexx: any) { // HEX-> ASCII
-        var hex = hexx.toString(); //força conversão
-        var str = ''
-        for (var i = 0; i < hex.length; i +=  2)
-          {
-            str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-          }
-        return str;
+      var hex = hexx.toString(); //força conversão
+      var str = ''
+      for (var i = 0; i < hex.length; i += 2) {
+        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+      }
+      return str;
     }
   }
 
 
-  formatarPeso(ascii:any){
+  formatarPeso(ascii: any) {
 
     var valor = Number(ascii);
-    if(!valor){
+    if (!valor) {
       valor = Number(ascii.substring(1));
     }
     this.quantidade = valor;
   }
 
-  imprimir(){
+  imprimir() {
+
+    // productId: 514 vendorId: 1208
     localStorage.setItem("itensVendas", JSON.stringify(this.produtos));
     var esc = '\x1B';
     var newLine = '\x0A';
@@ -305,8 +318,8 @@ export class VendaComponent implements OnInit {
     cmds += newLine + newLine;
     cmds += `TOTAL   ${totalCompra}`;
     cmds += esc + '!' + '\x00';
-    cmds += newLine + newLine;
-    cmds += new Date();
+    // cmds += newLine + newLine;
+    // cmds += new Date();
 
     //this.router.navigate(['/imprime-venda']);
     this.printService.init()

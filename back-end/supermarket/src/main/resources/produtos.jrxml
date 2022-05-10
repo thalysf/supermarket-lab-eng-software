@@ -38,7 +38,7 @@
 			<subreport>
 				<reportElement x="117" y="20" width="320" height="20" uuid="94ce6af1-62cb-4fb5-9e36-96d04f6ac38e"/>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{produtos})]]></dataSourceExpression>
-				<subreportExpression><![CDATA["src/main/resources/item_produto.jasper"]]></subreportExpression>
+				<subreportExpression><![CDATA["item_produto.jasper"]]></subreportExpression>
 			</subreport>
 			<staticText>
 				<reportElement x="227" y="0" width="100" height="30" uuid="b34c8e62-4d5a-42f3-8363-0b5cca823a15"/>

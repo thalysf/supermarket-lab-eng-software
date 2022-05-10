@@ -27,8 +27,13 @@ export class CadastroProdutoService {
   }
 
   carregarProdutoPorSetor(setor: string):Observable<Produto[]>{
-    const urlSetor = this.urlProdutos + "/setor/" + setor
+    const urlSetor = this.urlProdutos + "/setor/" + setor;
     return this.http.get<Produto[]>(urlSetor);
+  }
+
+ buscarProdutoPorCodigoDeBarras(codigoBarras: string):Observable<Produto>{
+    const urlSetor = this.urlProdutos + "/codigo-barras/" + codigoBarras;
+    return this.http.get<Produto>(urlSetor);
   }
 
   deletarProduto(rfid:any){
