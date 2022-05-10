@@ -72,8 +72,8 @@ export class VendaComponent implements OnInit {
     this.impressoraTermicaService.requestUsb().then(r => console.log("Conectado"));
   }
 
-  imprimirTeste() {
-    this.impressoraTermicaService.imprimir();
+  imprimir() {
+    this.impressoraTermicaService.imprimir(this.produtosRecibo);
   }
 
   bucarCartaoClientePorRfid() {
@@ -126,7 +126,10 @@ export class VendaComponent implements OnInit {
   finalizarCompra() {
     this.prepararVenda();
     this.vendaSerive.realizarVenda(this.venda).subscribe(
-      data => this.vendaSucesso(),
+      data => {
+        this.vendaSucesso();
+        this.imprimir();
+      },
       error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
     )
 
@@ -296,39 +299,39 @@ export class VendaComponent implements OnInit {
     this.quantidade = valor;
   }
 
-  imprimir() {
-
-    // productId: 514 vendorId: 1208
-    localStorage.setItem("itensVendas", JSON.stringify(this.produtos));
-    var esc = '\x1B';
-    var newLine = '\x0A';
-    var cmds = esc + "@";
-    cmds += esc + '!' + '\x38';
-    cmds += 'Produtos';
-    cmds += newLine + newLine;
-    cmds += esc + '!' + '\x00';
-    let total: any = 0;
-    let totalCompra: any = 0;
-    for (let i = 0; i < this.produtos.length; i++) {
-      total = (this.produtos[i].produto.preco_venda || 0) * this.produtos[i].quantidade;
-      totalCompra += total;
-      cmds += `${this.produtos[i].produto.nome}   ${this.produtos[i].quantidade}   ${total}`;
-      cmds += newLine;
-    }
-    cmds += newLine + newLine;
-    cmds += `TOTAL   ${totalCompra}`;
-    cmds += esc + '!' + '\x00';
-    // cmds += newLine + newLine;
-    // cmds += new Date();
-
-    //this.router.navigate(['/imprime-venda']);
-    this.printService.init()
-      .setSize('normal')
-      .writeLine(cmds)
-      .feed(4)
-      .cut('full')
-      .flush();
-  }
+  // imprimir() {
+  //
+  //   // productId: 514 vendorId: 1208
+  //   localStorage.setItem("itensVendas", JSON.stringify(this.produtos));
+  //   var esc = '\x1B';
+  //   var newLine = '\x0A';
+  //   var cmds = esc + "@";
+  //   cmds += esc + '!' + '\x38';
+  //   cmds += 'Produtos';
+  //   cmds += newLine + newLine;
+  //   cmds += esc + '!' + '\x00';
+  //   let total: any = 0;
+  //   let totalCompra: any = 0;
+  //   for (let i = 0; i < this.produtos.length; i++) {
+  //     total = (this.produtos[i].produto.preco_venda || 0) * this.produtos[i].quantidade;
+  //     totalCompra += total;
+  //     cmds += `${this.produtos[i].produto.nome}   ${this.produtos[i].quantidade}   ${total}`;
+  //     cmds += newLine;
+  //   }
+  //   cmds += newLine + newLine;
+  //   cmds += `TOTAL   ${totalCompra}`;
+  //   cmds += esc + '!' + '\x00';
+  //   // cmds += newLine + newLine;
+  //   // cmds += new Date();
+  //
+  //   //this.router.navigate(['/imprime-venda']);
+  //   this.printService.init()
+  //     .setSize('normal')
+  //     .writeLine(cmds)
+  //     .feed(4)
+  //     .cut('full')
+  //     .flush();
+  // }
 
   veririficarUsuario(tela: string) {
     if (localStorage.getItem('usuario')) {

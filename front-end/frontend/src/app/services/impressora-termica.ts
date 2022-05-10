@@ -58,22 +58,32 @@ export class ImpressoraTermicaService {
     this.printService.init();
   }
 
-  imprimir(): void {
+  imprimir(produtosRecibo: any): void {
     if(!this.printerStatus) return;
-    this.printService.init();
-    this.printService
-      .setBold(true)
-      .writeLine("Produto")
-      .setBold(false)
-      .feed(1)
-      .writeLine(`Descricao:`)
-      .writeLine(`Codigo de barras:`)
-      .writeLine(`Quantidade em estoque: `)
-      .writeLine(`RFID:`)
-      .feed(1)
+    var total = 0;
+    var esc = '\x1B'; //ESC byte in hex notation
+    var newLine = '\x0A'; //LF byte in hex notation
+    var cmds = esc + "@"; //Initializes the printer (ESC @)
+    cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
+    cmds += 'PRODUTOS'; //text to print
+    cmds += newLine + newLine;
+    cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
+    cmds += 'QUANTIDADE     NOME     PREÇO VENDA     VALOR';
+    cmds += newLine;
+    for (let i = 0; i < produtosRecibo.lenght; i++) {
+      cmds += `${produtosRecibo[i].quantidade}     ${produtosRecibo[i].produto.nome}      ${produtosRecibo[i].produto.preco_venda}     ${produtosRecibo[i].produto.preco_venda * produtosRecibo[i].quantidade}`;
+      total += produtosRecibo[i].produto.preco_venda * produtosRecibo[i].quantidade;
+    }
+    cmds += newLine + newLine;
+    cmds += esc + '!' + '\x18'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
+    cmds += `# TOTAL: ${total}`;
+
+    this.printService.init()
+      .setSize('normal')
+      .writeLine(cmds)
+      .feed(4)
       .cut('full')
-      .flush()
-    ;
+      .flush();
   }
 
 }
