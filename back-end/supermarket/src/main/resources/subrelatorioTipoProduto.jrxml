@@ -16,7 +16,7 @@
 			<textField>
 				<reportElement x="0" y="0" width="100" height="20" uuid="5640da40-eb3d-480a-8ba6-e184b0e2299b"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{nome} + ": "]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{nome} + " : R$  "]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="100" y="0" width="100" height="20" uuid="2ffa613e-8c42-4b3b-b432-5b2efa56ccf1"/>

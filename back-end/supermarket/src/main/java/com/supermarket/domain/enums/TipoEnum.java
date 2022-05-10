@@ -10,8 +10,11 @@ import javax.persistence.Id;
 public
 enum TipoEnum {
 
-    TIPO01("TIPO01"),
-    TIPO02("TIPO02");
+    ALIMENTOS("Alimentos"),
+    BEBIDAS("Bebidas"),
+    FRIOS("Frios"),
+    FRUTAS("Frutas"),
+    LEGUMES("Legumes");
 
     @Id
     private final String descricao;
