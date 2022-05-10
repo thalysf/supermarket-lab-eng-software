@@ -2,6 +2,7 @@ import { RelatorioService } from './../../services/relatorio.service';
 import { HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-relatorios',
@@ -13,7 +14,7 @@ export class RelatoriosComponent implements OnInit {
   dataInicio:any;
   dataFim:any;
 
-  constructor(private router: Router, private relatorioService:RelatorioService) {
+  constructor(private router: Router, private relatorioService:RelatorioService, private toastr: ToastrService) {
     this.veririficarUsuario('RELATORIOS');
    }
 
@@ -22,20 +23,56 @@ export class RelatoriosComponent implements OnInit {
 
 
   gerarRelatorioPorSetor(){
-    window.open("http://localhost:8080/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    if(this.datasValidas()){
+      window.open("http://localhost:8080/relatorios/setor/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    }
+    else{
+      this.toastr.error("Preencha as datas corretamente!");
+    }
   }
 
   gerarRelatorioPorProduto(){
-    window.open("http://localhost:8080/relatorios/produto/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    if(this.datasValidas()){
+      window.open("http://localhost:8080/relatorios/produto/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    }
+    else{
+      this.toastr.error("Preencha as datas corretamente!");
+    }    
   }
 
   gerarRelatorioPorCliente(){
-    window.open("http://localhost:8080/relatorios/cliente/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    if(this.datasValidas()){
+      window.open("http://localhost:8080/relatorios/cliente/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    }
+    else{
+      this.toastr.error("Preencha as datas corretamente!");
+    }   
   }
 
   gerarRelatorioPorTipo(){
-    window.open("http://localhost:8080/relatorios/tipo/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    if(this.datasValidas()){
+      window.open("http://localhost:8080/relatorios/tipo/" + this.dataInicio + '/' + this.dataFim, "_blank");
+    }
+    else{
+      this.toastr.error("Preencha as datas corretamente!");
+    }   
   }
+
+
+  datasValidas() {
+    if(typeof(this.dataInicio) === 'undefined' || typeof(this.dataFim)  === 'undefined'){
+      return false
+    }
+
+    const data01 = new Date(this.dataInicio).getTime();
+    const data02 = new Date(this.dataFim).getTime();
+
+   if (data01 <= data02) {
+      return true;
+   }else{
+     return false;
+   }
+}
 
   veririficarUsuario(tela: string) {
     if (localStorage.getItem('usuario')) {
