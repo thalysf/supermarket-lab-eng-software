@@ -68,10 +68,11 @@ export class ImpressoraTermicaService {
     cmds += 'PRODUTOS'; //text to print
     cmds += newLine + newLine;
     cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
-    cmds += 'QUANTIDADE     NOME     PREÇO VENDA     VALOR';
+    cmds += 'QUANTIDADE\tNOME\tPRECO\tVALOR';
     cmds += newLine;
-    for (let i = 0; i < produtosRecibo.lenght; i++) {
-      cmds += `${produtosRecibo[i].quantidade}     ${produtosRecibo[i].produto.nome}      ${produtosRecibo[i].produto.preco_venda}     ${produtosRecibo[i].produto.preco_venda * produtosRecibo[i].quantidade}`;
+    for (let i = 0; i < produtosRecibo.length; i++) {
+      cmds += `${produtosRecibo[i].quantidade}\t\t${produtosRecibo[i].produto.nome}\t${produtosRecibo[i].produto.preco_venda}\t${produtosRecibo[i].produto.preco_venda * produtosRecibo[i].quantidade}`;
+      cmds += newLine;
       total += produtosRecibo[i].produto.preco_venda * produtosRecibo[i].quantidade;
     }
     cmds += newLine + newLine;

@@ -18,7 +18,7 @@ import { Router } from "@angular/router";
 export class CadastroProdutoComponent implements AfterViewInit {
 
   setores = ['CAFETERIA', 'SUPERMERCADO']
-  tipos = ['TIPO01', 'TIPO02']
+  tipos = ['ALIMENTOS', 'BEBIDAS', 'FRIOS', 'FRUTAS', 'LEGUMES']
   nome: string = "";
   precoVenda: number = 0;
   precoCompra: number = 0;
