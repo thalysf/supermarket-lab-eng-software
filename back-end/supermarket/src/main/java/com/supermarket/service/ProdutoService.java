@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -61,5 +62,20 @@ public class ProdutoService {
 
     public Set<ProdutoDto> listarProdutosPorSetor(SetorEnum setor) {
         return produtoMapper.setProdutoToSetProdutoDto(produtoRepository.findBySetor(setor).orElseThrow(() -> new RegraNegocioException("Setor sem produtos cadastrados!")));
+    }
+
+    public String buscarProdutoMicroterminal(String codigoBarras){
+        Optional<Produto> produtoOptional = produtoRepository.findByCodigoBarras(codigoBarras);
+        String microterminalResultTela = "";
+
+        if(produtoOptional.isPresent()){
+            Produto prod = produtoOptional.get();
+            microterminalResultTela = prod.getNome() + " - R$ " + prod.getPrecoVenda();
+        }
+        else{
+            microterminalResultTela = "Produto nao encontrado.";
+        }
+
+        return microterminalResultTela;
     }
 }
