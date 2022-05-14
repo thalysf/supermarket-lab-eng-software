@@ -8,42 +8,66 @@
 	<field name="inicio" class="java.util.Date"/>
 	<field name="fim" class="java.util.Date"/>
 	<field name="produtos" class="java.util.List"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
 	<title>
 		<band height="80" splitType="Stretch">
-			<textField>
-				<reportElement x="19" y="0" width="525" height="80" uuid="cad847b2-a342-48dd-a632-bafaa8dd10f3"/>
-				<textElement textAlignment="Center">
-					<font fontName="Arial Black" size="20"/>
-				</textElement>
-				<textFieldExpression><![CDATA["RELATÓRIO DE VENDAS POR PRODUTO"]]></textFieldExpression>
-			</textField>
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="e95463e8-d7ea-4a80-bd38-b64bf7b536b7"/>
+				<staticText>
+					<reportElement x="20" y="20" width="544" height="43" forecolor="#FFFFFF" uuid="4c1c089e-730d-4fe3-89fb-ef2347538bcc"/>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[RELATÓRIO DE VENDAS POR PRODUTOS]]></text>
+				</staticText>
+			</frame>
 		</band>
 	</title>
 	<pageHeader>
-		<band height="35" splitType="Stretch">
+		<band height="45" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="5" width="545" height="30" uuid="7d285e60-2d1b-4256-877d-d45810a62191"/>
-				<textElement>
-					<font fontName="Arial" size="12"/>
+				<reportElement mode="Opaque" x="-20" y="-8" width="595" height="28" backcolor="#CCCCCC" uuid="7d285e60-2d1b-4256-877d-d45810a62191"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA["De " + new SimpleDateFormat("MM/dd/yyyy").format($F{inicio}) + " Até " + new SimpleDateFormat("MM/dd/yyyy").format($F{fim})]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="-20" y="20" width="300" height="24" forecolor="#FFFFFF" backcolor="rgba(0, 102, 153, 0.8627451)" uuid="b34c8e62-4d5a-42f3-8363-0b5cca823a15"/>
+				<box padding="2">
+					<pen lineColor="#030303"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Produto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="280" y="20" width="294" height="24" forecolor="#FFFFFF" backcolor="rgba(0, 102, 153, 0.8627451)" uuid="01dc5384-9b7a-411e-8f61-934621b65118"/>
+				<box padding="2">
+					<pen lineColor="#030303"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total]]></text>
+			</staticText>
 		</band>
 	</pageHeader>
 	<detail>
-		<band height="44" splitType="Stretch">
-			<subreport>
-				<reportElement x="117" y="20" width="320" height="20" uuid="94ce6af1-62cb-4fb5-9e36-96d04f6ac38e"/>
+		<band height="3" splitType="Stretch">
+			<subreport overflowType="Stretch">
+				<reportElement mode="Opaque" x="-20" y="0" width="595" height="3" backcolor="rgba(0, 102, 153, 0.039215688)" uuid="94ce6af1-62cb-4fb5-9e36-96d04f6ac38e"/>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{produtos})]]></dataSourceExpression>
 				<subreportExpression><![CDATA["item_produto.jasper"]]></subreportExpression>
 			</subreport>
-			<staticText>
-				<reportElement x="227" y="0" width="100" height="30" uuid="b34c8e62-4d5a-42f3-8363-0b5cca823a15"/>
-				<text><![CDATA[Produto x Valor Total]]></text>
-			</staticText>
 		</band>
 	</detail>
 </jasperReport>
