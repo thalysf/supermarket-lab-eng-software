@@ -1,32 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version 6.19.1.final using JasperReports Library version 6.19.1-867c00bf88cd4d784d404379d6c05e1b419e8a4c  -->
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="relatorioTipoProduto" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="459e38bb-e3dd-4c8b-b70a-dbee8c422217">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="produtos" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="7209e459-8899-4f4d-9614-c92e95645f63">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="One Empty Record"/>
 	<queryString>
 		<![CDATA[]]>
 	</queryString>
+	<field name="inicio" class="java.util.Date"/>
+	<field name="fim" class="java.util.Date"/>
 	<field name="data" class="java.util.List"/>
-	<background>
-		<band splitType="Stretch"/>
-	</background>
-	<columnHeader>
-		<band height="61" splitType="Stretch">
-			<textField>
-				<reportElement x="0" y="20" width="555" height="28" uuid="956d8793-460a-4977-824d-2cd4dc2aab59">
-					<property name="com.jaspersoft.studio.unit.height" value="px"/>
-					<property name="com.jaspersoft.studio.unit.width" value="px"/>
-				</reportElement>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA["RELATÓRIO VALOR POR TIPO DE PRODUTO"]]></textFieldExpression>
-			</textField>
+	<title>
+		<band height="80" splitType="Stretch">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="e95463e8-d7ea-4a80-bd38-b64bf7b536b7"/>
+				<staticText>
+					<reportElement x="20" y="20" width="544" height="43" forecolor="#FFFFFF" uuid="4c1c089e-730d-4fe3-89fb-ef2347538bcc"/>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="20" isBold="true"/>
+					</textElement>
+					<text><![CDATA[RELATÓRIO DE VENDAS POR TIPO DE PRODUTO]]></text>
+				</staticText>
+			</frame>
 		</band>
-	</columnHeader>
+	</title>
+	<pageHeader>
+		<band height="45" splitType="Stretch">
+			<textField>
+				<reportElement mode="Opaque" x="-20" y="-8" width="595" height="28" backcolor="#CCCCCC" uuid="7d285e60-2d1b-4256-877d-d45810a62191"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA["De " + new SimpleDateFormat("MM/dd/yyyy").format($F{inicio}) + " Até " + new SimpleDateFormat("MM/dd/yyyy").format($F{fim})]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement mode="Opaque" x="-20" y="20" width="300" height="24" forecolor="#FFFFFF" backcolor="rgba(0, 102, 153, 0.8627451)" uuid="b34c8e62-4d5a-42f3-8363-0b5cca823a15"/>
+				<box padding="2">
+					<pen lineColor="#030303"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Produto]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="280" y="20" width="294" height="24" forecolor="#FFFFFF" backcolor="rgba(0, 102, 153, 0.8627451)" uuid="01dc5384-9b7a-411e-8f61-934621b65118"/>
+				<box padding="2">
+					<pen lineColor="#030303"/>
+					<topPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<leftPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<bottomPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+					<rightPen lineWidth="1.0" lineStyle="Solid" lineColor="#030303"/>
+				</box>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Valor Total]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<property name="com.jaspersoft.studio.unit.height" value="px"/>
 			<subreport>
-				<reportElement x="0" y="0" width="555" height="20" uuid="b29f0425-7ae9-40ea-bcf6-7c78107457be"/>
+				<reportElement x="-20" y="-1" width="595" height="20" uuid="b29f0425-7ae9-40ea-bcf6-7c78107457be"/>
 				<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($F{data})]]></dataSourceExpression>
 				<subreportExpression><![CDATA["subrelatorioTipoProduto.jasper"]]></subreportExpression>
 			</subreport>

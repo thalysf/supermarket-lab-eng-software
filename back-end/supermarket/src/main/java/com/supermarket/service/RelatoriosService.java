@@ -203,6 +203,8 @@ public class RelatoriosService {
         }
 
         relatorioTipoDto.setData(lista);
+        relatorioTipoDto.setFim(dataFim);
+        relatorioTipoDto.setInicio(dataInicio);
 
         File file = ResourceUtils.getFile("classpath:relatorioTipoProduto.jrxml");
         JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
