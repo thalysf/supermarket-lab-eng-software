@@ -14,7 +14,6 @@ import {CartaoCliente} from 'src/app/entity/CartaoCliente';
 import {FormControl} from '@angular/forms';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {CartaoClienteService} from "../../services/cartao-cliente.service";
-import {ImpressoraTermicaService} from "../../services/impressora-termica";
 
 @Component({
   selector: 'app-venda',
@@ -46,15 +45,24 @@ export class VendaComponent implements OnInit {
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
   dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
 
+  usbPrintDriver: UsbDriver;
   status: boolean = false;
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
   constructor(public entradaEstoqueService: EntradaEstoqueService, public cafeteriaService: CafeteriaService, private toastr: ToastrService,
               private vendaSerive: VendaService, private router: Router, private printService: PrintService,
-              private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService, public impressoraTermicaService: ImpressoraTermicaService) {
+              private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService) {
     this.veririficarUsuario("VENDA");
-    this.impressoraTermicaService.getLocalStorageImpressora();
 
+    this.usbPrintDriver = new UsbDriver();
+    this.printService.isConnected.subscribe(result => {
+      this.status = result;
+      if (result) {
+        toastr.success('Impressora conectada!!!');
+      } else {
+        toastr.warning('Impressora não conectada.');
+      }
+    });
     this.dropdownSettings = {
       idField: 'rfid',
       textField: 'nome',
@@ -69,11 +77,43 @@ export class VendaComponent implements OnInit {
   }
 
   requestUsb() {
-    this.impressoraTermicaService.requestUsb().then(r => console.log("Conectado"));
-  }
+    this.usbPrintDriver.requestUsb().subscribe(result => {
+      this.printService.setDriver(this.usbPrintDriver, 'ESC/POS');
+    });
+}
 
-  imprimir() {
-    this.impressoraTermicaService.imprimir(this.produtosRecibo);
+
+
+ imprimir(produtosRecibo: ItemVenda[]): void {
+   console.log(produtosRecibo)
+    this.printService.init()
+      .setBold(true)
+      .writeLine("PRODUTO")
+      .setBold(false)
+      .writeLine(`------------------------------------------------`)
+      .writeLine(`ITEM        NOME        QTDE        TOTAL PROD  `)
+      .writeLine(`------------------------------------------------`)      
+    
+    let total = 0;
+    for (let i = 0; i < produtosRecibo.length; i++) {
+      total += produtosRecibo[i].quantidade * (produtosRecibo[i].produto.preco_venda || 0 );
+      let linha = `${i + 1}`.slice(0, 12).padEnd(12, ' ') +
+        `${produtosRecibo[i].produto.nome}`.slice(0, 12).padEnd(12, ' ') +
+        `${produtosRecibo[i].quantidade}`.slice(0, 12).padEnd(12, ' ') +
+        `${produtosRecibo[i].produto.preco_venda}`.slice(0, 12).padEnd(12, ' ');
+
+      this.printService
+        .writeLine(linha)
+        .feed(1)
+        .flush()
+
+    }
+
+    this.printService
+      .writeLine(`TOTAL: ${total}`.slice(0, 48).padEnd(48, ' '))
+      .feed(1)
+      .cut('full')
+      .flush()
   }
 
   bucarCartaoClientePorRfid() {
@@ -125,13 +165,14 @@ export class VendaComponent implements OnInit {
 
   finalizarCompra() {
     this.prepararVenda();
-    this.vendaSerive.realizarVenda(this.venda).subscribe(
-      data => {
-        this.vendaSucesso();
-        this.imprimir();
-      },
-      error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
-    )
+    this.imprimir(this.produtosRecibo);
+    // this.vendaSerive.realizarVenda(this.venda).subscribe(
+    //   data => {
+    //     this.vendaSucesso();
+    //     this.imprimir();
+    //   },
+    //   error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
+    // )
   }
 
   prepararVenda() {

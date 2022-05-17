@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import {PrintService, UsbDriver} from "ng-thermal-print";
+import { PrintService, UsbDriver } from "ng-thermal-print";
 
 @Injectable({
   providedIn: 'root'
@@ -59,32 +59,35 @@ export class ImpressoraTermicaService {
   }
 
   imprimir(produtosRecibo: any): void {
-    if(!this.printerStatus) return;
-    var total = 0;
-    var esc = '\x1B'; //ESC byte in hex notation
-    var newLine = '\x0A'; //LF byte in hex notation
-    var cmds = esc + "@"; //Initializes the printer (ESC @)
-    cmds += esc + '!' + '\x38'; //Emphasized + Double-height + Double-width mode selected (ESC ! (8 + 16 + 32)) 56 dec => 38 hex
-    cmds += 'PRODUTOS'; //text to print
-    cmds += newLine + newLine;
-    cmds += esc + '!' + '\x00'; //Character font A selected (ESC ! 0)
-    cmds += 'QUANTIDADE\tNOME\tPRECO\tVALOR';
-    cmds += newLine;
-    for (let i = 0; i < produtosRecibo.length; i++) {
-      cmds += `${produtosRecibo[i].quantidade}\t\t${produtosRecibo[i].produto.nome}\t${produtosRecibo[i].produto.preco_venda}\t${produtosRecibo[i].produto.preco_venda * produtosRecibo[i].quantidade}`;
-      cmds += newLine;
-      total += produtosRecibo[i].produto.preco_venda * produtosRecibo[i].quantidade;
-    }
-    cmds += newLine + newLine;
-    cmds += esc + '!' + '\x18'; //Emphasized + Double-height mode selected (ESC ! (16 + 8)) 24 dec => 18 hex
-    cmds += `# TOTAL: ${total}`;
+    if (!this.printerStatus) return;
+
 
     this.printService.init()
-      .setSize('normal')
-      .writeLine(cmds)
-      .feed(4)
+      .setBold(true)
+      .writeLine("PRODUTO!!!!!!!!!!!!!!!!!!")
+      .setBold(false)
+      .writeLine(`------------------------------------------------`)
+      .writeLine(`ITEM        DESCRICAO   QTDE        PRECO       `)
+      .writeLine(`------------------------------------------------`)      
+      .feed(3)
+
+    for (let i = 0; i < produtosRecibo.length; i++) {
+
+      let linha = `${i + 1}`.slice(0, 12).padEnd(12, ' ') +
+        `${produtosRecibo[i].produto.nome}`.slice(0, 12).padEnd(12, ' ') +
+        `${produtosRecibo[i].quantidade}`.slice(0, 12).padEnd(12, ' ') +
+        `${produtosRecibo[i].produto.preco_venda}`.slice(0, 12).padEnd(12, ' ');
+
+      this.printService
+        .writeLine(linha)
+        .feed(1)
+        .flush()
+
+    }
+
+    this.printService
       .cut('full')
-      .flush();
+      .flush()
   }
 
 }

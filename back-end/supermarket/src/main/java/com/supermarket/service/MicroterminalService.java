@@ -95,7 +95,7 @@ public class MicroterminalService {
     }
 
     private void recuperarProdutoPorCodigoBarras(String codigoBarras, DataOutputStream dos) throws IOException {
-        var microterminalUrl = new URL("http://localhost:8082/microterminal/codigo_barras/" + MicroterminalService.this.codigoBarras);
+        var microterminalUrl = new URL("http://localhost:8080/microterminal/codigo_barras/" + MicroterminalService.this.codigoBarras);
         HttpURLConnection con = (HttpURLConnection) microterminalUrl.openConnection();
         con.setRequestMethod("GET");
         con.setDoOutput(true);
