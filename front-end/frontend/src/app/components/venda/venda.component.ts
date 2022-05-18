@@ -52,7 +52,7 @@ export class VendaComponent implements OnInit {
   constructor(public entradaEstoqueService: EntradaEstoqueService, public cafeteriaService: CafeteriaService, private toastr: ToastrService,
               private vendaSerive: VendaService, private router: Router, private printService: PrintService,
               private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService) {
-    this.veririficarUsuario("VENDA");
+    this.verificarUsuario("VENDA");
 
     this.usbPrintDriver = new UsbDriver();
     this.printService.isConnected.subscribe(result => {
@@ -215,7 +215,7 @@ export class VendaComponent implements OnInit {
       this.precoTotalProduto = this.quantidade * this.precoUnitario;
     }
 
-    this.readerBalanca();
+    //this.readerBalanca();
   }
 
   carregarCartoesCliente() {
@@ -256,6 +256,36 @@ export class VendaComponent implements OnInit {
   }
 
 
+  async readerRfid(): Promise<any> {
+    let navegador: any;
+
+      navegador = window.navigator;
+
+      if (navegador && navegador.serial) {
+        const porta = await navegador.serial.requestPort();
+        await porta.open({ baudRate: 115200 });
+
+        while (porta.readable) {
+          const reader = porta.readable.getReader();
+          try {
+            while (true) {
+              const { value, done } = await reader.read();
+              if (done) {
+                break;
+              }
+              const hex   = this.buf2hex(value)
+              const ascii = this.hex2a(hex)
+              this.rfid = hex.slice(-10,-4);
+            }
+          } catch (error) {
+          } finally {
+            reader.releaseLock();
+          }
+        }
+        }
+      }
+    
+
   async readerBalanca(): Promise<any> {
     if (this.fracionado) {
       let navegador: any;
@@ -286,8 +316,8 @@ export class VendaComponent implements OnInit {
             while (true) {
               if (this.fracionado) {
                 const {value, done} = await this.balancaService.reader.read();
-                const hex = buf2hex(value)
-                const ascii = hex2a(hex)
+                const hex = this.buf2hex(value)
+                const ascii = this.hex2a(hex)
                 this.formatarPeso(ascii)
               } else {
                 this.balancaService.reader.releaseLock();
@@ -307,30 +337,29 @@ export class VendaComponent implements OnInit {
         this.toastr.error("Navegador não suporta leitura serial");
       }
     }
-
-    function buf2hex(buffer: any) { // buffer is an ArrayBuffer
-      return [...new Uint8Array(buffer)]
-        .map(x => x.toString(16).padStart(2, '0'))
-        .join('');
-    }
-
-    function toHexString(byteArray: any) {// Byte Array -> HEX
-      return Array.from(byteArray,
-        function (byte: any) {
-          return ('0' + (byte & 0XFF).toString(16)).slice(-2);
-        }).join()
-    }
-
-    function hex2a(hexx: any) { // HEX-> ASCII
-      var hex = hexx.toString(); //força conversão
-      var str = ''
-      for (var i = 0; i < hex.length; i += 2) {
-        str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-      }
-      return str;
-    }
   }
 
+  buf2hex(buffer: any) { // buffer is an ArrayBuffer
+    return [...new Uint8Array(buffer)]
+      .map(x => x.toString(16).padStart(2, '0'))
+      .join('');
+  }
+
+  toHexString(byteArray: any) {// Byte Array -> HEX
+    return Array.from(byteArray,
+      function (byte: any) {
+        return ('0' + (byte & 0XFF).toString(16)).slice(-2);
+      }).join()
+  }
+
+  hex2a(hexx: any) { // HEX-> ASCII
+    var hex = hexx.toString(); //força conversão
+    var str = ''
+    for (var i = 0; i < hex.length; i += 2) {
+      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
+    }
+    return str;
+  }
 
   formatarPeso(ascii: any) {
 
@@ -341,7 +370,7 @@ export class VendaComponent implements OnInit {
     this.quantidade = valor;
   }
 
-  veririficarUsuario(tela: string) {
+  verificarUsuario(tela: string) {
     if (localStorage.getItem('usuario')) {
       let usuario = JSON.parse(localStorage.getItem('usuario') || '');
 
