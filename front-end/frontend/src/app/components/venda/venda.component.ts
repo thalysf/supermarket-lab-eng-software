@@ -85,7 +85,9 @@ export class VendaComponent implements OnInit {
 
 
  imprimir(produtosRecibo: ItemVenda[]): void {
-   console.log(produtosRecibo)
+   if(!this.status){
+     this.toastr.error("Impressora não conectada!");
+   }
     this.printService.init()
       .setBold(true)
       .writeLine("PRODUTO")
@@ -100,7 +102,7 @@ export class VendaComponent implements OnInit {
       let linha = `${i + 1}`.slice(0, 12).padEnd(12, ' ') +
         `${produtosRecibo[i].produto.nome}`.slice(0, 12).padEnd(12, ' ') +
         `${produtosRecibo[i].quantidade}`.slice(0, 12).padEnd(12, ' ') +
-        `${produtosRecibo[i].produto.preco_venda}`.slice(0, 12).padEnd(12, ' ');
+        `${produtosRecibo[i].quantidade * (produtosRecibo[i].produto.preco_venda || 0 )}`.slice(0, 12).padEnd(12, ' ');
 
       this.printService
         .writeLine(linha)
@@ -110,7 +112,7 @@ export class VendaComponent implements OnInit {
     }
 
     this.printService
-      .writeLine(`TOTAL: ${total}`.slice(0, 48).padEnd(48, ' '))
+      .writeLine(`TOTAL GERAL: ${total}`.slice(0, 48).padEnd(48, ' '))
       .feed(1)
       .cut('full')
       .flush()
@@ -165,14 +167,14 @@ export class VendaComponent implements OnInit {
 
   finalizarCompra() {
     this.prepararVenda();
-    this.imprimir(this.produtosRecibo);
-    // this.vendaSerive.realizarVenda(this.venda).subscribe(
-    //   data => {
-    //     this.vendaSucesso();
-    //     this.imprimir();
-    //   },
-    //   error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
-    // )
+    
+    this.vendaSerive.realizarVenda(this.venda).subscribe(
+      data => {
+        this.vendaSucesso();
+        this.imprimir(this.produtosRecibo);
+      },
+      error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
+    )
   }
 
   prepararVenda() {
