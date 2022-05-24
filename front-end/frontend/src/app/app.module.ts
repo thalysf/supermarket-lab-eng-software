@@ -36,6 +36,10 @@ import { ImprimeVendaComponent } from './components/imprime-venda/imprime-venda/
 import { CartaoclienteComponent } from './components/cartaocliente/cartaocliente.component';
 import { RelatoriosComponent } from './components/relatorios/relatorios.component';
 import { FiscalSaidaComponent } from './components/fiscal-saida/fiscal-saida/fiscal-saida.component';
+import { BarcodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
+import { NgxPrintModule } from "ngx-print";
+import { CodigoBarrasComponent } from './components/codigo-barras/codigo-barras.component';
+import { NgxBarcode6Module } from 'ngx-barcode6';
 
 @NgModule({
   declarations: [
@@ -54,7 +58,8 @@ import { FiscalSaidaComponent } from './components/fiscal-saida/fiscal-saida/fis
     ImprimeVendaComponent,
     CartaoclienteComponent,
     RelatoriosComponent,
-    FiscalSaidaComponent
+    FiscalSaidaComponent,
+    CodigoBarrasComponent
   ],
   imports: [
     MatRadioModule,
@@ -76,7 +81,10 @@ import { FiscalSaidaComponent } from './components/fiscal-saida/fiscal-saida/fis
     MatCheckboxModule,
     MatSelectModule,
     MatIconModule,
-    MatChipsModule
+    MatChipsModule,
+    NgxPrintModule,
+    BarcodeGeneratorAllModule,
+    NgxBarcode6Module
   ],
   providers: [],
   bootstrap: [AppComponent]

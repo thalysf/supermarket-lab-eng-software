@@ -1,0 +1,21 @@
+<app-principal></app-principal>
+
+<button mat-raised-button color="primary" printTitle="Print" printSectionId="print-section" ngxPrint>
+  Imprimir
+</button>
+
+<div style="text-align:center">
+  <h1>
+    Welcome
+  </h1>
+</div>
+
+<div style="text-align:center" id="print-section" class="print">
+  <ngx-barcode6
+    [bc-format]="'MSI'"
+    [bc-value]="'12345678901231'"
+    [bc-display-value]="true"
+  >
+  </ngx-barcode6>
+</div>
+
