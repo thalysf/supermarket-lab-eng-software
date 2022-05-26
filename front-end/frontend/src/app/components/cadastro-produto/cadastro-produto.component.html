@@ -143,11 +143,54 @@
                     delete
                 </i>
             </a>
+            <a>
+              <i class="material-icons delete" (click)="imprimirCodigoBarras(row.codigo_barras)">
+                imprimir
+            </i>
+            </a>
+
+            <div style="text-align:center;" style="display: none !important;" id="{{row.codigo_barras}}">
+              <ngx-barcode6
+                [bc-format]="'EAN13'"
+                [bc-value]="row.codigo_barras"
+                [bc-display-value]="true"
+                [bc-font-size]="10"
+                [bc-width]="0.9"
+                [bc-height]="36"
+                [bc-margin-left]="0"
+                [bc-margin-right]="35"
+              >
+              </ngx-barcode6>
+              <ngx-barcode6
+                [bc-format]="'EAN13'"
+                [bc-value]="row.codigo_barras"
+                [bc-display-value]="true"
+                [bc-font-size]="10"
+                [bc-width]="0.9"
+                [bc-height]="36"
+                [bc-margin-left]="0"
+                [bc-margin-right]="35"
+              >
+              </ngx-barcode6>
+              <ngx-barcode6
+              [bc-format]="'EAN13'"
+              [bc-value]="row.codigo_barras"
+              [bc-display-value]="true"
+              [bc-font-size]="10"
+              [bc-width]="0.9"
+              [bc-height]="36"
+              [bc-margin-left]="0"
+            >
+            </ngx-barcode6>
+            </div>
         </td>
       </ng-container>
 
+
+
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
     </table>
 
 

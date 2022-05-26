@@ -1,0 +1,10 @@
+.landscape{
+    overflow-x: auto !important;
+    border-spacing: 2px !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    display: flex !important;
+}
+@media print {
+    @page { size: landscape !important; }
+}

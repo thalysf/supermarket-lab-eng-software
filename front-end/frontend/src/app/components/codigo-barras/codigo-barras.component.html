@@ -1,6 +1,6 @@
 <app-principal></app-principal>
-
-<button mat-raised-button color="primary" printTitle="Print" printSectionId="print-section" ngxPrint>
+<button 
+  mat-raised-button color="primary" (click)="imprimirCodigoBarras()">
   Imprimir
 </button>
 
@@ -10,12 +10,35 @@
   </h1>
 </div>
 
-<div style="text-align:center" id="print-section" class="print">
+<div style="text-align:center;" class="landscape" id="codigobarras">
   <ngx-barcode6
     [bc-format]="'EAN13'"
     [bc-value]="'1234567890128'"
     [bc-display-value]="true"
+    [bc-font-size]="10"
+    [bc-width]="1"
+    [bc-height]="40"
+    [bc-margin-left]="0"
   >
   </ngx-barcode6>
+  <ngx-barcode6
+    [bc-format]="'EAN13'"
+    [bc-value]="'1234567890128'"
+    [bc-display-value]="true"
+    [bc-font-size]="10"
+    [bc-width]="1"
+    [bc-height]="40"
+    [bc-margin-left]="0"
+  >
+  </ngx-barcode6>
+  <ngx-barcode6
+  [bc-format]="'EAN13'"
+  [bc-value]="'1234567890128'"
+  [bc-display-value]="true"
+  [bc-font-size]="10"
+  [bc-width]="1"
+  [bc-height]="40"
+  [bc-margin-left]="0"
+>
+</ngx-barcode6>
 </div>
-

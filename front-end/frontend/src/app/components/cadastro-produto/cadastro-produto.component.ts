@@ -51,6 +51,28 @@ export class CadastroProdutoComponent implements AfterViewInit {
   ngOnInit(): void {
   }
 
+
+  imprimirCodigoBarras(id_codigo_barras: string): void{
+
+    var mywindow = window.open('', 'PRINT', 'height=400,width=600');
+
+    mywindow?.document.write('<html><head><title>' + document.title  + '</title>');
+    mywindow?.document.write('</head><body style="display:flex; margin-left: 2 !important;">');
+
+    
+    var element = document.getElementById(id_codigo_barras) as HTMLInputElement
+    mywindow?.document.write(element.innerHTML);
+
+
+    mywindow?.document.write('</body></html>');
+
+    mywindow?.document.close();
+    mywindow?.focus();
+
+    mywindow?.print();
+    mywindow?.close();
+  }
+
   async cadastrar() {
     const produto: Produto = {
       nome: this.nome,
@@ -70,8 +92,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
       error => this.toastr.error('Não foi possível Cadastrar o Produto')
     );
   }
-
-
 
   atualizar() {
     const produto: Produto = {
