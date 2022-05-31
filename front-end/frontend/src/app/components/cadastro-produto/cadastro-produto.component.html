@@ -150,38 +150,48 @@
             </a>
 
             <div style="text-align:center;" style="display: none !important;" id="{{row.codigo_barras}}">
-              <ngx-barcode6
-                [bc-format]="'EAN13'"
-                [bc-value]="row.codigo_barras"
-                [bc-display-value]="true"
-                [bc-font-size]="10"
-                [bc-width]="0.9"
-                [bc-height]="36"
-                [bc-margin-left]="0"
-                [bc-margin-right]="35"
-              >
-              </ngx-barcode6>
-              <ngx-barcode6
-                [bc-format]="'EAN13'"
-                [bc-value]="row.codigo_barras"
-                [bc-display-value]="true"
-                [bc-font-size]="10"
-                [bc-width]="0.9"
-                [bc-height]="36"
-                [bc-margin-left]="0"
-                [bc-margin-right]="35"
-              >
-              </ngx-barcode6>
-              <ngx-barcode6
-              [bc-format]="'EAN13'"
-              [bc-value]="row.codigo_barras"
-              [bc-display-value]="true"
-              [bc-font-size]="10"
-              [bc-width]="0.9"
-              [bc-height]="36"
-              [bc-margin-left]="0"
-            >
-            </ngx-barcode6>
+              <div style="text-align: center">
+                <span>{{row.nome}}</span>
+                <ngx-barcode6
+                  [bc-format]="'EAN13'"
+                  [bc-value]="row.codigo_barras"
+                  [bc-display-value]="true"
+                  [bc-font-size]="10"
+                  [bc-width]="0.9"
+                  [bc-height]="36"
+                  [bc-margin-left]="0"
+                  [bc-margin-right]="35"
+                >
+                </ngx-barcode6>
+              </div>
+              <div style="text-align: center">
+                <span>{{row.nome}}</span>
+                <ngx-barcode6
+                  [bc-format]="'EAN13'"
+                  [bc-value]="row.codigo_barras"
+                  [bc-display-value]="true"
+                  [bc-font-size]="10"
+                  [bc-width]="0.9"
+                  [bc-height]="36"
+                  [bc-margin-left]="0"
+                  [bc-margin-right]="35"
+                >
+                </ngx-barcode6>
+              </div>
+              <div style="text-align: center">
+                <span>{{row.nome}}</span>
+                <ngx-barcode6
+                  [bc-format]="'EAN13'"
+                  [bc-value]="row.codigo_barras"
+                  [bc-display-value]="true"
+                  [bc-font-size]="10"
+                  [bc-width]="0.9"
+                  [bc-height]="36"
+                  [bc-margin-left]="0"
+                  [bc-margin-right]="35"
+                >
+                </ngx-barcode6>
+              </div>
             </div>
         </td>
       </ng-container>
