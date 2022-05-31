@@ -14,7 +14,7 @@
 	<name>supermarket</name>
 	<description>Projeto de Supermercado Lab Engenharia de Software</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
 		<maven.compiler.source>8</maven.compiler.source>
 		<maven.compiler.target>8</maven.compiler.target>
