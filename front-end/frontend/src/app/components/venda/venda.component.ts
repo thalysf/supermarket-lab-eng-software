@@ -172,6 +172,7 @@ export class VendaComponent implements OnInit {
       data => {
         this.vendaSucesso();
         this.imprimir(this.produtosRecibo);
+        this.limpar();
       },
       error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
     )

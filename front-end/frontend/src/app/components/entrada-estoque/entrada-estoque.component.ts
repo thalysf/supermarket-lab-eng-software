@@ -61,12 +61,16 @@ export class EntradaEstoqueComponent implements AfterViewInit {
   }
 
   salvar(){
+    var erro = 0;
     for(var p of this.produtos){
       this.entradaEstoqueService.atualizarProduto(p).subscribe(
-        data=> this.toastr.success('Operação feita'),
-        error=>this.toastr.error('Não foi possível Salvar os Produtos')
+        error=>erro = 1
       )
     }
+    if(erro === 0)
+      this.toastr.success('Operação feita')
+    else
+      this.toastr.error('Não foi possível Salvar os Produtos')
   }
 
   carregar(){
