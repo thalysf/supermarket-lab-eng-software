@@ -51,40 +51,93 @@ export class UsuarioTelaComponent implements AfterViewInit {
   }
 
   inserir() {
+    if(this.nome && this.cpf && this.telas.length > 0) {
+      const usuario: Usuario = {
+        cpf: this.cpf,
+        nome: this.nome,
+        telas: this.telasSelecionadas,
+        biometria: null
+      }
 
-    const usuario: Usuario = {
-      cpf: this.cpf,
-      nome: this.nome,
-      telas: this.telasSelecionadas,
-      biometria: null
+      this.usuarioTelaService.criarUsuario(usuario).subscribe(
+        data => {
+          this.carregarUsuarios();
+          this.toastr.success('Usuário criado com sucesso');
+        },
+        error => this.toastr.error('Não foi possível Inserir o Usuário')
+      );
+
+      this.carregarUsuarios();
+
+    } else {
+      if(!this.nome) {
+        this.toastr.warning('Informe um nome');
+      }
+
+      if(!this.cpf) {
+        this.toastr.warning('Cpf inválido');
+      }
+
+      if(this.telasSelecionadas.length === 0) {
+        this.toastr.warning('Selecione uma tela');
+      }
     }
 
-    this.usuarioTelaService.criarUsuario(usuario).subscribe(
-      data => this.carregarUsuarios(),
-      error => this.toastr.error('Não foi possível Inserir o Usuário')
-    );
-
-    this.carregarUsuarios();
   }
 
   editar() {
 
-    const usuario: Usuario = {
-      cpf: this.cpf,
-      nome: this.nome,
-      telas: this.telasSelecionadas,
-      biometria: null
-    }
+    // const usuario: Usuario = {
+    //   cpf: this.cpf,
+    //   nome: this.nome,
+    //   telas: this.telasSelecionadas,
+    //   biometria: null
+    // }
+    //
+    // this.usuarioTelaService.atualizarUsuario(usuario).subscribe(
+    //   data => this.carregarUsuarios(),
+    //   error => this.toastr.error('Não foi possível editar o Usuário')
+    // );
 
-    this.usuarioTelaService.atualizarUsuario(usuario).subscribe(
-      data => this.carregarUsuarios(),
-      error => this.toastr.error('Não foi possível editar o Usuário')
-    );
+    if(this.nome && this.cpf && this.telas.length > 0) {
+      const usuario: Usuario = {
+        cpf: this.cpf,
+        nome: this.nome,
+        telas: this.telasSelecionadas,
+        biometria: null
+      }
+
+      this.usuarioTelaService.criarUsuario(usuario).subscribe(
+        data => {
+          this.carregarUsuarios();
+          this.toastr.success('Usuário atualizado com sucesso');
+        },
+        error => this.toastr.error('Não foi possível editar o Usuário')
+      );
+
+      this.carregarUsuarios();
+
+    } else {
+      if(!this.nome) {
+        this.toastr.warning('Informe um nome');
+      }
+
+      if(!this.cpf) {
+        this.toastr.warning('Cpf inválido');
+      }
+
+      if(this.telasSelecionadas.length === 0) {
+        this.toastr.warning('Selecione uma tela');
+      }
+    }
   }
 
   excluir(usuario: any) {
     this.usuarioTelaService.excluirUsuario(usuario).subscribe(
-      data => this.carregarUsuarios(),
+      data => {
+        this.carregarUsuarios();
+        this.toastr.success('Usuário excluído');
+      },
       error => this.toastr.error('Não foi possível excluir o Usuário')
     );
   }

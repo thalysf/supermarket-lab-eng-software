@@ -8,8 +8,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from "@angular/router";
 
-
-
 @Component({
   selector: 'app-cadastro-produto',
   templateUrl: './cadastro-produto.component.html',
@@ -59,7 +57,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
     mywindow?.document.write('<html><head><title>' + document.title  + '</title>');
     mywindow?.document.write('</head><body style="display:flex; margin-left: 2 !important;">');
 
-    
+
     var element = document.getElementById(id_codigo_barras) as HTMLInputElement
     mywindow?.document.write(element.innerHTML);
 
@@ -74,48 +72,166 @@ export class CadastroProdutoComponent implements AfterViewInit {
   }
 
   async cadastrar() {
-    const produto: Produto = {
-      nome: this.nome,
-      preco_venda: this.precoVenda,
-      preco_compra: this.precoCompra,
-      imagem: this.imagem,
-      fracionado: this.fracionado,
-      codigo_barras: this.codigoBarras,
-      qtd_estoque: this.qtdEstoque,
-      setor: this.setor,
-      rfid: this.rfid,
-      tipo: this.tipoProduto
+
+    if(this.nome && this.precoVenda && this.precoCompra && this.imagem && this.fracionado && this.codigoBarras
+      && this.qtdEstoque && this.setor && this.rfid && this.tipoProduto) {
+
+      const produto: Produto = {
+        nome: this.nome,
+        preco_venda: this.precoVenda,
+        preco_compra: this.precoCompra,
+        imagem: this.imagem,
+        fracionado: this.fracionado,
+        codigo_barras: this.codigoBarras,
+        qtd_estoque: this.qtdEstoque,
+        setor: this.setor,
+        rfid: this.rfid,
+        tipo: this.tipoProduto
+      }
+
+      this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
+        data => {
+          this.carregarProduto();
+          this.toastr.success('Produto cadastrado com sucesso')
+        },
+        error => this.toastr.error('Não foi possível Cadastrar o Produto')
+      );
+
+    } else {
+        if(!this.nome) {
+          this.toastr.warning('Informe um nome');
+        }
+
+        if(!this.precoVenda) {
+          this.toastr.warning('Informe um preço de venda');
+        }
+
+        if(!this.precoCompra) {
+          this.toastr.warning('Informe um preço de compra');
+        }
+
+        if(!this.imagem) {
+          this.toastr.warning('Informe uma imagem');
+        }
+
+        if(!this.fracionado) {
+          this.toastr.warning('Informe a fração');
+        }
+
+        if(!this.codigoBarras) {
+          this.toastr.warning('Informe uma imagem');
+        }
+
+        if(!this.qtdEstoque) {
+          this.toastr.warning('Informe uma quantidade de estoque');
+        }
+
+        if(!this.setor) {
+          this.toastr.warning('Informe um setor');
+        }
+
+        if(!this.rfid) {
+          this.toastr.warning('Informe uma imagem');
+        }
+
+      if(!this.tipoProduto) {
+        this.toastr.warning('Informe um tipo de produto');
+      }
     }
 
-    this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
-      data => this.carregarProduto(),
-      error => this.toastr.error('Não foi possível Cadastrar o Produto')
-    );
   }
 
   atualizar() {
-    const produto: Produto = {
-      nome: this.nome,
-      preco_venda: this.precoVenda,
-      preco_compra: this.precoCompra,
-      imagem: this.imagem,
-      fracionado: this.fracionado,
-      codigo_barras: this.codigoBarras,
-      qtd_estoque: this.qtdEstoque,
-      setor: this.setor,
-      rfid: this.rfid,
-      tipo: this.tipoProduto
-    }
-    this.cadastroProdutoService.atualizarProduto(produto).subscribe(
-      data => this.carregarProduto(),
-      error => this.toastr.error('Não foi possível Atualizar o Produto')
-    )
+    // const produto: Produto = {
+    //   nome: this.nome,
+    //   preco_venda: this.precoVenda,
+    //   preco_compra: this.precoCompra,
+    //   imagem: this.imagem,
+    //   fracionado: this.fracionado,
+    //   codigo_barras: this.codigoBarras,
+    //   qtd_estoque: this.qtdEstoque,
+    //   setor: this.setor,
+    //   rfid: this.rfid,
+    //   tipo: this.tipoProduto
+    // }
+    // this.cadastroProdutoService.atualizarProduto(produto).subscribe(
+    //   data => this.carregarProduto(),
+    //   error => this.toastr.error('Não foi possível Atualizar o Produto')
+    // )
 
+    if(this.nome && this.precoVenda && this.precoCompra && this.imagem && this.fracionado && this.codigoBarras
+      && this.qtdEstoque && this.setor && this.rfid && this.tipoProduto) {
+
+      const produto: Produto = {
+        nome: this.nome,
+        preco_venda: this.precoVenda,
+        preco_compra: this.precoCompra,
+        imagem: this.imagem,
+        fracionado: this.fracionado,
+        codigo_barras: this.codigoBarras,
+        qtd_estoque: this.qtdEstoque,
+        setor: this.setor,
+        rfid: this.rfid,
+        tipo: this.tipoProduto
+      }
+
+      this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
+        data => {
+          this.carregarProduto();
+          this.toastr.success('Produto cadastrado com sucesso')
+        },
+        error => this.toastr.error('Não foi possível Cadastrar o Produto')
+      );
+
+    } else {
+      if(!this.nome) {
+        this.toastr.warning('Informe um nome');
+      }
+
+      if(!this.precoVenda) {
+        this.toastr.warning('Informe um preço de venda');
+      }
+
+      if(!this.precoCompra) {
+        this.toastr.warning('Informe um preço de compra');
+      }
+
+      if(!this.imagem) {
+        this.toastr.warning('Informe uma imagem');
+      }
+
+      if(!this.fracionado) {
+        this.toastr.warning('Informe a fração');
+      }
+
+      if(!this.codigoBarras) {
+        this.toastr.warning('Informe uma imagem');
+      }
+
+      if(!this.qtdEstoque) {
+        this.toastr.warning('Informe uma quantidade de estoque');
+      }
+
+      if(!this.setor) {
+        this.toastr.warning('Informe um setor');
+      }
+
+      if(!this.rfid) {
+        this.toastr.warning('Informe uma imagem');
+      }
+
+      if(!this.tipoProduto) {
+        this.toastr.warning('Informe um tipo de produto');
+      }
+    }
   }
 
   deletar(produto: any) {
     this.cadastroProdutoService.deletarProduto(produto.rfid).subscribe(
-      data => this.carregarProduto(),
+      data => {
+        this.carregarProduto();
+        this.toastr.error('Produto excluído com sucesso')
+      },
       error => this.toastr.error('Não foi possível Excluir o Produto')
     )
   }
@@ -233,14 +349,14 @@ export class CadastroProdutoComponent implements AfterViewInit {
           .map(x => x.toString(16).padStart(2, '0'))
           .join('');
       }
-    
+
       toHexString(byteArray: any) {// Byte Array -> HEX
         return Array.from(byteArray,
           function (byte: any) {
             return ('0' + (byte & 0XFF).toString(16)).slice(-2);
           }).join()
       }
-    
+
       hex2a(hexx: any) { // HEX-> ASCII
         var hex = hexx.toString(); //força conversão
         var str = ''

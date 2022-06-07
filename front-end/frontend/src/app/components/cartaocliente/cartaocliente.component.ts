@@ -39,7 +39,6 @@ export class CartaoclienteComponent implements OnInit {
     if (this.cartaoValido(this.cartaoCliente)) {
       this.cartaoCliente.cartao_pago = false;
       this.cartaoCliente.produtos_cafeteria = [];
-      console.log(this.cartaoCliente);
       this.cartaoClienteService.criarCartaoCliente(this.cartaoCliente).subscribe(
         data => {
           this.carregarcartoes();
@@ -160,14 +159,14 @@ export class CartaoclienteComponent implements OnInit {
           .map(x => x.toString(16).padStart(2, '0'))
           .join('');
       }
-    
+
       toHexString(byteArray: any) {// Byte Array -> HEX
         return Array.from(byteArray,
           function (byte: any) {
             return ('0' + (byte & 0XFF).toString(16)).slice(-2);
           }).join()
       }
-    
+
       hex2a(hexx: any) { // HEX-> ASCII
         var hex = hexx.toString(); //força conversão
         var str = ''
