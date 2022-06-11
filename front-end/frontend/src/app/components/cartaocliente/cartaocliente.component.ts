@@ -30,9 +30,11 @@ export class CartaoclienteComponent implements OnInit {
     this.carregarcartoes();
   }
   ngOnInit(): void {
+
   }
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.focusPrimeiroElementoFormulario();
   }
 
   inserir() {
@@ -52,6 +54,8 @@ export class CartaoclienteComponent implements OnInit {
     else {
       this.toastr.warning('Preencha os campos corretamente!');
     }
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
 
@@ -68,6 +72,8 @@ export class CartaoclienteComponent implements OnInit {
     else{
       this.toastr.warning('Preencha os campos corretamente!');
     }
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   excluir(cartao: CartaoCliente) {
@@ -82,6 +88,16 @@ export class CartaoclienteComponent implements OnInit {
 
   limpar() {
     this.cartaoCliente = { cartao_pago: false, cpf: '', nome: '', produtos_cafeteria: [], rfid: '' };
+  }
+
+  focusPrimeiroElementoFormulario(): void{
+    let blurElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+    blurElement.blur();
+
+    setTimeout(function(){
+      let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+      focusElement.focus();
+    },0);
   }
 
   carregarCartoesClientes() {

@@ -26,10 +26,10 @@ export class EntradaEstoqueComponent implements AfterViewInit {
     this.veririficarUsuario('ESTOQUE');
   }
 
-
   ngAfterViewInit() : void {
     this.dataSource.paginator = this.paginator;
     this.carregar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   inserir(){
@@ -92,6 +92,16 @@ export class EntradaEstoqueComponent implements AfterViewInit {
         return;
       }
     }
+  }
+
+  focusPrimeiroElementoFormulario(): void{
+    let blurElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+    blurElement.blur();
+
+    setTimeout(function(){
+      let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+      focusElement.focus();
+    },0);
   }
 
   veririficarUsuario(tela: string) {

@@ -48,6 +48,7 @@ export class UsuarioTelaComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
+    this.focusPrimeiroElementoFormulario();
   }
 
   inserir() {
@@ -65,7 +66,7 @@ export class UsuarioTelaComponent implements AfterViewInit {
           this.toastr.success('Usuário criado com sucesso');
         },
         error => this.toastr.error('Não foi possível Inserir o Usuário. Verifique se o CPF já existe')
-      );  
+      );
 
       this.carregarUsuarios();
 
@@ -82,23 +83,11 @@ export class UsuarioTelaComponent implements AfterViewInit {
         this.toastr.warning('Selecione uma tela');
       }
     }
-
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   editar() {
-
-    // const usuario: Usuario = {
-    //   cpf: this.cpf,
-    //   nome: this.nome,
-    //   telas: this.telasSelecionadas,
-    //   biometria: null
-    // }
-    //
-    // this.usuarioTelaService.atualizarUsuario(usuario).subscribe(
-    //   data => this.carregarUsuarios(),
-    //   error => this.toastr.error('Não foi possível editar o Usuário')
-    // );
-
     if(this.nome && this.cpf && this.telas.length > 0) {
       const usuario: Usuario = {
         cpf: this.cpf,
@@ -107,7 +96,7 @@ export class UsuarioTelaComponent implements AfterViewInit {
         biometria: null
       }
 
-      this.usuarioTelaService.criarUsuario(usuario).subscribe(
+      this.usuarioTelaService.atualizarUsuario(usuario).subscribe(
         data => {
           this.carregarUsuarios();
           this.toastr.success('Usuário atualizado com sucesso');
@@ -130,6 +119,18 @@ export class UsuarioTelaComponent implements AfterViewInit {
         this.toastr.warning('Selecione uma tela');
       }
     }
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
+  }
+
+  focusPrimeiroElementoFormulario(): void{
+    let blurElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+    blurElement.blur();
+
+    setTimeout(function(){
+      let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+      focusElement.focus();
+    },0);
   }
 
   excluir(usuario: any) {

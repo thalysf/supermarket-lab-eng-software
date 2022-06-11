@@ -49,6 +49,7 @@ export class CafeteriaComponent implements OnInit {
   }
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
+    this.focusPrimeiroElementoFormulario();
   }
 
   ngOnInit(): void {
@@ -101,7 +102,8 @@ export class CafeteriaComponent implements OnInit {
       this.cartaoSelecionado.produtos_cafeteria.push(itemVenda);
       this.dataSource.data = this.cartaoSelecionado.produtos_cafeteria;
     }
-
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   removerCarrinho(index: any): void {
@@ -116,8 +118,8 @@ export class CafeteriaComponent implements OnInit {
         },
         error => this.toastr.error(error.error.ERRORS)
       );
-
-
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   limparProdutosCartao(cartaoCliente: CartaoCliente) {
@@ -129,6 +131,18 @@ export class CafeteriaComponent implements OnInit {
       },
       error => this.toastr.error('Não foi possível Limpar os Produtos do Cartão Cliente: ' + error.error.ERRORS)
     )
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
+  }
+
+  focusPrimeiroElementoFormulario(): void{
+    let blurElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+    blurElement.blur();
+
+    setTimeout(function(){
+      let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+      focusElement.focus();
+    },0);
   }
 
   limpar() {

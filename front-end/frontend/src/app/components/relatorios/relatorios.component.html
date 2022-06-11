@@ -3,7 +3,7 @@
     <mat-card-title class="tituloTela">Relatórios</mat-card-title>
     <br>
     <mat-form-field class="campo espacamentoCampos" style="margin-right: 10px;">
-        <input matInput placeholder="DATA INICIO"
+        <input matInput placeholder="DATA INICIO" id="primeiroElementoForm"
         [(ngModel)]="dataInicio" name="dataInicio" type="date">
     </mat-form-field>
 
@@ -26,7 +26,7 @@
     <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima" (click)="gerarRelatorioPorSetor()">
         Relatório Setor
     </button>
-    
+
     <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima" (click)="gerarRelatorioPorTipo()">
         Relatório Tipo
     </button>

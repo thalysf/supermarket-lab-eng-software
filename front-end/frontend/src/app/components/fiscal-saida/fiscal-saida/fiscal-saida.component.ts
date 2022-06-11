@@ -20,13 +20,16 @@ export class FiscalSaidaComponent implements OnInit {
   ngOnInit(): void {
     this.veririficarUsuario('FISCAL');
     this.formulario = this.formBuilder.group({
-      rfid: ['', [Validators.required]]
+      rfid: ['']
     });
+  }
+  ngAfterViewInit(): void {
+    this.focusPrimeiroElementoFormulario();
   }
 
   verificarCartaoCliente() {
     if(!this.formulario.get('rfid')?.value){
-      this.toastr.error('Preencha o CPF!')
+      this.toastr.error('Preencha o RFID!')
     } else {
       this.cartaoClienteService.buscarCartaoClientePorRfid(this.formulario.get('rfid')?.value).subscribe(
         data => {
@@ -36,7 +39,7 @@ export class FiscalSaidaComponent implements OnInit {
           }
           else if(this.cartaoCliente.produtos_cafeteria.length === 0){
             this.toastr.warning('Cartão vazio!')
-          } 
+          }
           else {
             this.toastr.success('Cartão pago com sucesso!')
           }
@@ -44,6 +47,22 @@ export class FiscalSaidaComponent implements OnInit {
         error => this.toastr.error('Rfid não encontrado!')
       );
     }
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
+  }
+
+  limpar(): void{
+    this.formulario.controls['rfid'].setValue("");
+  }
+
+  focusPrimeiroElementoFormulario(): void{
+    let blurElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+    blurElement.blur();
+
+    setTimeout(function(){
+      let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+      focusElement.focus();
+    },0);
   }
 
   veririficarUsuario(tela: string) {

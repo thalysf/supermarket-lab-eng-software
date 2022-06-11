@@ -75,6 +75,10 @@ export class VendaComponent implements OnInit {
 
   ngOnInit(): void {
   }
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.focusPrimeiroElementoFormulario();
+  }
 
   requestUsb() {
     this.usbPrintDriver.requestUsb().subscribe(result => {
@@ -94,8 +98,8 @@ export class VendaComponent implements OnInit {
       .setBold(false)
       .writeLine(`------------------------------------------------`)
       .writeLine(`ITEM        NOME        QTDE        TOTAL PROD  `)
-      .writeLine(`------------------------------------------------`)      
-    
+      .writeLine(`------------------------------------------------`)
+
     let total = 0;
     for (let i = 0; i < produtosRecibo.length; i++) {
       total += produtosRecibo[i].quantidade * (produtosRecibo[i].produto.preco_venda || 0 );
@@ -131,6 +135,8 @@ export class VendaComponent implements OnInit {
       },
       error => this.toastr.error('Rfid não encontrado!')
     );
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   inserir() {
@@ -153,11 +159,14 @@ export class VendaComponent implements OnInit {
 
       this.total += this.precoTotalProduto;
 
+
       this.limpar();
+      this.focusPrimeiroElementoFormulario();
     }
   }
 
   limpar() {
+    this.rfid = null
     this.produtoAtual = null;
     this.codigo = "";
     this.quantidade = 1;
@@ -167,7 +176,7 @@ export class VendaComponent implements OnInit {
 
   finalizarCompra() {
     this.prepararVenda();
-    
+
     this.vendaSerive.realizarVenda(this.venda).subscribe(
       data => {
         this.vendaSucesso();
@@ -176,6 +185,8 @@ export class VendaComponent implements OnInit {
       },
       error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
     )
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   prepararVenda() {
@@ -204,7 +215,8 @@ export class VendaComponent implements OnInit {
       },
       error => this.toastr.error('Não foi possível encontrar o Produto' + error.error.ERRORS)
     )
-
+    this.limpar();
+    this.focusPrimeiroElementoFormulario();
   }
 
   carregarProduto(produto: any) {
@@ -256,6 +268,15 @@ export class VendaComponent implements OnInit {
     this.precoTotalProduto = this.quantidade * this.precoUnitario;
   }
 
+  focusPrimeiroElementoFormulario(): void{
+    let blurElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+    blurElement.blur();
+
+    setTimeout(function(){
+      let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
+      focusElement.focus();
+    },0);
+  }
 
   async readerRfid(): Promise<any> {
     let navegador: any;
@@ -285,7 +306,7 @@ export class VendaComponent implements OnInit {
         }
         }
       }
-    
+
 
   async readerBalanca(): Promise<any> {
     if (this.fracionado) {

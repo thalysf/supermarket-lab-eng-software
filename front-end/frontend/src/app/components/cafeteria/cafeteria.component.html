@@ -4,7 +4,7 @@
   <form [formGroup]="formulario" style="margin-top: 30px;">
 
     <mat-form-field class="campo espacamentoCampos">
-      <input [(ngModel)] ="rfid" matInput placeholder="RFID DO CARTAO CLIENTE" 
+      <input [(ngModel)] ="rfid" matInput placeholder="RFID DO CARTAO CLIENTE" id="primeiroElementoForm"
       (click)="readerRfid()"
       (keyup.enter)="bucarCartaoClientePorRfid()"
              formControlName="rfid" name="cartaoSelecionado"
@@ -12,14 +12,14 @@
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="CODIGO DE BARRAS DO PRODUTO" (keyup.enter)="bucarProdutoPorCodigoDeBarras()"
-             name="produtoSelecionado" type="text" formControlName="codigoBarras" required style="margin-left: 4px;">
-    </mat-form-field>
-
-    <mat-form-field class="campo espacamentoCampos">
       <input matInput placeholder="QUANTIDADE" (click)="readerBalanca()" formControlName="quantidade" name="quantidade"
              type="text" required
              style="margin-left: 4px;">
+    </mat-form-field>
+
+    <mat-form-field class="campo espacamentoCampos">
+      <input matInput placeholder="CODIGO DE BARRAS DO PRODUTO" (keyup.enter)="bucarProdutoPorCodigoDeBarras()"
+             name="produtoSelecionado" type="text" formControlName="codigoBarras" required style="margin-left: 4px;">
     </mat-form-field>
   </form>
 

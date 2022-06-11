@@ -32,13 +32,11 @@ import { VendaComponent } from './components/venda/venda.component';
 import { CafeteriaComponent } from './components/cafeteria/cafeteria.component';
 import {MatIconModule} from '@angular/material/icon';
 import {MatChipsModule} from '@angular/material/chips';
-import { ImprimeVendaComponent } from './components/imprime-venda/imprime-venda/imprime-venda.component';
 import { CartaoclienteComponent } from './components/cartaocliente/cartaocliente.component';
 import { RelatoriosComponent } from './components/relatorios/relatorios.component';
 import { FiscalSaidaComponent } from './components/fiscal-saida/fiscal-saida/fiscal-saida.component';
 import { BarcodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 import { NgxPrintModule } from "ngx-print";
-import { CodigoBarrasComponent } from './components/codigo-barras/codigo-barras.component';
 import { NgxBarcode6Module } from 'ngx-barcode6';
 
 @NgModule({
@@ -55,11 +53,9 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
     HomeComponent,
     VendaComponent,
     CafeteriaComponent,
-    ImprimeVendaComponent,
     CartaoclienteComponent,
     RelatoriosComponent,
-    FiscalSaidaComponent,
-    CodigoBarrasComponent
+    FiscalSaidaComponent
   ],
   imports: [
     MatRadioModule,
