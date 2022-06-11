@@ -114,7 +114,7 @@ export class CafeteriaComponent implements OnInit {
         data => {
           this.toastr.success('Produtos adicionados ao cartão!');
         },
-        error => this.toastr.error('Não foi possível Adicionar protudos ao Cartão: ' + error.error.ERRORS)
+        error => this.toastr.error(error.error.ERRORS)
       );
 
 

@@ -61,11 +61,11 @@ export class UsuarioTelaComponent implements AfterViewInit {
 
       this.usuarioTelaService.criarUsuario(usuario).subscribe(
         data => {
-          this.carregarUsuarios();
+          this.carregarUsuarios()
           this.toastr.success('Usuário criado com sucesso');
         },
-        error => this.toastr.error('Não foi possível Inserir o Usuário')
-      );
+        error => this.toastr.error('Não foi possível Inserir o Usuário. Verifique se o CPF já existe')
+      );  
 
       this.carregarUsuarios();
 

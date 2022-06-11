@@ -91,10 +91,10 @@ export class CadastroProdutoComponent implements AfterViewInit {
 
       this.cadastroProdutoService.cadastrarProduto(produto).subscribe(
         data => {
-          this.carregarProduto();
-          this.toastr.success('Produto cadastrado com sucesso')
+          this.carregarProduto()
+          this.toastr.success('Produto cadastrado com sucesso')  
         },
-        error => this.toastr.error('Não foi possível Cadastrar o Produto')
+        error => this.toastr.error('Erro. O RFID ou Código de barras já é associado a outro produto')
       );
 
     } else {
@@ -138,7 +138,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
         this.toastr.warning('Informe um tipo de produto');
       }
     }
-
   }
 
   atualizar() {

@@ -23,6 +23,10 @@ public class CartaoClienteService {
         cartaoClienteRepository.findById(cartaoClienteDto.getRfid()).ifPresent(u -> {
             throw new RegraNegocioException("Cartão já cadastrado!");
         });
+        if(cartaoClienteRepository.findByCpf(cartaoClienteDto.getCpf()) != null)
+        {
+            throw new RegraNegocioException("Cartão já cadastrado!");
+        }
         CartaoCliente cartaoCliente = cartaoClienteMapper.cartaoClienteDtoToCartaoCliente(cartaoClienteDto);
         cartaoClienteRepository.save(cartaoCliente);
     }

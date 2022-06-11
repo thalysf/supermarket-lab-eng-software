@@ -5,6 +5,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 import java.util.Set;
 
 @Repository
@@ -12,4 +13,6 @@ import java.util.Set;
 public interface CartaoClienteRepository extends CrudRepository<CartaoCliente, String> {
     @Override
     Set<CartaoCliente> findAll();
+
+    CartaoCliente findByCpf(String cpf);
 }

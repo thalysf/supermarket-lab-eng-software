@@ -17,7 +17,7 @@ public class CafeteriaController {
 
     @PutMapping
     @ResponseStatus(HttpStatus.OK)
-    public void incluirProdutosCafeteriaNoCartao(@RequestBody CartaoClienteDto cartaoClienteDto) {
+    public void incluirProdutosCafeteriaNoCartao(@RequestBody CartaoClienteDto cartaoClienteDto) throws Exception {
         cafeteriaService.incluirProdutosCafeteriaNoCartao(cartaoClienteDto);
     }
 
