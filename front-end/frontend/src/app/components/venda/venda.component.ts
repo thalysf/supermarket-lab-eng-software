@@ -50,7 +50,7 @@ export class VendaComponent implements OnInit {
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
   constructor(public entradaEstoqueService: EntradaEstoqueService, public cafeteriaService: CafeteriaService, private toastr: ToastrService,
-              private vendaSerive: VendaService, private router: Router, private impressoraTermicaService: ImpressoraTermicaService,
+              private vendaSerive: VendaService, private router: Router, public impressoraTermicaService: ImpressoraTermicaService,
               private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService) {
     this.verificarUsuario("VENDA");
     this.impressoraTermicaService.getLocalStorageImpressora();
@@ -129,18 +129,20 @@ export class VendaComponent implements OnInit {
   }
 
   finalizarCompra() {
-    this.prepararVenda();
+    //this.prepararVenda();
+    localStorage.clear();
+    //this.impressoraTermicaService.imprimir(this.produtosRecibo);
 
-    this.vendaSerive.realizarVenda(this.venda).subscribe(
-      data => {
-        this.vendaSucesso();
-        this.impressoraTermicaService.imprimir(this.produtosRecibo);
-        this.limpar();
-      },
-      error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
-    )
-    this.limpar();
-    this.focusPrimeiroElementoFormulario();
+    // this.vendaSerive.realizarVenda(this.venda).subscribe(
+    //   data => {
+    //     this.vendaSucesso();
+    //     this.impressoraTermicaService.imprimir(this.produtosRecibo);
+    //     this.limpar();
+    //   },
+    //   error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
+    // )
+    // this.limpar();
+    // this.focusPrimeiroElementoFormulario();
   }
 
   prepararVenda() {

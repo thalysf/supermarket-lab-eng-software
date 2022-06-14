@@ -52,14 +52,14 @@
     </button>
 
     <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"
-    (click)="finalizarCompra()">
+    (click)="finalizarCompra()" [disabled]="!impressoraTermicaService.printerStatus">
         Finalizar Compra
     </button>
 
-<!--  <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"-->
-<!--         (click)="conectarUsb()">-->
-<!--   Conectar USB-->
-<!--  </button>-->
+  <button mat-raised-button color="primary" class="espacamentoPrimeiroBotao espacamentoBotoesCima"
+         [disabled]="impressoraTermicaService.printerStatus" (click)="conectarUsb()">
+   Conectar Impressora Térmica
+  </button>
 
     <div class="mat-elevation-z2" style="margin-top: 30px;">
         <table mat-table [dataSource]="dataSource" style="width: 100%;">
