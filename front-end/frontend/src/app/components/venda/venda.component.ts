@@ -14,6 +14,7 @@ import {CartaoCliente} from 'src/app/entity/CartaoCliente';
 import {FormControl} from '@angular/forms';
 import {IDropdownSettings} from 'ng-multiselect-dropdown';
 import {CartaoClienteService} from "../../services/cartao-cliente.service";
+import {ImpressoraTermicaService} from "../../services/impressora-termica.service";
 
 @Component({
   selector: 'app-venda',
@@ -45,24 +46,14 @@ export class VendaComponent implements OnInit {
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
   dataSource = new MatTableDataSource<ItemVenda>(this.produtos);
 
-  usbPrintDriver: UsbDriver;
   status: boolean = false;
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
   constructor(public entradaEstoqueService: EntradaEstoqueService, public cafeteriaService: CafeteriaService, private toastr: ToastrService,
-              private vendaSerive: VendaService, private router: Router, private printService: PrintService,
+              private vendaSerive: VendaService, private router: Router, private impressoraTermicaService: ImpressoraTermicaService,
               private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService) {
     this.verificarUsuario("VENDA");
-
-    this.usbPrintDriver = new UsbDriver();
-    this.printService.isConnected.subscribe(result => {
-      this.status = result;
-      if (result) {
-        toastr.success('Impressora conectada!!!');
-      } else {
-        toastr.warning('Impressora não conectada.');
-      }
-    });
+    this.impressoraTermicaService.getLocalStorageImpressora();
     this.dropdownSettings = {
       idField: 'rfid',
       textField: 'nome',
@@ -75,51 +66,10 @@ export class VendaComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.focusPrimeiroElementoFormulario();
-  }
-
-  requestUsb() {
-    this.usbPrintDriver.requestUsb().subscribe(result => {
-      this.printService.setDriver(this.usbPrintDriver, 'ESC/POS');
-    });
-}
-
-
-
- imprimir(produtosRecibo: ItemVenda[]): void {
-   if(!this.status){
-     this.toastr.error("Impressora não conectada!");
-   }
-    this.printService.init()
-      .setBold(true)
-      .writeLine("PRODUTO")
-      .setBold(false)
-      .writeLine(`------------------------------------------------`)
-      .writeLine(`ITEM        NOME        QTDE        TOTAL PROD  `)
-      .writeLine(`------------------------------------------------`)
-
-    let total = 0;
-    for (let i = 0; i < produtosRecibo.length; i++) {
-      total += produtosRecibo[i].quantidade * (produtosRecibo[i].produto.preco_venda || 0 );
-      let linha = `${i + 1}`.slice(0, 12).padEnd(12, ' ') +
-        `${produtosRecibo[i].produto.nome}`.slice(0, 12).padEnd(12, ' ') +
-        `${produtosRecibo[i].quantidade}`.slice(0, 12).padEnd(12, ' ') +
-        `${produtosRecibo[i].quantidade * (produtosRecibo[i].produto.preco_venda || 0 )}`.slice(0, 12).padEnd(12, ' ');
-
-      this.printService
-        .writeLine(linha)
-        .feed(1)
-        .flush()
-
-    }
-
-    this.printService
-      .writeLine(`TOTAL GERAL: ${total}`.slice(0, 48).padEnd(48, ' '))
-      .feed(1)
-      .cut('full')
-      .flush()
   }
 
   bucarCartaoClientePorRfid() {
@@ -174,13 +124,17 @@ export class VendaComponent implements OnInit {
     this.precoTotalProduto = 0;
   }
 
+  conectarUsb(): void {
+    this.impressoraTermicaService.requestUsb().then(() => console.log("Conectado"));
+  }
+
   finalizarCompra() {
     this.prepararVenda();
 
     this.vendaSerive.realizarVenda(this.venda).subscribe(
       data => {
         this.vendaSucesso();
-        this.imprimir(this.produtosRecibo);
+        this.impressoraTermicaService.imprimir(this.produtosRecibo);
         this.limpar();
       },
       error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
@@ -268,44 +222,44 @@ export class VendaComponent implements OnInit {
     this.precoTotalProduto = this.quantidade * this.precoUnitario;
   }
 
-  focusPrimeiroElementoFormulario(): void{
+  focusPrimeiroElementoFormulario(): void {
     let blurElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
     blurElement.blur();
 
-    setTimeout(function(){
+    setTimeout(function () {
       let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
       focusElement.focus();
-    },0);
+    }, 0);
   }
 
   async readerRfid(): Promise<any> {
     let navegador: any;
 
-      navegador = window.navigator;
+    navegador = window.navigator;
 
-      if (navegador && navegador.serial) {
-        const porta = await navegador.serial.requestPort();
-        await porta.open({ baudRate: 115200 });
+    if (navegador && navegador.serial) {
+      const porta = await navegador.serial.requestPort();
+      await porta.open({baudRate: 115200});
 
-        while (porta.readable) {
-          const reader = porta.readable.getReader();
-          try {
-            while (true) {
-              const { value, done } = await reader.read();
-              if (done) {
-                break;
-              }
-              const hex   = this.buf2hex(value)
-              const ascii = this.hex2a(hex)
-              this.rfid = hex.slice(-10,-4);
+      while (porta.readable) {
+        const reader = porta.readable.getReader();
+        try {
+          while (true) {
+            const {value, done} = await reader.read();
+            if (done) {
+              break;
             }
-          } catch (error) {
-          } finally {
-            reader.releaseLock();
+            const hex = this.buf2hex(value)
+            const ascii = this.hex2a(hex)
+            this.rfid = hex.slice(-10, -4);
           }
-        }
+        } catch (error) {
+        } finally {
+          reader.releaseLock();
         }
       }
+    }
+  }
 
 
   async readerBalanca(): Promise<any> {
