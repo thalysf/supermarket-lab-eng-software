@@ -9,12 +9,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BannerPrincipalComponent implements OnInit {
 
-  constructor(private rfidService:RfidService, private balancaService:BalancaService) { 
-    //this.rfidService.readerRfid();
-    this.balancaService.readerBalanca();
+  constructor(public rfidService:RfidService, public balancaService:BalancaService) { 
   }
-
-  navegador:any;
 
   ngOnInit(): void {
   }

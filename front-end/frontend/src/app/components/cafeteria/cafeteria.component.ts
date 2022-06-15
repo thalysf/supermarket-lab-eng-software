@@ -91,6 +91,11 @@ export class CafeteriaComponent implements OnInit {
 
   addCarrinho(produtoSelecionado: any, qtd: number): void {
 
+    if(!produtoSelecionado.fracionado && (qtd%1)!==0){
+      this.toastr.error('O Produto não é fracionado!')
+      return;
+    }
+
     let itemVenda: ItemVenda = { produto: produtoSelecionado, quantidade: qtd };
 
     let atualizacao: boolean = false;

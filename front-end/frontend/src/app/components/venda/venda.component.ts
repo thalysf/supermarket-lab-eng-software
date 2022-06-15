@@ -29,7 +29,6 @@ export class VendaComponent implements OnInit, OnDestroy {
   venda: Venda = {cpf: '', nome: '', data: new Date(), cartoes: [], produtos_supermercado: []};
 
   codigo: any;
-  quantidade: any = 1;
   precoUnitario: any;
   total: any = 0;
   imagem: any;
@@ -101,16 +100,22 @@ export class VendaComponent implements OnInit, OnDestroy {
 
   inserir() {
     if (this.produtoAtual != null) {
+
+      if(!this.produtoAtual.fracionado && (this.balancaService.peso%1)!==0){
+        this.toastr.error('O Produto não é fracionado!')
+        return;
+      }
+
       for (let produto of this.produtos) {
         if (produto.produto.codigo_barras === this.codigo) {
-          produto.quantidade += this.quantidade;
+          produto.quantidade += this.balancaService.peso;
           this.limpar();
           return;
         }
       }
 
       let novoItemVenda: ItemVenda = {
-        quantidade: this.quantidade,
+        quantidade: this.balancaService.peso,
         produto: this.produtoAtual
       }
 
@@ -128,7 +133,7 @@ export class VendaComponent implements OnInit, OnDestroy {
   limpar() {
     this.produtoAtual = null;
     this.codigo = "";
-    this.quantidade = 1;
+    this.balancaService.peso = 1;
     this.precoUnitario = 0;
     this.precoTotalProduto = 0;
   }
@@ -138,20 +143,19 @@ export class VendaComponent implements OnInit, OnDestroy {
   }
 
   finalizarCompra() {
-    //this.prepararVenda();
-    localStorage.clear();
+    this.prepararVenda();
     //this.impressoraTermicaService.imprimir(this.produtosRecibo);
 
-    // this.vendaSerive.realizarVenda(this.venda).subscribe(
-    //   data => {
-    //     this.vendaSucesso();
-    //     this.impressoraTermicaService.imprimir(this.produtosRecibo);
-    //     this.limpar();
-    //   },
-    //   error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
-    // )
-    // this.limpar();
-    // this.focusPrimeiroElementoFormulario();
+     this.vendaSerive.realizarVenda(this.venda).subscribe(
+       data => {
+         this.vendaSucesso();
+         this.impressoraTermicaService.imprimir(this.produtosRecibo);
+         this.limpar();
+       },
+       error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
+     )
+     this.limpar();
+     this.focusPrimeiroElementoFormulario();
   }
 
   prepararVenda() {
@@ -180,7 +184,6 @@ export class VendaComponent implements OnInit, OnDestroy {
       },
       error => this.toastr.error('Não foi possível encontrar o Produto' + error.error.ERRORS)
     )
-    this.limpar();
     this.focusPrimeiroElementoFormulario();
   }
 
@@ -189,8 +192,8 @@ export class VendaComponent implements OnInit, OnDestroy {
     this.precoUnitario = produto.preco_venda;
     this.produtoAtual = produto;
     this.fracionado = produto.fracionado
-    if (this.quantidade) {
-      this.precoTotalProduto = this.quantidade * this.precoUnitario;
+    if (this.balancaService.peso) {
+      this.precoTotalProduto = this.balancaService.peso * this.precoUnitario;
     }
 
     //this.readerBalanca();
@@ -230,7 +233,7 @@ export class VendaComponent implements OnInit, OnDestroy {
   }
 
   calcularPrecoTotalProduto() {
-    this.precoTotalProduto = this.quantidade * this.precoUnitario;
+    this.precoTotalProduto = this.balancaService.peso * this.precoUnitario;
   }
 
   focusPrimeiroElementoFormulario(): void {
