@@ -1,3 +1,4 @@
+import { RfidService } from './../../services/rfid.service';
 import { Produto } from './../../entity/Produto';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,7 +26,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
   fracionado = false;
   qtdEstoque: number = 0;
   setor: string = "";
-  rfid: string = "";
   produtos: Produto[] = [];
   tipoProduto: string = "";
 
@@ -38,7 +38,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
   constructor(public dialog: MatDialog, public cadastroProdutoService: CadastroProdutoService,
-    private toastr: ToastrService, private sant: DomSanitizer, private router: Router) {
+    private toastr: ToastrService, private sant: DomSanitizer, private router: Router, public rfidService:RfidService) {
     this.veririficarUsuario('PRODUTO');
     this.carregarProduto();
   }
@@ -75,7 +75,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
   async cadastrar() {
 
     if(this.nome && this.precoVenda && this.precoCompra && this.codigoBarras
-      && this.setor && this.rfid && this.tipoProduto) {
+      && this.setor && this.rfidService.rfid && this.tipoProduto) {
 
       const produto: Produto = {
         nome: this.nome,
@@ -86,7 +86,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
         codigo_barras: this.codigoBarras,
         qtd_estoque: this.qtdEstoque,
         setor: this.setor,
-        rfid: this.rfid,
+        rfid: this.rfidService.rfid,
         tipo: this.tipoProduto
       }
 
@@ -119,8 +119,8 @@ export class CadastroProdutoComponent implements AfterViewInit {
           this.toastr.warning('Informe um setor');
         }
 
-        if(!this.rfid) {
-          this.toastr.warning('Informe uma imagem');
+        if(!this.rfidService.rfid) {
+          this.toastr.warning('Informe um rfid');
         }
 
       if(!this.tipoProduto) {
@@ -133,7 +133,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
 
   atualizar() {
     if(this.nome && this.precoVenda && this.precoCompra && this.codigoBarras
-      && this.setor && this.rfid && this.tipoProduto) {
+      && this.setor && this.rfidService.rfid && this.tipoProduto) {
 
       const produto: Produto = {
         nome: this.nome,
@@ -144,7 +144,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
         codigo_barras: this.codigoBarras,
         qtd_estoque: this.qtdEstoque,
         setor: this.setor,
-        rfid: this.rfid,
+        rfid: this.rfidService.rfid,
         tipo: this.tipoProduto
       }
 
@@ -177,7 +177,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
         this.toastr.warning('Informe um setor');
       }
 
-      if(!this.rfid) {
+      if(!this.rfidService.rfid) {
         this.toastr.warning('Informe uma imagem');
       }
 
@@ -218,7 +218,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
     this.codigoBarras = "";
     this.qtdEstoque = 0;
     this.setor = "";
-    this.rfid = "";
     this.imagem = null;
     this.fileSelected = new Blob();
     this.imageUrl = "";
@@ -285,37 +284,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
     }
 
     return this.router.navigate(['/login']);
-
   }
-
-  async readerRfid(): Promise<any> {
-    let navegador: any;
-
-      navegador = window.navigator;
-
-      if (navegador && navegador.serial) {
-        const porta = await navegador.serial.requestPort();
-        await porta.open({ baudRate: 115200 });
-
-        while (porta.readable) {
-          const reader = porta.readable.getReader();
-          try {
-            while (true) {
-              const { value, done } = await reader.read();
-              if (done) {
-                break;
-              }
-              const hex   = this.buf2hex(value)
-              const ascii = this.hex2a(hex)
-              this.rfid = hex.slice(-10,-4);
-            }
-          } catch (error) {
-          } finally {
-            reader.releaseLock();
-          }
-        }
-        }
-      }
 
       buf2hex(buffer: any) { // buffer is an ArrayBuffer
         return [...new Uint8Array(buffer)]

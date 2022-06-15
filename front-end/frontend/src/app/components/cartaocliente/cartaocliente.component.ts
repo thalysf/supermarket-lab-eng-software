@@ -1,3 +1,4 @@
+import { RfidService } from './../../services/rfid.service';
 import { CartaoCliente } from 'src/app/entity/CartaoCliente';
 import { Component, OnInit } from '@angular/core';
 import { AfterViewInit, ViewChild } from '@angular/core';
@@ -24,7 +25,8 @@ export class CartaoclienteComponent implements OnInit {
 
   @ViewChild(MatPaginator, { static: false }) paginator!: MatPaginator;
 
-  constructor(public dialog: MatDialog, public cartaoClienteService: CartaoClienteService, private toastr: ToastrService, private router: Router) {
+  constructor(public dialog: MatDialog, public cartaoClienteService: CartaoClienteService, private toastr: ToastrService, private router: Router,
+    public rfidService:RfidService) {
     this.veririficarUsuario('CARTAOCLIENTE');
     this.carregarCartoesClientes();
     this.carregarcartoes();
@@ -38,6 +40,7 @@ export class CartaoclienteComponent implements OnInit {
   }
 
   inserir() {
+    this.cartaoCliente.rfid = this.rfidService.rfid;
     if (this.cartaoValido(this.cartaoCliente)) {
       this.cartaoCliente.cartao_pago = false;
       this.cartaoCliente.produtos_cafeteria = [];
@@ -60,6 +63,7 @@ export class CartaoclienteComponent implements OnInit {
 
 
   editar() {
+    this.cartaoCliente.rfid = this.rfidService.rfid;
     if (this.cartaoValido(this.cartaoCliente)) {
     this.cartaoClienteService.atualizarCartaoCliente(this.cartaoCliente).subscribe(
       data => {
@@ -77,6 +81,7 @@ export class CartaoclienteComponent implements OnInit {
   }
 
   excluir(cartao: CartaoCliente) {
+    this.cartaoCliente.rfid = this.rfidService.rfid;
     this.cartaoClienteService.excluirCartaoCliente(cartao).subscribe(
       data => {
         this.carregarcartoes();
@@ -118,7 +123,7 @@ export class CartaoclienteComponent implements OnInit {
   }
 
   carregar(cartao: CartaoCliente) {
-    this.cartaoCliente = { cartao_pago: cartao.cartao_pago, cpf: cartao.cpf, nome: cartao.nome, produtos_cafeteria: cartao.produtos_cafeteria, rfid: cartao.rfid };
+    this.cartaoCliente = { cartao_pago: cartao.cartao_pago, cpf: cartao.cpf, nome: cartao.nome, produtos_cafeteria: cartao.produtos_cafeteria, rfid: this.rfidService.rfid };
   }
 
   cartaoValido(cartao: CartaoCliente): boolean {
@@ -140,56 +145,5 @@ export class CartaoclienteComponent implements OnInit {
     return this.router.navigate(['/login']);
 
   }
-
-  async readerRfid(): Promise<any> {
-    let navegador: any;
-
-      navegador = window.navigator;
-
-      if (navegador && navegador.serial) {
-        const porta = await navegador.serial.requestPort();
-        await porta.open({ baudRate: 115200 });
-
-        while (porta.readable) {
-          const reader = porta.readable.getReader();
-          try {
-            while (true) {
-              const { value, done } = await reader.read();
-              if (done) {
-                break;
-              }
-              const hex   = this.buf2hex(value)
-              const ascii = this.hex2a(hex)
-              this.cartaoCliente.rfid = hex.slice(-10,-4);
-            }
-          } catch (error) {
-          } finally {
-            reader.releaseLock();
-          }
-        }
-        }
-      }
-
-      buf2hex(buffer: any) { // buffer is an ArrayBuffer
-        return [...new Uint8Array(buffer)]
-          .map(x => x.toString(16).padStart(2, '0'))
-          .join('');
-      }
-
-      toHexString(byteArray: any) {// Byte Array -> HEX
-        return Array.from(byteArray,
-          function (byte: any) {
-            return ('0' + (byte & 0XFF).toString(16)).slice(-2);
-          }).join()
-      }
-
-      hex2a(hexx: any) { // HEX-> ASCII
-        var hex = hexx.toString(); //força conversão
-        var str = ''
-        for (var i = 0; i < hex.length; i += 2) {
-          str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-        }
-        return str;
-      }
 
 }

@@ -1,3 +1,4 @@
+import { RfidService } from './../../services/rfid.service';
 import {Venda} from './../../entity/Venda';
 import {BalancaService} from './../../services/balanca.service';
 import {Router} from '@angular/router';
@@ -7,7 +8,7 @@ import {ToastrService} from 'ngx-toastr';
 import {EntradaEstoqueService} from './../../services/entrada-estoque.service';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatTableDataSource} from '@angular/material/table';
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {PrintService, UsbDriver} from "ng-thermal-print";
 import {CafeteriaService} from 'src/app/services/cafeteria.service';
 import {CartaoCliente} from 'src/app/entity/CartaoCliente';
@@ -21,7 +22,7 @@ import {ImpressoraTermicaService} from "../../services/impressora-termica.servic
   templateUrl: './venda.component.html',
   styleUrls: ['./venda.component.css']
 })
-export class VendaComponent implements OnInit {
+export class VendaComponent implements OnInit, OnDestroy {
 
   produtos: ItemVenda[] = [];
   produtoAtual: any;
@@ -41,6 +42,9 @@ export class VendaComponent implements OnInit {
   rfid: any;
   produtosRecibo: any;
 
+  mudandoTela:boolean = false;
+  navegador:any;
+
   public formControlCartoes = new FormControl([]);
 
   displayedColumns: string[] = ["nome", "quantidade", "precoUnidade", "precoTotalProduto", "imagem", "acao"];
@@ -49,9 +53,12 @@ export class VendaComponent implements OnInit {
   status: boolean = false;
   @ViewChild(MatPaginator, {static: false}) paginator!: MatPaginator;
 
+  @ViewChild("myNameElem") myNameElem: any;
+
   constructor(public entradaEstoqueService: EntradaEstoqueService, public cafeteriaService: CafeteriaService, private toastr: ToastrService,
               private vendaSerive: VendaService, private router: Router, public impressoraTermicaService: ImpressoraTermicaService,
-              private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService) {
+              private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService,
+              public rfidService:RfidService) {
     this.verificarUsuario("VENDA");
     this.impressoraTermicaService.getLocalStorageImpressora();
     this.dropdownSettings = {
@@ -67,13 +74,16 @@ export class VendaComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  ngOnDestroy(): void {
+  }
+
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.focusPrimeiroElementoFormulario();
   }
 
   bucarCartaoClientePorRfid() {
-    this.cartaoClienteService.buscarCartaoClientePorRfid(this.rfid).subscribe(
+    this.cartaoClienteService.buscarCartaoClientePorRfid(this.rfidService.rfid).subscribe(
       data => {
         this.cartao = data;
         this.cartoesSelecionados.push(this.cartao);
@@ -116,7 +126,6 @@ export class VendaComponent implements OnInit {
   }
 
   limpar() {
-    this.rfid = null
     this.produtoAtual = null;
     this.codigo = "";
     this.quantidade = 1;
@@ -232,35 +241,6 @@ export class VendaComponent implements OnInit {
       let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
       focusElement.focus();
     }, 0);
-  }
-
-  async readerRfid(): Promise<any> {
-    let navegador: any;
-
-    navegador = window.navigator;
-
-    if (navegador && navegador.serial) {
-      const porta = await navegador.serial.requestPort();
-      await porta.open({baudRate: 115200});
-
-      while (porta.readable) {
-        const reader = porta.readable.getReader();
-        try {
-          while (true) {
-            const {value, done} = await reader.read();
-            if (done) {
-              break;
-            }
-            const hex = this.buf2hex(value)
-            const ascii = this.hex2a(hex)
-            this.rfid = hex.slice(-10, -4);
-          }
-        } catch (error) {
-        } finally {
-          reader.releaseLock();
-        }
-      }
-    }
   }
 
 

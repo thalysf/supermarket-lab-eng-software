@@ -1,3 +1,4 @@
+import { RfidService } from './../../services/rfid.service';
 import { Component, OnInit } from '@angular/core';
 
 @Component({
@@ -7,9 +8,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class BannerPrincipalComponent implements OnInit {
 
-  constructor() { }
+  constructor(private rfidService:RfidService) { 
+    this.rfidService.readerRfid();
+  }
+
+  navegador:any;
 
   ngOnInit(): void {
   }
-
 }

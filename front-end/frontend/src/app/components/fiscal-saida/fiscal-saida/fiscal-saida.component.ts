@@ -1,3 +1,4 @@
+import { RfidService } from './../../../services/rfid.service';
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
@@ -15,7 +16,8 @@ export class FiscalSaidaComponent implements OnInit {
   formulario: FormGroup = this.formBuilder.group({});
   cartaoCliente: CartaoCliente =  { cartao_pago: false, cpf: '', nome: '', produtos_cafeteria: [], rfid: '' }
 
-  constructor(private router: Router, private formBuilder: FormBuilder, private toastr:ToastrService, private cartaoClienteService: CartaoClienteService) { }
+  constructor(private router: Router, private formBuilder: FormBuilder, private toastr:ToastrService, private cartaoClienteService: CartaoClienteService,
+    public rfidService:RfidService) { }
 
   ngOnInit(): void {
     this.veririficarUsuario('FISCAL');

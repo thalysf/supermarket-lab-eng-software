@@ -1,3 +1,4 @@
+import { RfidService } from './../../services/rfid.service';
 import { CafeteriaService } from './../../services/cafeteria.service';
 import { ItemVenda } from './../../entity/ItemVenda';
 import { CartaoCliente } from './../../entity/CartaoCliente';
@@ -30,6 +31,9 @@ export class CafeteriaComponent implements OnInit {
 
   porta: any;
   reader: any;
+  navegador:any;
+
+  mudandoTela:boolean = false;
 
   formulario: FormGroup = this.formBuilder.group({});
 
@@ -42,8 +46,10 @@ export class CafeteriaComponent implements OnInit {
 
   constructor(public dialog: MatDialog, public cafeteriaService: CafeteriaService,
     public cadastroProdutoService: CadastroProdutoService, private formBuilder: FormBuilder,
-    private toastr: ToastrService, private sant: DomSanitizer, private router: Router, private cartaoClienteService: CartaoClienteService ) {
+    private toastr: ToastrService, private sant: DomSanitizer, private router: Router, private cartaoClienteService: CartaoClienteService,
+    public rfidService:RfidService ) {
     this.veririficarUsuario('CAFETERIA');
+    
     // this.carregarProduto();
     // this.carregarCartaoCliente();
   }
@@ -203,35 +209,6 @@ export class CafeteriaComponent implements OnInit {
 
     return this.router.navigate(['/login']);
   }
-
-  async readerRfid(): Promise<any> {
-    let navegador: any;
-
-      navegador = window.navigator;
-
-      if (navegador && navegador.serial) {
-        const porta = await navegador.serial.requestPort();
-        await porta.open({ baudRate: 115200 });
-
-        while (porta.readable) {
-          const reader = porta.readable.getReader();
-          try {
-            while (true) {
-              const { value, done } = await reader.read();
-              if (done) {
-                break;
-              }
-              const hex   = this.buf2hex(value)
-              const ascii = this.hex2a(hex)
-              this.rfid = hex.slice(-10,-4);
-            }
-          } catch (error) {
-          } finally {
-            reader.releaseLock();
-          }
-        }
-        }
-      }
 
   async readerBalanca(): Promise<any> {
 

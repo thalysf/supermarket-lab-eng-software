@@ -5,8 +5,7 @@
 
       <mat-form-field class="campo espacamentoCampos">
         <input matInput placeholder="RFID DO CARTÃO" id="primeiroElementoForm"
-               [(ngModel)] = "rfid" name="cartao" type="text" (keyup.enter)="bucarCartaoClientePorRfid()"
-               (click)="readerRfid()"
+               [(ngModel)] = "rfidService.rfid" name="cartao" type="text" (keyup.enter)="bucarCartaoClientePorRfid()"
                style="margin-left: 4px;">
       </mat-form-field>
 
