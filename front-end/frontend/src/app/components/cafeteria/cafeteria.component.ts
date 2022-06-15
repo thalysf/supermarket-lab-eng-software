@@ -1,3 +1,4 @@
+import { BalancaService } from './../../services/balanca.service';
 import { RfidService } from './../../services/rfid.service';
 import { CafeteriaService } from './../../services/cafeteria.service';
 import { ItemVenda } from './../../entity/ItemVenda';
@@ -25,7 +26,6 @@ export class CafeteriaComponent implements OnInit {
   cartoes: CartaoCliente[] = [];
   produtoSelecionado: any;
   cartaoSelecionado: any = {};
-  quantidade: any = 0;
   rfidSelecionado: boolean = false;
   rfid = "";
 
@@ -47,7 +47,7 @@ export class CafeteriaComponent implements OnInit {
   constructor(public dialog: MatDialog, public cafeteriaService: CafeteriaService,
     public cadastroProdutoService: CadastroProdutoService, private formBuilder: FormBuilder,
     private toastr: ToastrService, private sant: DomSanitizer, private router: Router, private cartaoClienteService: CartaoClienteService,
-    public rfidService:RfidService ) {
+    public rfidService:RfidService, public balancaService:BalancaService ) {
     this.veririficarUsuario('CAFETERIA');
     
     // this.carregarProduto();
@@ -185,7 +185,7 @@ export class CafeteriaComponent implements OnInit {
   }
 
   camposPreenchidos(): boolean {
-    return this.cartaoSelecionado && this.produtoSelecionado && this.quantidade > 0;
+    return this.cartaoSelecionado && this.produtoSelecionado && this.formulario.get('quantidade')?.value > 0;
   }
 
   clienteSelecionado(): boolean {
@@ -210,72 +210,4 @@ export class CafeteriaComponent implements OnInit {
     return this.router.navigate(['/login']);
   }
 
-  async readerBalanca(): Promise<any> {
-
-    if (this.produtoSelecionado.fracionado) {
-      let navegador: any;
-
-      navegador = window.navigator;
-
-      if (navegador && navegador.serial) {
-        this.porta = await navegador.serial.requestPort();
-        await this.porta.open({ baudRate: 4800 });
-
-        while (this.porta.readable) {
-          this.reader = this.porta.readable.getReader();
-          try {
-            while (true) {
-              const { value, done } = await this.reader.read();
-              if (this.produtoSelecionado.fracionado) {
-                const { value, done } = await this.reader.read();
-                const hex = this.buf2hex(value)
-                const ascii = this.hex2a(hex)
-                this.formatarPeso(ascii)
-              } else {
-                this.reader.releaseLock();
-                this.porta.close();
-                return;
-              }
-            }
-          } catch (error) {
-          } finally {
-            this.reader.releaseLock();
-          }
-        }
-      } else {
-        this.toastr.error("Navegador não suporta leitura serial");
-      }
-    }
-  }
-
-  buf2hex(buffer: any) { // buffer is an ArrayBuffer
-    return [...new Uint8Array(buffer)]
-      .map(x => x.toString(16).padStart(2, '0'))
-      .join('');
-  }
-
-  toHexString(byteArray: any) {// Byte Array -> HEX
-    return Array.from(byteArray,
-      function (byte: any) {
-        return ('0' + (byte & 0XFF).toString(16)).slice(-2);
-      }).join()
-  }
-
-  hex2a(hexx: any) { // HEX-> ASCII
-    var hex = hexx.toString(); //força conversão
-    var str = ''
-    for (var i = 0; i < hex.length; i += 2) {
-      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    }
-    return str;
-  }
-
-  formatarPeso(ascii: any) {
-
-    var valor = Number(ascii);
-    if (!valor) {
-      valor = Number(ascii.substring(1));
-    }
-    this.quantidade = valor;
-  }
 }

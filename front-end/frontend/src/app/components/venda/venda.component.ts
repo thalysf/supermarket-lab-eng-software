@@ -57,7 +57,7 @@ export class VendaComponent implements OnInit, OnDestroy {
 
   constructor(public entradaEstoqueService: EntradaEstoqueService, public cafeteriaService: CafeteriaService, private toastr: ToastrService,
               private vendaSerive: VendaService, private router: Router, public impressoraTermicaService: ImpressoraTermicaService,
-              private balancaService: BalancaService, private cartaoClienteService: CartaoClienteService,
+              public balancaService: BalancaService, private cartaoClienteService: CartaoClienteService,
               public rfidService:RfidService) {
     this.verificarUsuario("VENDA");
     this.impressoraTermicaService.getLocalStorageImpressora();
@@ -241,91 +241,6 @@ export class VendaComponent implements OnInit, OnDestroy {
       let focusElement: HTMLElement = document.getElementById("primeiroElementoForm") as HTMLElement;
       focusElement.focus();
     }, 0);
-  }
-
-
-  async readerBalanca(): Promise<any> {
-    if (this.fracionado) {
-      let navegador: any;
-
-      navegador = window.navigator;
-
-      if (navegador && navegador.serial) {
-
-        await this.balancaService.inicializarPorta();
-
-        if (!this.balancaService.getPorta()) {
-          this.balancaService.porta = await navegador.serial.requestPort();
-          await this.balancaService.porta.open({baudRate: 4800});
-        }
-
-        try {
-          await this.balancaService.porta.open({baudRate: 4800});
-        } catch (err) {
-
-        }
-        while (this.balancaService.porta.readable) {
-          try {
-            this.balancaService.reader = this.balancaService.porta.readable.getReader();
-          } catch (err) {
-
-          }
-          try {
-            while (true) {
-              if (this.fracionado) {
-                const {value, done} = await this.balancaService.reader.read();
-                const hex = this.buf2hex(value)
-                const ascii = this.hex2a(hex)
-                this.formatarPeso(ascii)
-              } else {
-                this.balancaService.reader.releaseLock();
-                this.balancaService.porta.close();
-                return;
-              }
-            }
-          } catch (error) {
-          } finally {
-            this.balancaService.reader.releaseLock();
-
-          }
-        }
-
-
-      } else {
-        this.toastr.error("Navegador não suporta leitura serial");
-      }
-    }
-  }
-
-  buf2hex(buffer: any) { // buffer is an ArrayBuffer
-    return [...new Uint8Array(buffer)]
-      .map(x => x.toString(16).padStart(2, '0'))
-      .join('');
-  }
-
-  toHexString(byteArray: any) {// Byte Array -> HEX
-    return Array.from(byteArray,
-      function (byte: any) {
-        return ('0' + (byte & 0XFF).toString(16)).slice(-2);
-      }).join()
-  }
-
-  hex2a(hexx: any) { // HEX-> ASCII
-    var hex = hexx.toString(); //força conversão
-    var str = ''
-    for (var i = 0; i < hex.length; i += 2) {
-      str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
-    }
-    return str;
-  }
-
-  formatarPeso(ascii: any) {
-
-    var valor = Number(ascii);
-    if (!valor) {
-      valor = Number(ascii.substring(1));
-    }
-    this.quantidade = valor;
   }
 
   verificarUsuario(tela: string) {
