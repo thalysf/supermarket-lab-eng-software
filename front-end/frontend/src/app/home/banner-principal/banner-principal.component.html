@@ -1,9 +1,15 @@
 <div class="banner">
-    <span class="texto">SUPERMERCADO (((DELE)))</span> 
-    <button mat-raised-button color="primary" class="botaoPequeno botao" 
+    <span class="texto">SUPERMERCADO (((DELE)))</span>
+    <button mat-raised-button color="primary" class="botaoPequeno botao"
     *ngIf="rfidService.rfid === null || rfidService.rfid === undefined"
     (click)="rfidService.readerRfid()">Iniciar RFID</button>
     <button mat-raised-button color="primary" class="botaoPequeno botao"
     *ngIf="balancaService.porta === null || balancaService.porta === undefined"
     (click)="balancaService.readerBalanca()">Iniciar Balança</button>
+    <span class="usuario">Bem-vindo {{nomeUsuarioLogado}}</span>
+    <a class="sair" matTooltip="Sair do Sistema" (click)="logout()">
+      <i class="material-icons">
+        logout
+      </i>
+    </a>
 </div>

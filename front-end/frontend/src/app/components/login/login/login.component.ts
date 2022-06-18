@@ -22,6 +22,7 @@ export class LoginComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    localStorage.removeItem("usuario");
     this.formulario = this.formBuilder.group({
       cpf: ['', [Validators.required]]
     });
@@ -33,7 +34,7 @@ export class LoginComponent implements OnInit {
     }
     else{
       this.loginService.carregarUsuario(this.formulario.get('cpf')?.value).subscribe(
-        data => this.entrou(data), 
+        data => this.entrou(data),
         error => this.toastr.error('Usuário não cadastrado!')
       );
     }

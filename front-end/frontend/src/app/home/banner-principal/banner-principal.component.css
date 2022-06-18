@@ -17,3 +17,33 @@
     color: white;
     font-size: 12px;
 }
+
+.usuario{
+  padding-top: 35px;
+  color: white;
+  font-size: 22px;
+  text-align: right;
+  position: absolute;
+  right: 70px;
+}
+.sair{
+  width: 20px;
+  height: 30px;
+  color: white;
+  font-size: 18px;
+  padding-top: 35px;
+  position: absolute;
+  right: 28px;
+  top: -6px;
+}
+
+.sair i{
+  color: #0437F2;
+  font-size: 32px;
+  transition: all 200ms linear;
+}
+
+.sair i:hover{
+  color: #0818A8 !important;
+}
+

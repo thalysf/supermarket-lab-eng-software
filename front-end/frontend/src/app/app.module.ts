@@ -38,6 +38,7 @@ import { FiscalSaidaComponent } from './components/fiscal-saida/fiscal-saida/fis
 import { BarcodeGeneratorAllModule } from '@syncfusion/ej2-angular-barcode-generator';
 import { NgxPrintModule } from "ngx-print";
 import { NgxBarcode6Module } from 'ngx-barcode6';
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -57,31 +58,31 @@ import { NgxBarcode6Module } from 'ngx-barcode6';
     RelatoriosComponent,
     FiscalSaidaComponent
   ],
-  imports: [
-    MatRadioModule,
-    MatToolbarModule,
-    BrowserModule,
-    AppRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule, ReactiveFormsModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatButtonModule,
-    MatTableModule,
-    MatPaginatorModule,
-    NgMultiSelectDropDownModule.forRoot(),
-    HttpClientModule,
-    MatDialogModule,
-    ToastrModule.forRoot(),
-    MatCheckboxModule,
-    MatSelectModule,
-    MatIconModule,
-    MatChipsModule,
-    NgxPrintModule,
-    BarcodeGeneratorAllModule,
-    NgxBarcode6Module
-  ],
+    imports: [
+        MatRadioModule,
+        MatToolbarModule,
+        BrowserModule,
+        AppRoutingModule,
+        BrowserAnimationsModule,
+        FormsModule, ReactiveFormsModule,
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        MatTableModule,
+        MatPaginatorModule,
+        NgMultiSelectDropDownModule.forRoot(),
+        HttpClientModule,
+        MatDialogModule,
+        ToastrModule.forRoot(),
+        MatCheckboxModule,
+        MatSelectModule,
+        MatIconModule,
+        MatChipsModule,
+        NgxPrintModule,
+        BarcodeGeneratorAllModule,
+        NgxBarcode6Module, MatTooltipModule
+    ],
   providers: [],
   bootstrap: [AppComponent]
 })

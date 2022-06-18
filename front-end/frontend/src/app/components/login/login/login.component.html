@@ -25,10 +25,10 @@
 
         <div class="input">
           <mat-form-field>
-            <input formControlName="cpf" matInput placeholder="CPF">
+            <input formControlName="cpf" matInput placeholder="CPF" mask="000.000.000-00||00.000.000/0000-00">
           </mat-form-field>
         </div>
-        <button (click)="verificarUsuario()">
+        <button (click)="verificarUsuario()" mask="CPF_CNPJ">
           Entrar
         </button>
       </mat-card>
