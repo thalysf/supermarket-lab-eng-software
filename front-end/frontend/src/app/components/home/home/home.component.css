@@ -1,0 +1,6 @@
+* {
+  background: url("src/assets/images/carrinho-de-compras.png") no-repeat center center;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}

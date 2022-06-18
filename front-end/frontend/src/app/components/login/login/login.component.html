@@ -1,20 +1,60 @@
-<form [formGroup]="formulario" style="background-color: hsla(214, 65%, 47%, 0.5)">
-  <mat-card class="card">
+<!DOCTYPE html>
+<html lang="en">
 
-    <div class="input">
-      <mat-form-field>
-        <input formControlName="cpf" matInput placeholder="CPF">
-      </mat-form-field>
+<head>
+  <meta charset="utf-8">
+  <title>Daily UI - Day 1 Sign In</title>
+
+  <!-- Google Fonts -->
+  <link href='https://fonts.googleapis.com/css?family=Roboto+Slab:400,100,300,700|Lato:400,100,300,700,900' rel='stylesheet' type='text/css'>
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+</head>
+
+<body>
+<div class="container">
+  <div class="top" style="font-size: 0.8em">
+    <h1 id="title" class="hidden"><span id="logo">Supermercado <span style="display: inline-block; margin-top: 8px">(((DELE)))</span></span></h1>
+  </div>
+  <div class="login-box animated fadeInUp">
+    <div class="box-header">
+      <h2>Log In</h2>
     </div>
+    <form [formGroup]="formulario">
+      <mat-card class="card">
 
-    <div class="botao">
-      <button mat-raised-button color="primary" (click)="verificarUsuario()">
-        Login
-      </button>
-    </div>
+        <div class="input">
+          <mat-form-field>
+            <input formControlName="cpf" matInput placeholder="CPF">
+          </mat-form-field>
+        </div>
+        <button (click)="verificarUsuario()">
+          Entrar
+        </button>
+      </mat-card>
 
-  </mat-card>
+    </form>
+  </div>
+</div>
+</body>
 
-</form>
+<script>
+  $(document).ready(function () {
+    $('#logo').addClass('animated fadeInDown');
+    $("input:text:visible:first").focus();
+  });
+  $('#username').focus(function() {
+    $('label[for="username"]').addClass('selected');
+  });
+  $('#username').blur(function() {
+    $('label[for="username"]').removeClass('selected');
+  });
+  $('#password').focus(function() {
+    $('label[for="password"]').addClass('selected');
+  });
+  $('#password').blur(function() {
+    $('label[for="password"]').removeClass('selected');
+  });
+</script>
 
-
+</html>
