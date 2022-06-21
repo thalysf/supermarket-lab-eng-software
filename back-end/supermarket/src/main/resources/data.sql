@@ -16,7 +16,7 @@ VALUES
 
 INSERT INTO usuario
 VALUES
-('75538833011', null, 'adm');
+('75538833011', null, 'Admin');
 
 INSERT INTO usuario_tela
 VALUES
