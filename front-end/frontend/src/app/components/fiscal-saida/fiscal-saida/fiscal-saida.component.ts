@@ -31,7 +31,7 @@ export class FiscalSaidaComponent implements OnInit {
 
   verificarCartaoCliente() {
     if(!this.formulario.get('rfid')?.value){
-      this.toastr.error('Preencha o RFID!')
+      this.toastr.warning('Preencha o campo corretamente!')
     } else {
       this.cartaoClienteService.buscarCartaoClientePorRfid(this.formulario.get('rfid')?.value).subscribe(
         data => {

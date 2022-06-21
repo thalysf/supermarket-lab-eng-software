@@ -4,19 +4,19 @@
     <form style="margin-top: 30px;">
 
         <mat-form-field class="campo espacamentoCampos">
-            <input matInput placeholder="NOME"
+            <input matInput placeholder="NOME*"
             [(ngModel)]="cartaoCliente.nome" name="nome" type="text" id="primeiroElementoForm"
             style="margin-left: 4px;">
         </mat-form-field>
 
         <mat-form-field class="campo espacamentoCampos">
-            <input matInput placeholder="CPF"
+            <input matInput placeholder="CPF*"
             [(ngModel)] = "cartaoCliente.cpf" name="cpf" type="text"
             style="margin-left: 4px;">
         </mat-form-field>
 
 '      <mat-form-field class="campo espacamentoCampos">
-        <input matInput placeholder="RFID"
+        <input matInput placeholder="RFID*"
                [(ngModel)]="rfidService.rfid" name="rfid" type="text"
                 (keyup.enter)="inserir()"
                style="margin-left: 4px;">

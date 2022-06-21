@@ -4,28 +4,28 @@
   <form style="margin-top: 30px;">
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="NOME" [(ngModel)]="nome" name="nome" type="text" id="primeiroElementoForm" autofocus style="margin-left: 4px;">
+      <input matInput placeholder="NOME*" [(ngModel)]="nome" name="nome" type="text" id="primeiroElementoForm" autofocus style="margin-left: 4px;">
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="PREÇO DE VENDA" [(ngModel)]="precoVenda" name="precoVenda" type="text"
+      <input matInput placeholder="PREÇO DE VENDA*" [(ngModel)]="precoVenda" name="precoVenda" type="text"
         style="margin-left: 4px;">
       <span matPrefix> R$ </span>
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="CÓDIGO DE BARRA" [(ngModel)]="codigoBarras" name="codBarra" type="text"
+      <input matInput placeholder="CÓDIGO DE BARRA*" [(ngModel)]="codigoBarras" name="codBarra" type="text"
         style="margin-left: 4px;">
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="PREÇO DE CUSTO" [(ngModel)]="precoCompra" name="precoCompra" type="text"
+      <input matInput placeholder="PREÇO DE CUSTO*" [(ngModel)]="precoCompra" name="precoCompra" type="text"
         style="margin-left: 4px;">
       <span matPrefix> R$ </span>
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <mat-select [(ngModel)]="setor" name="setor" placeholder="SETOR">
+      <mat-select [(ngModel)]="setor" name="setor" placeholder="SETOR*">
         <mat-option *ngFor="let setor of setores" [value]="setor">
           {{setor}}
         </mat-option>
@@ -33,11 +33,11 @@
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <input matInput placeholder="RFID" [(ngModel)]="rfidService.rfid" name="rfid" type="text" style="margin-left: 4px;">
+      <input matInput placeholder="RFID*" [(ngModel)]="rfidService.rfid" name="rfid" type="text" style="margin-left: 4px;">
     </mat-form-field>
 
     <mat-form-field class="campo espacamentoCampos">
-      <mat-select [(ngModel)]="tipoProduto" name="tipoProduto" placeholder="TIPO">
+      <mat-select [(ngModel)]="tipoProduto" name="tipoProduto" placeholder="TIPO*">
         <mat-option *ngFor="let tipo of tipos" [value]="tipo">
           {{tipo}}
         </mat-option>

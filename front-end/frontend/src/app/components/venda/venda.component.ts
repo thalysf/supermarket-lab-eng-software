@@ -82,6 +82,11 @@ export class VendaComponent implements OnInit, OnDestroy {
   }
 
   bucarCartaoClientePorRfid() {
+    const encontrado = this.cartoesSelecionados.find(cartao => cartao.rfid === this.rfidService.rfid);
+    if(encontrado) {
+      this.toastr.error("Rfid já informado, tente outro");
+      return;
+    }
     this.cartaoClienteService.buscarCartaoClientePorRfid(this.rfidService.rfid).subscribe(
       data => {
         this.cartao = data;

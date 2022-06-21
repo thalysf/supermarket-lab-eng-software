@@ -99,33 +99,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       );
 
     } else {
-        if(!this.nome) {
-          this.toastr.warning('Informe um nome');
-        }
-
-        if(!this.precoVenda) {
-          this.toastr.warning('Informe um preço de venda');
-        }
-
-        if(!this.precoCompra) {
-          this.toastr.warning('Informe um preço de compra');
-        }
-
-        if(!this.codigoBarras) {
-          this.toastr.warning('Informe uma imagem');
-        }
-
-        if(!this.setor) {
-          this.toastr.warning('Informe um setor');
-        }
-
-        if(!this.rfidService.rfid) {
-          this.toastr.warning('Informe um rfid');
-        }
-
-      if(!this.tipoProduto) {
-        this.toastr.warning('Informe um tipo de produto');
-      }
+      this.toastr.warning('Preencha os campos corretamente!');
     }
     this.limpar();
     this.focusPrimeiroElementoFormulario();
@@ -157,33 +131,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
       );
 
     } else {
-      if(!this.nome) {
-        this.toastr.warning('Informe um nome');
-      }
-
-      if(!this.precoVenda) {
-        this.toastr.warning('Informe um preço de venda');
-      }
-
-      if(!this.precoCompra) {
-        this.toastr.warning('Informe um preço de compra');
-      }
-
-      if(!this.codigoBarras) {
-        this.toastr.warning('Informe uma imagem');
-      }
-
-      if(!this.setor) {
-        this.toastr.warning('Informe um setor');
-      }
-
-      if(!this.rfidService.rfid) {
-        this.toastr.warning('Informe uma imagem');
-      }
-
-      if(!this.tipoProduto) {
-        this.toastr.warning('Informe um tipo de produto');
-      }
+      this.toastr.warning('Preencha os campos corretamente!');
     }
     this.limpar();
     this.focusPrimeiroElementoFormulario();

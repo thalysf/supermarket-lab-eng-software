@@ -71,17 +71,7 @@ export class UsuarioTelaComponent implements AfterViewInit {
       this.carregarUsuarios();
 
     } else {
-      if(!this.nome) {
-        this.toastr.warning('Informe um nome');
-      }
-
-      if(!this.cpf) {
-        this.toastr.warning('Cpf inválido');
-      }
-
-      if(this.telasSelecionadas.length === 0) {
-        this.toastr.warning('Selecione uma tela');
-      }
+      this.toastr.warning('Preencha os campos corretamente!');
     }
     this.limpar();
     this.focusPrimeiroElementoFormulario();
@@ -107,17 +97,7 @@ export class UsuarioTelaComponent implements AfterViewInit {
       this.carregarUsuarios();
 
     } else {
-      if(!this.nome) {
-        this.toastr.warning('Informe um nome');
-      }
-
-      if(!this.cpf) {
-        this.toastr.warning('Cpf inválido');
-      }
-
-      if(this.telasSelecionadas.length === 0) {
-        this.toastr.warning('Selecione uma tela');
-      }
+      this.toastr.warning('Preencha os campos corretamente!');
     }
     this.limpar();
     this.focusPrimeiroElementoFormulario();

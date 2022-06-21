@@ -38,6 +38,8 @@ export class EntradaEstoqueComponent implements AfterViewInit {
         data=> this.atualizarProduto(data),
         error=>this.toastr.error('Não foi possível Adicionar o Produto')
       )
+    } else {
+      this.toastr.warning('Preencha o campo corretamente!');
     }
   }
 
@@ -47,6 +49,8 @@ export class EntradaEstoqueComponent implements AfterViewInit {
         data=> this.retirarProduto(data),
         error=>this.toastr.error('Não foi possível Remover o Produto')
       )
+    } else {
+      this.toastr.warning('Preencha o campo corretamente!');
     }
   }
 
@@ -60,17 +64,22 @@ export class EntradaEstoqueComponent implements AfterViewInit {
     }
   }
 
-  salvar(){
-    var erro = 0;
-    for(var p of this.produtos){
-      this.entradaEstoqueService.atualizarProduto(p).subscribe(
-        error=>erro = 1
-      )
+  salvar() {
+    if (!this.codigoBarras) {
+      this.toastr.warning("Preencha o campo corretamente!");
+    } else {
+      var erro = 0;
+      for (var p of this.produtos) {
+        this.entradaEstoqueService.atualizarProduto(p).subscribe(
+          error => erro = 1
+        )
+      }
+      if (erro === 0)
+        this.toastr.success('Operação feita')
+      else
+        this.toastr.error('Não foi possível Salvar os Produtos')
+
     }
-    if(erro === 0)
-      this.toastr.success('Operação feita')
-    else
-      this.toastr.error('Não foi possível Salvar os Produtos')
   }
 
   carregar(){
