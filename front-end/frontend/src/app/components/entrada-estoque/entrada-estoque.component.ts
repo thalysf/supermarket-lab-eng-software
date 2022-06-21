@@ -34,6 +34,7 @@ export class EntradaEstoqueComponent implements AfterViewInit {
 
   inserir(){
     if(this.codigoBarras != ""){
+      this.codigoBarras = this.codigoBarras.padStart(13, '0')
       this.entradaEstoqueService.carregarProduto(this.codigoBarras).subscribe(
         data=> this.atualizarProduto(data),
         error=>this.toastr.error('Não foi possível Adicionar o Produto')

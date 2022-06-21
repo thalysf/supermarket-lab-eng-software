@@ -108,7 +108,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
   atualizar() {
     if(this.nome && this.precoVenda && this.precoCompra && this.codigoBarras
       && this.setor && this.rfidService.rfid && this.tipoProduto) {
-
       const produto: Produto = {
         nome: this.nome,
         preco_venda: this.precoVenda,
@@ -141,7 +140,7 @@ export class CadastroProdutoComponent implements AfterViewInit {
     this.cadastroProdutoService.deletarProduto(produto.rfid).subscribe(
       data => {
         this.carregarProduto();
-        this.toastr.error('Produto excluído com sucesso')
+        this.toastr.success('Produto excluído com sucesso')
       },
       error => this.toastr.error('Não foi possível Excluir o Produto')
     )
