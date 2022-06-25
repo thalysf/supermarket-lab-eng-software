@@ -65,22 +65,17 @@ export class EntradaEstoqueComponent implements AfterViewInit {
     }
   }
 
-  salvar() {
-    if (!this.codigoBarras) {
-      this.toastr.warning("Preencha o campo corretamente!");
-    } else {
-      var erro = 0;
-      for (var p of this.produtos) {
-        this.entradaEstoqueService.atualizarProduto(p).subscribe(
-          error => erro = 1
-        )
-      }
-      if (erro === 0)
-        this.toastr.success('Operação feita')
-      else
-        this.toastr.error('Não foi possível Salvar os Produtos')
-
+  salvar(){
+    var erro = 0;
+    for(var p of this.produtos){
+      this.entradaEstoqueService.atualizarProduto(p).subscribe(
+        error=>erro = 1
+      )
     }
+    if(erro === 0)
+      this.toastr.success('Estoque atualizado com sucesso!')
+    else
+      this.toastr.error('Não foi possível atualizar o estoque!')
   }
 
   carregar(){

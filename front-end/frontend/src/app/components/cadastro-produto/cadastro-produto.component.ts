@@ -254,4 +254,18 @@ export class CadastroProdutoComponent implements AfterViewInit {
         }
         return str;
       }
+
+  carregar(row: any) {
+    this.nome = row.nome;
+    this.precoVenda = row.preco_venda;
+    this.precoCompra = row.preco_compra;
+    this.imagem = row.imagem;
+    this.fracionado = row.fracionado;
+    this.codigoBarras = row.codigo_barras;
+    this.qtdEstoque = 0;
+    this.setor = row.setor;
+    this.imagem = row.imagem;
+    this.fileSelected = new Blob();
+    this.tipoProduto = row.tipo
+  }
 }
