@@ -40,6 +40,7 @@ export class VendaComponent implements OnInit, OnDestroy {
   cartao: CartaoCliente = {rfid: '', cpf: '', nome: '', cartao_pago: false, produtos_cafeteria: []};
   rfid: any;
   produtosRecibo: any;
+  produtoPesquisado:boolean = false;
 
   mudandoTela:boolean = false;
   navegador:any;
@@ -113,7 +114,7 @@ export class VendaComponent implements OnInit, OnDestroy {
 
       for (let produto of this.produtos) {
         if (produto.produto.codigo_barras === this.codigo) {
-          produto.quantidade += this.balancaService.peso;
+          produto.quantidade = Number(produto.quantidade) + this.balancaService.peso;
           this.limpar();
           return;
         }
@@ -143,11 +144,20 @@ export class VendaComponent implements OnInit, OnDestroy {
     this.precoTotalProduto = 0;
   }
 
+  limparTabela(){
+    this.dataSource.data = [];
+  }
+
   conectarUsb(): void {
     this.impressoraTermicaService.requestUsb().then(() => console.log("Conectado"));
   }
 
   finalizarCompra() {
+    if(this.cartao.rfid === undefined || this.cartao.rfid === null || this.cartao.rfid === ''){
+      this.toastr.error("Cartão não carregado ou vazio");
+      return;
+    }
+
     this.prepararVenda();
     //this.impressoraTermicaService.imprimir(this.produtosRecibo);
 
@@ -155,7 +165,6 @@ export class VendaComponent implements OnInit, OnDestroy {
        data => {
          this.vendaSucesso();
          this.impressoraTermicaService.imprimir(this.produtosRecibo);
-         this.limpar();
        },
        error => this.toastr.error('Não foi possível realizar a venda: ' + error.error.ERRORS)
      )
@@ -177,8 +186,23 @@ export class VendaComponent implements OnInit, OnDestroy {
   vendaSucesso() {
     this.toastr.success('Venda realizada com sucesso!');
     this.limpar();
+    this.limparTabela();
   }
 
+  incluirPesquisarProduto(){
+    var texto = this.codigo;
+    if(!this.produtoPesquisado){
+      this.entradaEstoqueService.carregarProduto(texto).subscribe(
+        data => {
+          this.carregarProduto(data);
+          this.produtoPesquisado = true;
+        },
+        error => this.toastr.error('Não foi possível encontrar o Produto' + error.error.ERRORS)
+      )
+    } else {
+      this.incluirProduto();
+    }
+  }
 
   incluirProduto() {
     var texto = this.codigo;
@@ -186,6 +210,7 @@ export class VendaComponent implements OnInit, OnDestroy {
       data => {
         this.carregarProduto(data);
         this.inserir();
+        this.produtoPesquisado = false;
       },
       error => this.toastr.error('Não foi possível encontrar o Produto' + error.error.ERRORS)
     )

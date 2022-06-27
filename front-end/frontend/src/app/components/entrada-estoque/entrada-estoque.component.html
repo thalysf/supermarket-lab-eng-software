@@ -1,13 +1,19 @@
 <app-principal></app-principal>
 <mat-card class="telaMatCard">
     <mat-card-title class="tituloTela">Entrada de Estoque</mat-card-title>
-    <form style="margin-top: 30px;" (keyup.enter)="inserir()">
+    <form style="margin-top: 30px;">
 
         <mat-form-field class="campo espacamentoCampos">
             <input matInput placeholder="CÓDIGO*" id="primeiroElementoForm"
             [(ngModel)] = "codigoBarras" name="codigoBarras" type="text"
             style="margin-left: 4px;">
         </mat-form-field>
+
+        <mat-form-field class="campo espacamentoCampos">
+          <input matInput placeholder="QUANTIDADE*" 
+          [(ngModel)] = "quantidade" name="quantidade" type="number"
+          style="margin-left: 4px;">
+      </mat-form-field>
 
         <button mat-raised-button color="primary" class="botaoPequeno"
         (click)="inserir()">

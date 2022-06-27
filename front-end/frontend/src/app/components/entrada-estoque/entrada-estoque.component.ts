@@ -15,6 +15,7 @@ import {Router} from "@angular/router";
 export class EntradaEstoqueComponent implements AfterViewInit {
 
   codigoBarras:string = "";
+  quantidade:number = 1;
   produtos:Produto[] = [];
 
   displayedColumns: string[] = ['nome', 'quantidade'];
@@ -58,8 +59,9 @@ export class EntradaEstoqueComponent implements AfterViewInit {
   atualizarProduto(produto:any){
     for(var p of this.produtos){
       if(p.codigo_barras === this.codigoBarras){
-        p.qtd_estoque += 1;
+        p.qtd_estoque += this.quantidade;
         this.codigoBarras = "";
+        this.quantidade = 1;
         return;
       }
     }
@@ -92,8 +94,9 @@ export class EntradaEstoqueComponent implements AfterViewInit {
   retirarProduto(produto:any){
     for(var p of this.produtos){
       if(p.codigo_barras === this.codigoBarras && p.qtd_estoque > 0){
-        p.qtd_estoque -= 1;
+        p.qtd_estoque -= this.quantidade;
         this.codigoBarras = "";
+        this.quantidade = 1;
         return;
       }
     }

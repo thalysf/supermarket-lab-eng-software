@@ -267,5 +267,6 @@ export class CadastroProdutoComponent implements AfterViewInit {
     this.imagem = row.imagem;
     this.fileSelected = new Blob();
     this.tipoProduto = row.tipo
+    this.rfidService.rfid = row.rfid;
   }
 }
