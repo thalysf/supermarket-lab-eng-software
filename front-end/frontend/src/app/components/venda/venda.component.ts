@@ -82,21 +82,31 @@ export class VendaComponent implements OnInit, OnDestroy {
     this.focusPrimeiroElementoFormulario();
   }
 
+  atualizarDataSource(): void {
+    this.dataSource.data = this.produtos;
+  }
+
   bucarCartaoClientePorRfid() {
-    const encontrado = this.cartoesSelecionados.find(cartao => cartao.rfid === this.rfidService.rfid);
-    if(encontrado) {
-      this.toastr.error("Rfid já informado, tente outro");
-      return;
-    }
     this.cartaoClienteService.buscarCartaoClientePorRfid(this.rfidService.rfid).subscribe(
       data => {
         this.cartao = data;
+        if(this.cartao.produtos_cafeteria.length === 0) {
+          this.toastr.warning("Cartão informado sem produtos da cafeteria");
+          return;
+        }
+        this.cartao.produtos_cafeteria.forEach(c => {
+
+          let index = this.produtos.findIndex(p => p.produto.rfid === c.produto.rfid);
+          if(index === -1) {
+            this.produtos.push(c);
+          } else {
+            this.produtos[index].quantidade += c.quantidade;
+          }
+        });
         this.cartoesSelecionados.push(this.cartao);
         this.toastr.success('Cartão Cliente encontrado!');
-        this.cartao.produtos_cafeteria.forEach(p => {
-          this.produtos.push(p);
-        })
-        this.dataSource.data = this.produtos;
+        this.atualizarTotalGeral();
+        this.atualizarDataSource();
       },
       error => this.toastr.error('Rfid não encontrado!')
     );
@@ -114,8 +124,7 @@ export class VendaComponent implements OnInit, OnDestroy {
 
       for (let produto of this.produtos) {
         if (produto.produto.codigo_barras === this.codigo) {
-          produto.quantidade = Number(produto.quantidade) + this.balancaService.peso;
-          this.limpar();
+          produto.quantidade = Number(produto.quantidade) + Number(this.balancaService.peso);
           return;
         }
       }
@@ -128,10 +137,6 @@ export class VendaComponent implements OnInit, OnDestroy {
       this.produtos.push(novoItemVenda);
       this.dataSource.data = this.produtos;
 
-      this.total += this.precoTotalProduto;
-
-
-      this.limpar();
       this.focusPrimeiroElementoFormulario();
     }
   }
@@ -159,7 +164,6 @@ export class VendaComponent implements OnInit, OnDestroy {
     }
 
     this.prepararVenda();
-    //this.impressoraTermicaService.imprimir(this.produtosRecibo);
 
      this.vendaSerive.realizarVenda(this.venda).subscribe(
        data => {
@@ -210,6 +214,7 @@ export class VendaComponent implements OnInit, OnDestroy {
       data => {
         this.carregarProduto(data);
         this.inserir();
+        this.atualizarTotalGeral();
         this.produtoPesquisado = false;
       },
       error => this.toastr.error('Não foi possível encontrar o Produto' + error.error.ERRORS)
@@ -225,8 +230,6 @@ export class VendaComponent implements OnInit, OnDestroy {
     if (this.balancaService.peso) {
       this.precoTotalProduto = this.balancaService.peso * this.precoUnitario;
     }
-
-    //this.readerBalanca();
   }
 
   carregarCartoesCliente() {
@@ -239,9 +242,10 @@ export class VendaComponent implements OnInit, OnDestroy {
       if (this.produtos[i].produto.codigo_barras == produto.produto.codigo_barras) {
         this.total -= this.produtos[i].quantidade * (this.produtos[i].produto.preco_venda || 1);
         this.produtos.splice(i, 1);
-        this.dataSource.data = this.produtos;
+        this.atualizarDataSource();
       }
     }
+    this.atualizarTotalGeral();
   }
 
   expandeImagem(id: any) {
@@ -290,5 +294,12 @@ export class VendaComponent implements OnInit, OnDestroy {
 
     return this.router.navigate(['/login']);
 
+  }
+
+  atualizarTotalGeral(): void {
+    this.total = 0;
+    this.produtos.forEach( p => {
+      this.total += p.quantidade * (p.produto.preco_venda || 0);
+    });
   }
 }

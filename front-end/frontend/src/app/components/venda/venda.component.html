@@ -12,7 +12,7 @@
         <mat-form-field class="campo espacamentoCampos">
             <input matInput placeholder="CÓDIGO PRODUTO"
             [(ngModel)] = "codigo" name="codigo-produto" type="text" max="13"
-            style="margin-left: 4px;" (keyup.enter)="incluirPesquisarProduto()">
+            style="margin-left: 4px;" (keyup.enter)="incluirProduto()">
         </mat-form-field>
 
         <mat-form-field class="campo espacamentoCampos">
@@ -28,14 +28,8 @@
         </mat-form-field>
 
         <mat-form-field class="campo espacamentoCampos">
-            <input readonly matInput placeholder="PREÇO PRODUTO TOTAL"
+            <input readonly matInput placeholder="PREÇO TOTAL PRODUTO"
             [(ngModel)] = "precoTotalProduto" name="preco-total-produto" type="text"
-            style="margin-left: 4px;">
-        </mat-form-field>
-
-        <mat-form-field class="campo espacamentoCampos">
-            <input readonly matInput placeholder="TOTAL"
-            [(ngModel)] = "total" name="total" type="text"
             style="margin-left: 4px;">
         </mat-form-field>
 
@@ -118,6 +112,12 @@
                        showFirstLastButtons
                        aria-label="Select page of periodic blocos">
         </mat-paginator>
+
+      <mat-form-field style="margin-left: 15px">
+        <input readonly matInput placeholder="TOTAL"
+               [(ngModel)] = "total" name="total" type="text"
+               style="margin-left: 4px;">
+      </mat-form-field>
       </div>
 
 </mat-card>

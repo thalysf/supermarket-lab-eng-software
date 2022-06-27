@@ -49,7 +49,7 @@ export class CafeteriaComponent implements OnInit {
     private toastr: ToastrService, private sant: DomSanitizer, private router: Router, private cartaoClienteService: CartaoClienteService,
     public rfidService:RfidService, public balancaService:BalancaService ) {
     this.veririficarUsuario('CAFETERIA');
-    
+
     // this.carregarProduto();
     // this.carregarCartaoCliente();
   }
@@ -80,9 +80,13 @@ export class CafeteriaComponent implements OnInit {
   bucarProdutoPorCodigoDeBarras() {
     this.cadastroProdutoService.buscarProdutoPorCodigoDeBarras(this.formulario.get('codigoBarras')?.value).subscribe(
       data => {
-        this.produtoSelecionado = data;
-        this.addCarrinho(this.produtoSelecionado, this.formulario.get('quantidade')?.value);
-        this.toastr.success('Produto adicionado no carrinho!');
+        if(data.setor === "SUPERMERCADO") {
+          this.toastr.error("Só é possível adicionar produtos da cafeteria");
+        } else {
+          this.produtoSelecionado = data;
+          this.addCarrinho(this.produtoSelecionado, this.formulario.get('quantidade')?.value);
+          this.toastr.success('Produto adicionado no carrinho!');
+        }
       },
       error => this.toastr.error('Produto não encontrado!')
     );
@@ -111,8 +115,8 @@ export class CafeteriaComponent implements OnInit {
     }
     if (!atualizacao) {
       this.cartaoSelecionado.produtos_cafeteria.push(itemVenda);
-      this.dataSource.data = this.cartaoSelecionado.produtos_cafeteria;
     }
+    this.dataSource.data = this.cartaoSelecionado.produtos_cafeteria;
     this.limpar();
     this.focusPrimeiroElementoFormulario();
   }
