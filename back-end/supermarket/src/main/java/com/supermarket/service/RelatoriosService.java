@@ -45,12 +45,12 @@ public class RelatoriosService {
         Double totalCafeteria = 0.0;
 
             for (ItemVenda iv : vendas){
-                totalMercado += iv.getProduto().getPrecoVenda();
+                totalMercado += (iv.getProduto().getPrecoVenda() * iv.getQuantidade());
             }
 
             for(CartaoCliente c : cartoes){
                 for(ItemVenda iv : c.getProdutosCafeteria()){
-                    totalCafeteria += iv.getProduto().getPrecoVenda();
+                    totalCafeteria += (iv.getProduto().getPrecoVenda() * iv.getQuantidade());
                 }
             }
 
@@ -197,7 +197,7 @@ public class RelatoriosService {
         for (ItemVenda iv : vendas){
             for(TipoInformacoesDto tipo: lista){
                 if(tipo.getNome().equals(iv.getProduto().getTipo().getDescricao())){
-                    tipo.setTotal(tipo.getTotal() + iv.getProduto().getPrecoVenda());
+                    tipo.setTotal(tipo.getTotal() + (iv.getProduto().getPrecoVenda() * iv.getQuantidade()));
                 }
             }
         }

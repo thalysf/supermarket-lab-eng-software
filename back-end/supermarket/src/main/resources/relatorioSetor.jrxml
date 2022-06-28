@@ -18,7 +18,7 @@
 					<textElement textAlignment="Center">
 						<font fontName="SansSerif" size="20" isBold="true"/>
 					</textElement>
-					<text><![CDATA[RELATÓRIO DE VENDAS POR TIPO DE PRODUTO]]></text>
+					<text><![CDATA[RELATÓRIO DE VENDAS POR SETOR]]></text>
 				</staticText>
 			</frame>
 		</band>

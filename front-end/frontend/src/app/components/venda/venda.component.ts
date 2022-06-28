@@ -190,6 +190,7 @@ export class VendaComponent implements OnInit, OnDestroy {
   vendaSucesso() {
     this.toastr.success('Venda realizada com sucesso!');
     this.limpar();
+    this.total = 0;
     this.limparTabela();
   }
 
